@@ -10,4 +10,14 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GoodDay.BLL\GoodDay.BLL.csproj" />
+    <ProjectReference Include="..\GoodDay.DAL\GoodDay.DAL.csproj" />
+    <ProjectReference Include="..\GoodDay.Models\GoodDay.Models.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+
 </Project>

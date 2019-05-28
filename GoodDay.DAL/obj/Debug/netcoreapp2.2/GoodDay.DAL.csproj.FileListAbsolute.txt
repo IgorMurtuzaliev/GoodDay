@@ -1,0 +1,5 @@
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\bin\Debug\netcoreapp2.2\GoodDay.Models.dll
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.csprojAssemblyReference.cache
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.csproj.CoreCompileInputs.cache
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.AssemblyInfoInputs.cache
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.AssemblyInfo.cs

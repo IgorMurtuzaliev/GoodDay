@@ -6,10 +6,17 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodDay.WebAPI", "GoodDay.WebAPI\GoodDay.WebAPI.csproj", "{E199EB36-31E6-4DF1-B871-01B955B11185}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodDay.BLL", "GoodDay.BLL\GoodDay.BLL.csproj", "{CA58E4D2-EB60-4399-A696-5806AFBBD276}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6FCEEB84-A704-4DBD-A133-1C4F75277900} = {6FCEEB84-A704-4DBD-A133-1C4F75277900}
+		{7FE9E9AA-5727-420E-B3FC-2DC8727B8A79} = {7FE9E9AA-5727-420E-B3FC-2DC8727B8A79}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodDay.DAL", "GoodDay.DAL\GoodDay.DAL.csproj", "{7FE9E9AA-5727-420E-B3FC-2DC8727B8A79}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodDay.DAL", "GoodDay.DAL\GoodDay.DAL.csproj", "{7FE9E9AA-5727-420E-B3FC-2DC8727B8A79}"
+	ProjectSection(ProjectDependencies) = postProject
+		{6FCEEB84-A704-4DBD-A133-1C4F75277900} = {6FCEEB84-A704-4DBD-A133-1C4F75277900}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GoodDay.Models", "GoodDay.Models\GoodDay.Models.csproj", "{6FCEEB84-A704-4DBD-A133-1C4F75277900}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GoodDay.Models", "GoodDay.Models\GoodDay.Models.csproj", "{6FCEEB84-A704-4DBD-A133-1C4F75277900}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
