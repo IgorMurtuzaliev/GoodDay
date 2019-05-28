@@ -22,5 +22,8 @@ namespace GoodDay.DAL.EF
 
         public DbSet<Message> Messages { get; set; }
         public DbSet<File> Files { get; set; }
+        public DbSet<Dialog> Dialogs { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<UserContact> UserContacts { get; set; }
     }
 }

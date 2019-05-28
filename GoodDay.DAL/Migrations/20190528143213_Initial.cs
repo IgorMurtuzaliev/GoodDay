@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GoodDay.DAL.Migrations
 {
-    public partial class Init : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -43,12 +43,26 @@ namespace GoodDay.DAL.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     Surname = table.Column<string>(nullable: false),
-                    Phone = table.Column<string>(nullable: true),
-                    LastLogin = table.Column<DateTime>(nullable: true)
+                    Phone = table.Column<string>(nullable: false),
+                    FileId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Contacts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    FriendId = table.Column<string>(nullable: true),
+                    Blocked = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Contacts", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -58,7 +72,9 @@ namespace GoodDay.DAL.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(nullable: true),
-                    Path = table.Column<string>(nullable: true)
+                    Path = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    MessageId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -172,6 +188,60 @@ namespace GoodDay.DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Dialogs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    SenderId = table.Column<string>(nullable: true),
+                    ReceiverId = table.Column<string>(nullable: true),
+                    UserId = table.Column<string>(nullable: true),
+                    UserId1 = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Dialogs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Dialogs_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Dialogs_AspNetUsers_UserId1",
+                        column: x => x.UserId1,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "UserContacts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(nullable: true),
+                    ContactId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserContacts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_UserContacts_Contacts_ContactId",
+                        column: x => x.ContactId,
+                        principalTable: "Contacts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserContacts_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Messages",
                 columns: table => new
                 {
@@ -179,19 +249,19 @@ namespace GoodDay.DAL.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Text = table.Column<string>(nullable: true),
                     SendingTime = table.Column<DateTime>(nullable: false),
-                    FromUserId = table.Column<string>(nullable: true),
-                    ToUserId = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true)
+                    SenderId = table.Column<string>(nullable: true),
+                    DialogId = table.Column<int>(nullable: false),
+                    FileId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Messages", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Messages_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
+                        name: "FK_Messages_Dialogs_DialogId",
+                        column: x => x.DialogId,
+                        principalTable: "Dialogs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -232,8 +302,28 @@ namespace GoodDay.DAL.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Messages_UserId",
+                name: "IX_Dialogs_UserId",
+                table: "Dialogs",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Dialogs_UserId1",
+                table: "Dialogs",
+                column: "UserId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_DialogId",
                 table: "Messages",
+                column: "DialogId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserContacts_ContactId",
+                table: "UserContacts",
+                column: "ContactId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserContacts_UserId",
+                table: "UserContacts",
                 column: "UserId");
         }
 
@@ -261,7 +351,16 @@ namespace GoodDay.DAL.Migrations
                 name: "Messages");
 
             migrationBuilder.DropTable(
+                name: "UserContacts");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Dialogs");
+
+            migrationBuilder.DropTable(
+                name: "Contacts");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

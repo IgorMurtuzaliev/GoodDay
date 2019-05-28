@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace GoodDay.Models.Entities
@@ -19,11 +20,17 @@ namespace GoodDay.Models.Entities
         [Required(ErrorMessage = "Input your surname")]
         public string Surname { get; set; }
 
-       // [Phone, Required(ErrorMessage = "Input you phone number")]
+        [Phone, Required(ErrorMessage = "Input you phone number")]
         public string Phone { get; set; }
         
-        public DateTime? LastLogin { get; set; }
+        //public DateTime? LastLogin { get; set; }
 
-        public virtual ICollection<Message> Messages { get; set; }
+        public int? FileId { get; set; }
+
+        public virtual ICollection<Dialog> ResponsingForDialog { get; set; }
+        public virtual ICollection<Dialog> RequestingToDialog { get; set; }
+        public virtual ICollection<UserContact> UserContacts{ get; set; }
+        [NotMapped]
+        public virtual File File { get; set; }
     }
 }
