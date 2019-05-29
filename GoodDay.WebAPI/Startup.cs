@@ -55,7 +55,8 @@ namespace GoodDay.WebAPI
                 options.AddPolicy("MyAllowSpecificOrigins",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200")
+                    builder.WithOrigins("http://localhost:4200", "https://accounts.google.com")
+
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();
                 });
@@ -98,7 +99,14 @@ namespace GoodDay.WebAPI
 
 
                        };
-                   });
+
+                   })
+                    .AddGoogle("Google", options =>
+                     {
+                         options.CallbackPath = new PathString("/google-callback");
+                         options.ClientId = "405558759348-k906i53f8256bh7qf1ikneve7280s25i.apps.googleusercontent.com";
+                         options.ClientSecret = "XqziAwV3i4Hms5k06T00165c";
+                     });
             services.AddMemoryCache();
             services.AddSession(opts =>
             {
