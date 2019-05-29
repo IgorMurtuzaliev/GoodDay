@@ -61,7 +61,7 @@ namespace GoodDay.WebAPI
                 });
             });
             //services.AddTransient<IUserService, UserService>();
-            //services.AddTransient<IRepository<User>, UserRepository>();           
+            //services.AddTransient<IRepository<User>, UserRepository>();         
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IEmailService, EmailService>();          
            // services.AddTransient<IFileManager, FileManager>();
