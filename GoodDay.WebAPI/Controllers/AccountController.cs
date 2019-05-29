@@ -16,14 +16,13 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodDay.WebAPI.Controllers
-{
-    [EnableCorsAttribute("https://accounts.google.com")]
+{   [EnableCorsAttribute("https://accounts.google.com")]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
         readonly IAccountService service;
-
+   
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private ApplicationDbContext db;
@@ -74,7 +73,7 @@ namespace GoodDay.WebAPI.Controllers
                         Email = model.Email,
                         Password = model.Password
 
-                    };
+                    }; 
                     var token = await service.LogIn(userModel);
                     return Ok(new { token });
                 }
@@ -98,23 +97,23 @@ namespace GoodDay.WebAPI.Controllers
                 return NotFound();
         }
 
+        //[Route("signInWithGoogle")]
+        //public async Task<IActionResult> Token()
+        //{
+        //    SignInWithGoogle();
+        //    HandleExternalLogin();
+        //    var id = User.Claims.First(c => c.Type == "Id").Value;
+        //    User user = await userManager.FindByIdAsync(id);
+        //    var token = await service.TokenGeneration(user.Email);
+        //    return Ok(new { token });
+        //}
 
-        [Route("signInWithGoogle")]
-        public async Task<IActionResult> SignIn()
-        {
-            SignInWithGoogle();
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            User user = await userManager.FindByIdAsync(id);
-            var token = await service.TokenGeneration(user.Email);
-            return Ok(new { token });
-
-        }
-
+            
         public IActionResult SignInWithGoogle()
         {
             var authenticationProperties = signInManager.ConfigureExternalAuthenticationProperties("Google", Url.Action(nameof(HandleExternalLogin)));
             return Challenge(authenticationProperties, "Google");
-
+            
         }
 
         public async void HandleExternalLogin()
@@ -132,8 +131,8 @@ namespace GoodDay.WebAPI.Controllers
                     UserName = email,
                     Email = email,
                     EmailConfirmed = true,
-                    Phone = "",
-
+                    Phone = "",             
+                    
                 };
                 var createResult = await userManager.CreateAsync(newUser);
                 if (!createResult.Succeeded)
@@ -142,10 +141,7 @@ namespace GoodDay.WebAPI.Controllers
                 await userManager.AddLoginAsync(newUser, info);
                 var newUserClaims = info.Principal.Claims.Append(new Claim("userId", newUser.Id));
                 await userManager.AddClaimsAsync(newUser, newUserClaims);
-                //await signInManager.SignInAsync(newUser, isPersistent: false);
-                //await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);               
             }
-
         }
 
     }
