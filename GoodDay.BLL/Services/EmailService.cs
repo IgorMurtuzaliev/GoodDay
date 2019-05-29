@@ -1,5 +1,6 @@
 ﻿using GoodDay.BLL.Interfaces;
 using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using MimeKit;
 using System;
 using System.Collections.Generic;
@@ -8,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace GoodDay.BLL.Services
 {
-    public class EmailService : IEmailService
+    public class EmailService : IEmailSender
     {
-        public async Task SendEmail(string email, string subject, string message)
+        public async Task SendEmailAsync(string email, string subject, string htmlmessage)
         {
             var emailMessage = new MimeMessage();
             emailMessage.From.Add(new MailboxAddress("Service administration", "ingwarrior.99@yandex.ru"));
@@ -18,7 +19,7 @@ namespace GoodDay.BLL.Services
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
             {
-                Text = message
+                Text =htmlmessage
             };
             using (var client = new SmtpClient())
             {

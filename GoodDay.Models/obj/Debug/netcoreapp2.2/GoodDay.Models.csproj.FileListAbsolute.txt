@@ -10,3 +10,15 @@ C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.Models\obj\Debug\netcoreapp2.2
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.Models\bin\Debug\netcoreapp2.2\GoodDay.Models.pdb
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.dll
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.pdb
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\bin\Debug\netcoreapp2.2\GoodDay.Models.deps.json
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\bin\Debug\netcoreapp2.2\GoodDay.Models.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\bin\Debug\netcoreapp2.2\GoodDay.Models.pdb
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\bin\Debug\netcoreapp2.2\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\bin\Debug\netcoreapp2.2\Microsoft.Extensions.Identity.Stores.xml
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.csprojAssemblyReference.cache
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.csproj.CoreCompileInputs.cache
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.AssemblyInfoInputs.cache
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.AssemblyInfo.cs
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.csproj.CopyComplete
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.Models\obj\Debug\netcoreapp2.2\GoodDay.Models.pdb

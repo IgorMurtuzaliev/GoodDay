@@ -40,6 +40,7 @@ namespace GoodDay.WebAPI.Controllers
                 Name = model.Name,
                 Surname = model.Surname,
                 Email = model.Email,
+                Phone = model.Phone,
                 Password = model.Password,
                 PasswordConfirm = model.PasswordConfirm
             };
@@ -56,5 +57,24 @@ namespace GoodDay.WebAPI.Controllers
             return Ok(model);
         }
 
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+
+            var user = await userManager.FindByEmailAsync(model.Email);
+            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+            {
+                var userModel = new LoginDTO
+                {
+                    Email = model.Email,
+                    Password = model.Password
+
+                };
+                var token = await service.LogIn(userModel);
+                return Ok(new { token });
+            }
+            else return BadRequest(new { message = "Username or password is incorrect" });
+        }
     }
 }
