@@ -10,3 +10,15 @@ C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\bin\Debug\netcoreapp2.2\Go
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.csproj.CopyComplete
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.dll
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.pdb
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\bin\Debug\netcoreapp2.2\GoodDay.DAL.deps.json
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\bin\Debug\netcoreapp2.2\GoodDay.DAL.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\bin\Debug\netcoreapp2.2\GoodDay.DAL.pdb
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\bin\Debug\netcoreapp2.2\GoodDay.Models.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\bin\Debug\netcoreapp2.2\GoodDay.Models.pdb
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.csprojAssemblyReference.cache
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.csproj.CoreCompileInputs.cache
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.AssemblyInfoInputs.cache
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.AssemblyInfo.cs
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.csproj.CopyComplete
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.DAL\obj\Debug\netcoreapp2.2\GoodDay.DAL.pdb

@@ -10,5 +10,7 @@ namespace GoodDay.BLL.Interfaces
     public interface IAccountService
     {
         Task<IdentityResult> Create(RegisterDTO model, string url);
+        Task<object> LogIn(LoginDTO model);
+        Task<IdentityResult> ConfirmEmail(string userId, string code);
     }
 }
