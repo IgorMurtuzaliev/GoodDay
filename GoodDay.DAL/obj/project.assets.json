@@ -4602,23 +4602,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\ingwa\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.DAL\\GoodDay.DAL.csproj",
+      "projectUniqueName": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.DAL\\GoodDay.DAL.csproj",
       "projectName": "GoodDay.DAL",
-      "projectPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.DAL\\GoodDay.DAL.csproj",
-      "packagesPath": "C:\\Users\\ingwa\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.DAL\\obj\\",
+      "projectPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.DAL\\GoodDay.DAL.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.DAL\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\ingwa\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -4631,8 +4631,8 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.Models\\GoodDay.Models.csproj": {
-              "projectPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.Models\\GoodDay.Models.csproj"
+            "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.Models\\GoodDay.Models.csproj": {
+              "projectPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.Models\\GoodDay.Models.csproj"
             }
           }
         }
