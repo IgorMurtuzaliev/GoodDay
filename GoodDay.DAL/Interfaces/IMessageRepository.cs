@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace GoodDay.DAL.Interfaces
 {
-    public interface IFileRepository
+    public interface IMessageRepository
     {
-        Task Add(File item);
+        Task Add(Message item);
         Task Delete(int? id);
-        Task Save();
     }
 }
