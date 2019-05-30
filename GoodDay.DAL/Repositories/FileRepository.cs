@@ -18,6 +18,7 @@ namespace GoodDay.DAL.Repositories
         public async Task Add(File item)
         {
             await dbContext.Files.AddAsync(item);
+            await Save();
         }
 
         public async Task Delete(int? id)

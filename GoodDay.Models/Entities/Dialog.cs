@@ -7,6 +7,10 @@ namespace GoodDay.Models.Entities
 {
     public class Dialog
     {
+        public Dialog()
+        {
+
+        }
         public int Id { get; set; }
         public string SenderId { get; set; }
         public string ReceiverId { get; set; }

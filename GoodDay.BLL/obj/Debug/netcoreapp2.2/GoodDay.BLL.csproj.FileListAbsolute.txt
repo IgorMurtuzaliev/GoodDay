@@ -42,3 +42,9 @@ C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Sy
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Identity.UI.xml
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\System.IdentityModel.Tokens.Jwt.pdb
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\System.IdentityModel.Tokens.Jwt.xml
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Abstractions.dll
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Abstractions.xml
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Core.dll
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Core.xml
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Authorization.dll
+C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Authorization.xml

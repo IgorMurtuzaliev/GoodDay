@@ -7,6 +7,10 @@ namespace GoodDay.Models.Entities
 {
     public class File
     {
+        public File()
+        {
+
+        }
         public int Id { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }

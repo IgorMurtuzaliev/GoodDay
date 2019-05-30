@@ -1,5 +1,7 @@
 ﻿using GoodDay.BLL.DTO;
+using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +15,7 @@ namespace GoodDay.BLL.Interfaces
         Task<object> TokenGeneration(string email);
         Task<object> LogIn(LoginDTO model);
         Task<IdentityResult> ConfirmEmail(string userId, string code);
+        Task<User> GetClientAccount(string id);
+        Task<IEnumerable<Contact>> GetClientContacts(string id);
     }
 }

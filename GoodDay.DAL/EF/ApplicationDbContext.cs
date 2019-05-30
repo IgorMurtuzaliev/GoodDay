@@ -14,11 +14,11 @@ namespace GoodDay.DAL.EF
         {
             Database.EnsureCreated();
         }
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-        //    optionsBuilder.UseLazyLoadingProxies();
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
 
-        //}
+        }
 
         public DbSet<Message> Messages { get; set; }
         public DbSet<File> Files { get; set; }
