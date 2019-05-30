@@ -3,8 +3,10 @@ using GoodDay.BLL.DTO;
 using GoodDay.BLL.Infrastructure;
 using GoodDay.BLL.Interfaces;
 using GoodDay.Models.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -30,17 +32,10 @@ namespace GoodDay.BLL.Services
         }
         public async Task<IdentityResult> Create(RegisterDTO model, string url)
         {
-            //User user = new User
-            //{
-            //    Name = model.Name,
-            //    Surname = model.Surname,
-            //    Email = model.Email,
-            //    UserName = model.Email,
-            //    Phone = model.Phone
-            //};
             Mapper.Initialize(cfg => cfg.CreateMap<RegisterDTO, User>()
                     .ForMember("UserName", opt => opt.MapFrom(src => src.Email)));
             User user = Mapper.Map<RegisterDTO, User>(model);
+            Mapper.Reset();
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
@@ -49,6 +44,7 @@ namespace GoodDay.BLL.Services
                 var callbackurl = new StringBuilder("https://").AppendFormat(url).AppendFormat("/api/account/confirmemail").AppendFormat($"?userId={user.Id}&code={encode}");
                 await emailService.SendEmailAsync(user.Email, "Тема письма", $"Please confirm your account by <a href='{callbackurl}'>clicking here</a>.");
             }
+            
             return result;
         }
 
@@ -81,6 +77,18 @@ namespace GoodDay.BLL.Services
             User user = await userManager.FindByIdAsync(userId);
             IdentityResult success = await userManager.ConfirmEmailAsync(user, code);
             return success;
+        }
+    
+        public async Task<User> GetClientAccount(string id)
+        {
+            User user = await userManager.FindByIdAsync(id);
+            return user;
+        }
+        public async Task<IEnumerable<Contact>> GetClientContacts(string id)
+        {
+            User user = await userManager.FindByIdAsync(id);
+            var contacts = user.Contacts;
+            return contacts;
         }
     }
 }

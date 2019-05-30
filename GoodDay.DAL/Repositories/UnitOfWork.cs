@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GoodDay.DAL.Repositories
 {
-    public class UnitOfWork:IUnitOfWork
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext dbContext;
         private UserRepository userRepository;

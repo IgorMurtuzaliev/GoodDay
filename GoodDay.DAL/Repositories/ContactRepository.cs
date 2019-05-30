@@ -19,6 +19,7 @@ namespace GoodDay.DAL.Repositories
         public async Task Add(Contact item)
         {
             await dbContext.Contacts.AddAsync(item);
+            await Save();
         }
 
         public async Task Delete(int? id)
@@ -26,6 +27,7 @@ namespace GoodDay.DAL.Repositories
             Contact contact = await dbContext.Contacts.FindAsync(id);
             if (contact != null)
                 dbContext.Contacts.Remove(contact);
+            await Save();
         }
 
         public async Task Edit(Contact item)

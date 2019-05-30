@@ -11,9 +11,11 @@ namespace GoodDay.Models.Entities
     {
         public User()
         {
-
+            Dialogs = new List<Dialog>();
+            Contacts = new List<Contact>();
         }
 
+        public static object Claims { get; set; }
         [Required(ErrorMessage = "Input your name")]
         public string Name { get; set; }
 
@@ -27,10 +29,9 @@ namespace GoodDay.Models.Entities
 
         public int? FileId { get; set; }
 
-        public virtual ICollection<Dialog> ResponsingForDialog { get; set; }
-        public virtual ICollection<Dialog> RequestingToDialog { get; set; }
-        public virtual ICollection<Contact> UsersContacts{ get; set; }
-        public virtual ICollection<Contact> UserInContact { get; set; }
+        public virtual ICollection<Dialog> Dialogs { get; set; }
+        public virtual ICollection<Contact> Contacts{ get; set; }
+
         [NotMapped]
         public virtual File File { get; set; }
     }

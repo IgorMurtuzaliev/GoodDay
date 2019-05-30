@@ -10,25 +10,25 @@ using GoodDay.DAL.EF;
 using GoodDay.Models.Entities;
 using GoodDay.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodDay.WebAPI.Controllers
-{   [EnableCorsAttribute("https://accounts.google.com")]
+{ 
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
-        readonly IAccountService service;
-   
+        readonly IAccountService accountService;  
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private ApplicationDbContext db;
-        public AccountController(UserManager<User> _userManager, IAccountService _service, SignInManager<User> _signInManager, ApplicationDbContext _db)
+        public AccountController(UserManager<User> _userManager, IAccountService _accountService, SignInManager<User> _signInManager, ApplicationDbContext _db)
         {
-            service = _service;
+            accountService = _accountService;
             userManager = _userManager;
             signInManager = _signInManager;
 
@@ -49,7 +49,7 @@ namespace GoodDay.WebAPI.Controllers
             };
             if (ModelState.IsValid)
             {
-                IdentityResult result = await service.Create(register, HttpContext.Request.Host.ToString());
+                IdentityResult result = await accountService.Create(register, HttpContext.Request.Host.ToString());
                 if (result.Succeeded)
                 {
                     return Ok(register);
@@ -74,7 +74,7 @@ namespace GoodDay.WebAPI.Controllers
                         Password = model.Password
 
                     }; 
-                    var token = await service.LogIn(userModel);
+                    var token = await accountService.LogIn(userModel);
                     return Ok(new { token });
                 }
                 else return BadRequest(new { message = "Confirm your email" });
@@ -90,7 +90,7 @@ namespace GoodDay.WebAPI.Controllers
             {
                 return NotFound();
             }
-            IdentityResult result = await service.ConfirmEmail(userId, code);
+            IdentityResult result = await accountService.ConfirmEmail(userId, code);
             if (result.Succeeded)
                 return Ok("Welcome");
             else
@@ -144,5 +144,22 @@ namespace GoodDay.WebAPI.Controllers
             }
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetClientAccount()
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            var result = await accountService.GetClientAccount(id);
+            return Ok(result);
+        }
+        [HttpGet]
+        [Authorize]
+        [Route("contacts")]
+        public async Task<IActionResult> GetClientContacts()
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            var result = await accountService.GetClientContacts(id);
+            return Ok(result);
+        }
     }
 }

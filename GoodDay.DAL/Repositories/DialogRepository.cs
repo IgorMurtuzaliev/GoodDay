@@ -19,6 +19,7 @@ namespace GoodDay.DAL.Repositories
         public async Task Add(Dialog item)
         {
             await dbContext.Dialogs.AddAsync(item);
+            await Save();
         }
 
         public async Task Delete(int? id)

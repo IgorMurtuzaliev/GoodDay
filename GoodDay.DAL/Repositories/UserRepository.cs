@@ -4,6 +4,7 @@ using GoodDay.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -42,6 +43,11 @@ namespace GoodDay.DAL.Repositories
         public async Task Save()
         {
             await dbContext.SaveChangesAsync();
+        }
+
+        public bool UserExists(string id)
+        {
+            return dbContext.Users.Any(e => e.Id == id);
         }
     }
 }

@@ -61,11 +61,13 @@ namespace GoodDay.WebAPI
                                         .AllowAnyMethod();
                 });
             });
-            //services.AddTransient<IUserService, UserService>();
-            //services.AddTransient<IRepository<User>, UserRepository>();         
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IAccountService, AccountService>();
-            services.AddTransient<IEmailSender, EmailService>();          
-           // services.AddTransient<IFileManager, FileManager>();
+            services.AddTransient<IEmailSender, EmailService>();
+            services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IContactService, ContactService>();
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -96,8 +98,6 @@ namespace GoodDay.WebAPI
                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                            ValidateIssuerSigningKey = true,
                            ClockSkew = TimeSpan.Zero
-
-
                        };
 
                    })
