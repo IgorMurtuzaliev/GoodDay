@@ -1,4 +1,5 @@
-﻿using GoodDay.BLL.Interfaces;
+﻿using GoodDay.BLL.DTO;
+using GoodDay.BLL.Interfaces;
 using GoodDay.DAL.Interfaces;
 using GoodDay.DAL.Repositories;
 using GoodDay.Models.Entities;
@@ -34,6 +35,18 @@ namespace GoodDay.BLL.Services
             return contact;
         }
 
+        public async Task<Contact> ChangeContactName(ContactDTO model)
+        {
+            Contact contact = await unitOfWork.Contacts.Get(model.Id);
+            if( contact!= null)
+            {
+                contact.ContactName = model.ContactName;
+            }
+            await unitOfWork.Contacts.Edit(contact);
+            await unitOfWork.Contacts.Save();
+            return contact;
+        }
+
         public async Task DeleteContact(int? id)
         {
            await unitOfWork.Contacts.Delete(id);
@@ -43,6 +56,13 @@ namespace GoodDay.BLL.Services
         public async Task<Contact> GetContact(int? id)
         {
             return await unitOfWork.Contacts.Get(id);
+        }
+
+        public async Task<IEnumerable<Contact>> GetContacts(string id)
+        {
+            User user = await userManager.FindByIdAsync(id);
+            var contacts = user.Contacts;
+            return contacts;
         }
     }
 }

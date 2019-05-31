@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using GoodDay.BLL.DTO;
 using GoodDay.BLL.Interfaces;
 using GoodDay.Models.Entities;
+using GoodDay.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -64,5 +66,45 @@ namespace GoodDay.WebAPI.Controllers
             }
             else return BadRequest("Contact not found");
         }
+
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> GetContacts()
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            var result = await contactService.GetContacts(id);
+            return Ok(result);
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> ChangeContactName( int? id, [FromForm]ContactViewModel model)
+        {          
+            if (id == null)
+            {
+                return BadRequest("Id is not valid");
+            }
+            else
+            {
+                Contact contact = await contactService.GetContact(id);
+                var userId = User.Claims.First(c => c.Type == "Id").Value;
+                if (userId!= contact.UserId )
+                {
+                    return BadRequest("This id is not current user id");
+                }
+                else
+                {
+                    var contactModel = new ContactDTO
+                    {
+                        Id = model.Id,
+                        ContactName = model.ContactName
+                    };
+                    var result = await contactService.ChangeContactName(contactModel);
+                    return Ok(result);
+                }
+               
+            }           
+        }
+
     }
 }

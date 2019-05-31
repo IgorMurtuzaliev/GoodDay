@@ -1,4 +1,5 @@
-﻿using GoodDay.Models.Entities;
+﻿using GoodDay.BLL.DTO;
+using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,5 +13,7 @@ namespace GoodDay.BLL.Interfaces
         Task<Contact> AddContact(string id, string friendId);
         Task DeleteContact(int? id);
         Task<Contact> GetContact(int? id);
+        Task<IEnumerable<Contact>> GetContacts(string id);
+        Task<Contact> ChangeContactName(ContactDTO model);
     }
 }

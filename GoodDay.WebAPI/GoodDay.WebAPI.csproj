@@ -20,4 +20,8 @@
     <ProjectReference Include="..\GoodDay.Models\GoodDay.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
 </Project>

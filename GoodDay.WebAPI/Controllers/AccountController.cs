@@ -97,18 +97,6 @@ namespace GoodDay.WebAPI.Controllers
                 return NotFound();
         }
 
-        //[Route("signInWithGoogle")]
-        //public async Task<IActionResult> Token()
-        //{
-        //    SignInWithGoogle();
-        //    HandleExternalLogin();
-        //    var id = User.Claims.First(c => c.Type == "Id").Value;
-        //    User user = await userManager.FindByIdAsync(id);
-        //    var token = await service.TokenGeneration(user.Email);
-        //    return Ok(new { token });
-        //}
-
-            
         public IActionResult SignInWithGoogle()
         {
             var authenticationProperties = signInManager.ConfigureExternalAuthenticationProperties("Google", Url.Action(nameof(HandleExternalLogin)));
@@ -146,20 +134,17 @@ namespace GoodDay.WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> GetClientAccount()
+        public async Task<object> GetClientAccount()
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
-            var result = await accountService.GetClientAccount(id);
-            return Ok(result);
-        }
-        [HttpGet]
-        [Authorize]
-        [Route("contacts")]
-        public async Task<IActionResult> GetClientContacts()
-        {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            var result = await accountService.GetClientContacts(id);
-            return Ok(result);
+            var user = await userManager.FindByIdAsync(id);
+            return new
+            {
+                user.Surname,
+                user.Name,
+                user.Email,
+                user.Phone
+            };
         }
     }
 }

@@ -15,7 +15,6 @@ namespace GoodDay.Models.Entities
             Contacts = new List<Contact>();
         }
 
-        public static object Claims { get; set; }
         [Required(ErrorMessage = "Input your name")]
         public string Name { get; set; }
 

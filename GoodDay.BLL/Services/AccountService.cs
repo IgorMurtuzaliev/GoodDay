@@ -78,17 +78,12 @@ namespace GoodDay.BLL.Services
             IdentityResult success = await userManager.ConfirmEmailAsync(user, code);
             return success;
         }
+
     
         public async Task<User> GetClientAccount(string id)
         {
             User user = await userManager.FindByIdAsync(id);
             return user;
-        }
-        public async Task<IEnumerable<Contact>> GetClientContacts(string id)
-        {
-            User user = await userManager.FindByIdAsync(id);
-            var contacts = user.Contacts;
-            return contacts;
         }
     }
 }
