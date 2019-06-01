@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace GoodDay.BLL.DTO
+﻿namespace GoodDay.BLL.DTO
 {
     public class ContactDTO
     {

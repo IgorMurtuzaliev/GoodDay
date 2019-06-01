@@ -1,13 +1,9 @@
 ﻿using GoodDay.BLL.DTO;
 using GoodDay.BLL.Interfaces;
 using GoodDay.DAL.Interfaces;
-using GoodDay.DAL.Repositories;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GoodDay.BLL.Services

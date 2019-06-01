@@ -49,5 +49,9 @@ namespace GoodDay.DAL.Repositories
         {
             return dbContext.Users.Any(e => e.Id == id);
         }
+        public bool UserIsSignedUp(string email)
+        {
+            return dbContext.Users.Any(e => e.Email == email);
+        }
     }
 }

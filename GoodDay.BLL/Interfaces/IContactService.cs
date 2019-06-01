@@ -1,9 +1,6 @@
 ﻿using GoodDay.BLL.DTO;
 using GoodDay.Models.Entities;
-using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GoodDay.BLL.Interfaces

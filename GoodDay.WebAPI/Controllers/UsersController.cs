@@ -24,28 +24,7 @@ namespace GoodDay.WebAPI.Controllers
         {
             userService = _userService;
         }
-
-        [HttpPut]
-        [Authorize]
-        public async Task<IActionResult> EditClientProfile([FromForm]UserViewModel model)
-        {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            if (id == null)
-            {
-                return BadRequest("Id is not valid");
-            }
-            else
-            {
-                    var userModel = new UserDTO
-                    {
-                        Id = id,
-                        Name = model.Name,
-                        Surname = model.Surname,
-                    };
-                    await userService.EditClientProfile(userModel);
-                    return Ok();               
-            }
-        }
+      
 
         [Route("{id}")]
         [HttpGet]
@@ -54,13 +33,13 @@ namespace GoodDay.WebAPI.Controllers
         {
             if(id == null)
             {
-                return BadRequest("Id is not valid");
+                return BadRequest(new { message = "Id is not valid" });
             }
             else
             {
                 if (!userService.UserExists(id))
                 {
-                    return BadRequest("There are not users with this id");
+                   return BadRequest(new { message = "There are not users with this id" });
                 }
                 else
                 {

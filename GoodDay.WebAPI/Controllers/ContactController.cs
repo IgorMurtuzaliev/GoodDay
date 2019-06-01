@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using GoodDay.BLL.DTO;
 using GoodDay.BLL.Interfaces;
 using GoodDay.Models.Entities;
 using GoodDay.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodDay.WebAPI.Controllers

@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using GoodDay.BLL.Interfaces;
 using GoodDay.Models.Entities;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodDay.WebAPI.Controllers
@@ -24,12 +21,16 @@ namespace GoodDay.WebAPI.Controllers
         {
             if (string.IsNullOrEmpty(search))
             {
-                return BadRequest("The search string is ");
+                return BadRequest("The search string is empty");
             }
             else
             {
                 var searchResult = await searchService.Search(search);
-                return Ok(searchResult);
+                if(searchResult == null)
+                {
+                    return BadRequest("Not found by your response");
+                }
+                else return Ok(searchResult);
             }
         }
     }

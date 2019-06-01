@@ -2,14 +2,12 @@
 using GoodDay.BLL.DTO;
 using GoodDay.BLL.Infrastructure;
 using GoodDay.BLL.Interfaces;
+using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -23,12 +21,14 @@ namespace GoodDay.BLL.Services
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
         private readonly IEmailSender emailService;
+        private readonly IUnitOfWork unitOfWork;
 
-        public AccountService(UserManager<User> _userManager, SignInManager<User> _signInManager, IEmailSender _emailService)
+        public AccountService(UserManager<User> _userManager, SignInManager<User> _signInManager, IEmailSender _emailService, IUnitOfWork _unitOfWork)
         {
             userManager = _userManager;
             signInManager = _signInManager;
             emailService = _emailService;
+            unitOfWork = _unitOfWork;
         }
         public async Task<IdentityResult> Create(RegisterDTO model, string url)
         {
@@ -50,7 +50,7 @@ namespace GoodDay.BLL.Services
 
         public async Task<object> TokenGeneration(string email)
         {
-            IdentityOptions _options = new IdentityOptions();
+            IdentityOptions options = new IdentityOptions();
             var user = await userManager.FindByEmailAsync(email);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -84,6 +84,17 @@ namespace GoodDay.BLL.Services
         {
             User user = await userManager.FindByIdAsync(id);
             return user;
+        }
+
+        public async Task EditClientProfile(UserDTO model)
+        {
+            User user = await userManager.FindByIdAsync(model.Id);
+            if (user != null)
+            {
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+                await unitOfWork.Users.Edit(user);
+            }
         }
     }
 }

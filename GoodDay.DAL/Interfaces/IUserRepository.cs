@@ -14,5 +14,6 @@ namespace GoodDay.DAL.Interfaces
         Task<User> Get(string id);     
         Task Save();
         bool UserExists(string id);
+        bool UserIsSignedUp(string email);
     }
 }

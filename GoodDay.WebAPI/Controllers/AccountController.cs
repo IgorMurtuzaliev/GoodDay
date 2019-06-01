@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using GoodDay.BLL.DTO;
 using GoodDay.BLL.Interfaces;
 using GoodDay.DAL.EF;
 using GoodDay.Models.Entities;
 using GoodDay.WebAPI.ViewModels;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodDay.WebAPI.Controllers
-{ 
+{
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase
@@ -25,61 +21,71 @@ namespace GoodDay.WebAPI.Controllers
         readonly IAccountService accountService;  
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
-        private ApplicationDbContext db;
-        public AccountController(UserManager<User> _userManager, IAccountService _accountService, SignInManager<User> _signInManager, ApplicationDbContext _db)
+        public AccountController(UserManager<User> _userManager, IAccountService _accountService, SignInManager<User> _signInManager)
         {
             accountService = _accountService;
             userManager = _userManager;
             signInManager = _signInManager;
-
-            db = _db;
         }
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            var register = new RegisterDTO
+            try
             {
-                Name = model.Name,
-                Surname = model.Surname,
-                Email = model.Email,
-                Phone = model.Phone,
-                Password = model.Password,
-                PasswordConfirm = model.PasswordConfirm
-            };
-            if (ModelState.IsValid)
-            {
+                var register = new RegisterDTO
+                {
+                    Name = model.Name,
+                    Surname = model.Surname,
+                    Email = model.Email,
+                    Phone = model.Phone,
+                    Password = model.Password,
+                    PasswordConfirm = model.PasswordConfirm
+                };
                 IdentityResult result = await accountService.Create(register, HttpContext.Request.Host.ToString());
                 if (result.Succeeded)
                 {
                     return Ok(register);
                 }
+                else
+                {
+                    return BadRequest(new { result });
+                }
             }
-            return Ok(model);
+            catch(Exception ex) 
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]
         [Route("login")]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-
-            var user = await userManager.FindByEmailAsync(model.Email);
-            if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+            try
             {
-                if (user.EmailConfirmed == true)
+                var user = await userManager.FindByEmailAsync(model.Email);
+                if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
                 {
-                    var userModel = new LoginDTO
+                    if (user.EmailConfirmed == true)
                     {
-                        Email = model.Email,
-                        Password = model.Password
+                        var userModel = new LoginDTO
+                        {
+                            Email = model.Email,
+                            Password = model.Password
 
-                    }; 
-                    var token = await accountService.LogIn(userModel);
-                    return Ok(new { token });
+                        }; 
+                        var token = await accountService.LogIn(userModel);
+                        return Ok(new { token });
+                    }
+                    else return BadRequest(new { message = "Confirm your email" });
                 }
-                else return BadRequest(new { message = "Confirm your email" });
+                else return BadRequest(new { message = "Username or password is incorrect" });
             }
-            else return BadRequest(new { message = "Username or password is incorrect" });
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet]
@@ -145,6 +151,28 @@ namespace GoodDay.WebAPI.Controllers
                 user.Email,
                 user.Phone
             };
+        }
+
+        [HttpPut]
+        [Authorize]
+        public async Task<IActionResult> EditClientProfile([FromForm]UserViewModel model)
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            if (id == null)
+            {
+                return BadRequest("Id is not valid");
+            }
+            else
+            {
+                var userModel = new UserDTO
+                {
+                    Id = id,
+                    Name = model.Name,
+                    Surname = model.Surname,
+                };
+                await accountService.EditClientProfile(userModel);
+                return Ok();
+            }
         }
     }
 }
