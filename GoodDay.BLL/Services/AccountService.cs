@@ -30,14 +30,17 @@ namespace GoodDay.BLL.Services
         }
         public async Task<IdentityResult> Create(RegisterDTO model, string url)
         {
-            User user = new User
-            {
-                Name = model.Name,
-                Surname = model.Surname,
-                Email = model.Email,
-                UserName = model.Email,
-                Phone = model.Phone
-            };
+            //User user = new User
+            //{
+            //    Name = model.Name,
+            //    Surname = model.Surname,
+            //    Email = model.Email,
+            //    UserName = model.Email,
+            //    Phone = model.Phone
+            //};
+            Mapper.Initialize(cfg => cfg.CreateMap<RegisterDTO, User>()
+                    .ForMember("UserName", opt => opt.MapFrom(src => src.Email)));
+            User user = Mapper.Map<RegisterDTO, User>(model);
             IdentityResult result = await userManager.CreateAsync(user, model.Password);
             if (result.Succeeded)
             {
@@ -49,10 +52,10 @@ namespace GoodDay.BLL.Services
             return result;
         }
 
-        public async Task<object> LogIn(LoginDTO model)
+        public async Task<object> TokenGeneration(string email)
         {
             IdentityOptions _options = new IdentityOptions();
-            var user = await userManager.FindByEmailAsync(model.Email);
+            var user = await userManager.FindByEmailAsync(email);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new Claim[]
@@ -68,6 +71,10 @@ namespace GoodDay.BLL.Services
             var securityToken = tokenHandler.CreateToken(tokenDescriptor);
             var token = tokenHandler.WriteToken(securityToken);
             return token;
+        }
+        public async Task<object> LogIn(LoginDTO model)
+        {
+            return await TokenGeneration(model.Email);
         }
         public async Task<IdentityResult> ConfirmEmail(string userId, string code)
         {

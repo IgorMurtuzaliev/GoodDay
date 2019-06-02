@@ -29,7 +29,8 @@ namespace GoodDay.Models.Entities
 
         public virtual ICollection<Dialog> ResponsingForDialog { get; set; }
         public virtual ICollection<Dialog> RequestingToDialog { get; set; }
-        public virtual ICollection<UserContact> UserContacts{ get; set; }
+        public virtual ICollection<Contact> UsersContacts{ get; set; }
+        public virtual ICollection<Contact> UserInContact { get; set; }
         [NotMapped]
         public virtual File File { get; set; }
     }

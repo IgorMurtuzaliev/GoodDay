@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodDay.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190528143213_Initial")]
-    partial class Initial
+    [Migration("20190529112255_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,9 +26,21 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<bool>("Blocked");
 
+                    b.Property<string>("ClientId");
+
+                    b.Property<string>("ContactName");
+
                     b.Property<string>("FriendId");
 
+                    b.Property<string>("UserId");
+
+                    b.Property<string>("UserId1");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.HasIndex("UserId1");
 
                     b.ToTable("Contacts");
                 });
@@ -156,24 +168,6 @@ namespace GoodDay.DAL.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("GoodDay.Models.Entities.UserContact", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<int>("ContactId");
-
-                    b.Property<string>("UserId");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ContactId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserContacts");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -281,6 +275,17 @@ namespace GoodDay.DAL.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("GoodDay.Models.Entities.Contact", b =>
+                {
+                    b.HasOne("GoodDay.Models.Entities.User")
+                        .WithMany("UserInContact")
+                        .HasForeignKey("UserId");
+
+                    b.HasOne("GoodDay.Models.Entities.User")
+                        .WithMany("UsersContacts")
+                        .HasForeignKey("UserId1");
+                });
+
             modelBuilder.Entity("GoodDay.Models.Entities.Dialog", b =>
                 {
                     b.HasOne("GoodDay.Models.Entities.User")
@@ -298,18 +303,6 @@ namespace GoodDay.DAL.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("DialogId")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("GoodDay.Models.Entities.UserContact", b =>
-                {
-                    b.HasOne("GoodDay.Models.Entities.Contact")
-                        .WithMany("UserContacts")
-                        .HasForeignKey("ContactId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GoodDay.Models.Entities.User")
-                        .WithMany("UserContacts")
-                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
