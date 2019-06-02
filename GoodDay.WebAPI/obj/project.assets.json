@@ -13780,23 +13780,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {},
+    "C:\\Users\\ingwa\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.WebAPI\\GoodDay.WebAPI.csproj",
+      "projectUniqueName": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.WebAPI\\GoodDay.WebAPI.csproj",
       "projectName": "GoodDay.WebAPI",
-      "projectPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.WebAPI\\GoodDay.WebAPI.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.WebAPI\\obj\\",
+      "projectPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.WebAPI\\GoodDay.WebAPI.csproj",
+      "packagesPath": "C:\\Users\\ingwa\\.nuget\\packages\\",
+      "outputPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\ingwa\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -13809,14 +13809,14 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.BLL\\GoodDay.BLL.csproj": {
-              "projectPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.BLL\\GoodDay.BLL.csproj"
+            "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.BLL\\GoodDay.BLL.csproj": {
+              "projectPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.BLL\\GoodDay.BLL.csproj"
             },
-            "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.DAL\\GoodDay.DAL.csproj": {
-              "projectPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.DAL\\GoodDay.DAL.csproj"
+            "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.DAL\\GoodDay.DAL.csproj": {
+              "projectPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.DAL\\GoodDay.DAL.csproj"
             },
-            "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.Models\\GoodDay.Models.csproj": {
-              "projectPath": "C:\\Users\\User\\source\\repos\\GoodDay.WebAPI\\GoodDay.Models\\GoodDay.Models.csproj"
+            "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.Models\\GoodDay.Models.csproj": {
+              "projectPath": "c:\\Users\\ingwa\\source\\repos\\GoodDay\\GoodDay.Models\\GoodDay.Models.csproj"
             }
           }
         }
