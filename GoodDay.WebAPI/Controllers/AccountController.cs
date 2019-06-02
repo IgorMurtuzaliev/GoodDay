@@ -38,14 +38,14 @@ namespace GoodDay.WebAPI.Controllers
                     Name = model.Name,
                     Surname = model.Surname,
                     Email = model.Email,
-                    Phone = model.Phone,
+                    Phone =  "+375" + model.Phone,
                     Password = model.Password,
                     PasswordConfirm = model.PasswordConfirm
                 };
                 IdentityResult result = await accountService.Create(register, HttpContext.Request.Host.ToString());
                 if (result.Succeeded)
                 {
-                    return Ok(register);
+                    return Ok(result);
                 }
                 else
                 {
@@ -64,23 +64,46 @@ namespace GoodDay.WebAPI.Controllers
         {
             try
             {
-                var user = await userManager.FindByEmailAsync(model.Email);
-                if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+                if (model.Login.Contains("@"))
                 {
-                    if (user.EmailConfirmed == true)
+    var             user = await userManager.FindByEmailAsync(model.Login);
+                    if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
                     {
-                        var userModel = new LoginDTO
+                        if (user.EmailConfirmed == true)
                         {
-                            Email = model.Email,
-                            Password = model.Password
-
-                        }; 
-                        var token = await accountService.LogIn(userModel);
-                        return Ok(new { token });
+                            var userModel = new LoginDTO
+                            {
+                                Email = model.Login,
+                                Password = model.Password
+                            }; 
+                            var token = await accountService.LogIn(userModel);
+                            return Ok(new { token });
+                        }
+                        else return BadRequest("Confirm your email");
                     }
-                    else return BadRequest(new { message = "Confirm your email" });
+                    else return BadRequest("Email or password is incorrect");
                 }
-                else return BadRequest(new { message = "Username or password is incorrect" });
+                else
+                {
+                    User user = await accountService.FindByPhoneAsync(model.Login);
+                    if (user != null && await userManager.CheckPasswordAsync(user, model.Password))
+                    {
+                        if (user.EmailConfirmed == true)
+                        {
+                            var email = user.Email;
+                            var userModel = new LoginDTO
+                            {
+                                Email = email,
+                                Password = model.Password,
+                                Phone = model.Login
+                            };
+                            var token = await accountService.LogIn(userModel);
+                            return Ok(new { token });
+                        }
+                        else return BadRequest("Confirm your email" );
+                    }
+                    else return BadRequest("Phone or password is incorrect");
+                }
             }
             catch(Exception ex)
             {
@@ -149,13 +172,14 @@ namespace GoodDay.WebAPI.Controllers
                 user.Surname,
                 user.Name,
                 user.Email,
-                user.Phone
+                user.Phone,
+                user.UserName
             };
         }
 
         [HttpPut]
         [Authorize]
-        public async Task<IActionResult> EditClientProfile([FromForm]UserViewModel model)
+        public async Task<IActionResult> EditClientProfile(UserViewModel model)
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
             if (id == null)

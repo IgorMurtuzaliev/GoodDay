@@ -42,7 +42,8 @@ namespace GoodDay.BLL.Services
                 string code = await userManager.GenerateEmailConfirmationTokenAsync(user);
                 var encode = HttpUtility.UrlEncode(code);
                 var callbackurl = new StringBuilder("https://").AppendFormat(url).AppendFormat("/api/account/confirmemail").AppendFormat($"?userId={user.Id}&code={encode}");
-                await emailService.SendEmailAsync(user.Email, "Тема письма", $"Please confirm your account by <a href='{callbackurl}'>clicking here</a>.");
+                await emailService.SendEmailAsync(user.Email, "Тема письма", $"Please confirm your account by <a href='{callbackurl}'>clicking here</a>.asnfasnfoansfansofjnajsnfaojsnfajns)))asbasjubgaousbgasjubgasgbaosaubgbwegbeg/asfasfa/asf/a.asfa.sfa.sf..asf.asfasf as fasfas fa sa.f as as fas .as fa s.fas a.sf asfas fa.s a.sf a");
+                return result;
             }
             
             return result;
@@ -95,6 +96,13 @@ namespace GoodDay.BLL.Services
                 user.Surname = model.Surname;
                 await unitOfWork.Users.Edit(user);
             }
+        }
+        public async Task<User> FindByPhoneAsync(string phone)
+        {
+
+            User user = await unitOfWork.Users.FindByPhone(phone);
+            return user;
+            
         }
     }
 }

@@ -49,9 +49,13 @@ namespace GoodDay.DAL.Repositories
         {
             return dbContext.Users.Any(e => e.Id == id);
         }
-        public bool UserIsSignedUp(string email)
+        public bool PhoneExists(string phone)
         {
-            return dbContext.Users.Any(e => e.Email == email);
+            return dbContext.Users.Any(e => e.Phone == phone);
+        }
+        public async Task<User> FindByPhone(string phone)
+        {
+            return await dbContext.Users.SingleAsync(c => c.Phone == phone);
         }
     }
 }

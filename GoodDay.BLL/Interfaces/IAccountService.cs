@@ -17,5 +17,6 @@ namespace GoodDay.BLL.Interfaces
         Task<IdentityResult> ConfirmEmail(string userId, string code);
         Task<User> GetClientAccount(string id);
         Task EditClientProfile(UserDTO model);
+        Task<User> FindByPhoneAsync(string phone);
     }
 }
