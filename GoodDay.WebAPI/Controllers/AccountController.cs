@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using GoodDay.BLL.DTO;
 using GoodDay.BLL.Interfaces;
 using GoodDay.DAL.EF;
@@ -31,26 +32,21 @@ namespace GoodDay.WebAPI.Controllers
         [Route("register")]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, RegisterDTO>());
+            var register = Mapper.Map<RegisterViewModel, RegisterDTO>(model);
+            Mapper.Reset();
             try
-            {
-                var register = new RegisterDTO
+            {           
+                if (accountService.PhoneExists(register.Phone) == false)
                 {
-                    Name = model.Name,
-                    Surname = model.Surname,
-                    Email = model.Email,
-                    Phone =  "+375" + model.Phone,
-                    Password = model.Password,
-                    PasswordConfirm = model.PasswordConfirm
-                };
-                IdentityResult result = await accountService.Create(register, HttpContext.Request.Host.ToString());
-                if (result.Succeeded)
-                {
+                    IdentityResult result = await accountService.Create(register, HttpContext.Request.Host.ToString());
                     return Ok(result);
                 }
                 else
                 {
-                    return BadRequest(new { result });
+                    return BadRequest("The phone number is already taken");
                 }
+
             }
             catch(Exception ex) 
             {
@@ -121,7 +117,7 @@ namespace GoodDay.WebAPI.Controllers
             }
             IdentityResult result = await accountService.ConfirmEmail(userId, code);
             if (result.Succeeded)
-                return Ok("Welcome");
+                return Redirect("http://localhost:4200/login");
             else
                 return NotFound();
         }
@@ -163,18 +159,11 @@ namespace GoodDay.WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<object> GetClientAccount()
+        public async Task<IActionResult> GetClientProfile()
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
             var user = await userManager.FindByIdAsync(id);
-            return new
-            {
-                user.Surname,
-                user.Name,
-                user.Email,
-                user.Phone,
-                user.UserName
-            };
+            return Ok(user);
         }
 
         [HttpPut]
@@ -197,6 +186,39 @@ namespace GoodDay.WebAPI.Controllers
                 await accountService.EditClientProfile(userModel);
                 return Ok();
             }
+        }
+        [HttpPut]
+        [Authorize]
+        [Route("editAvatar")]
+        public async Task<IActionResult> EditProfileImage([FromForm]UserViewModel model)
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            const int lengthMax = 2097152;
+            const string correctType = "image/jpeg";
+            var type = model.Avatar.ContentType;
+            var length = model.Avatar.Length;
+            if (type != correctType)
+            {
+                ModelState.AddModelError("Uploads", "Error, allowed image resolution jpg / jpeg");
+                return BadRequest(ModelState);
+            }
+
+            if (length>lengthMax)
+            {
+                ModelState.AddModelError("Uploads", "Error, image size should not be more than 2 MB");
+                return BadRequest(ModelState);
+            }
+            else
+            {
+                var userModel = new UserDTO
+                {
+                    Id = id,
+                    CurrentAvatar = model.CurrentAvatar,
+                    Avatar = model.Avatar
+                };
+                await accountService.EditProfileImage(userModel);
+                return Ok();
+            }       
         }
     }
 }

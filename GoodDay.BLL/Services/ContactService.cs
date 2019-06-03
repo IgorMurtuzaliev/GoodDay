@@ -3,6 +3,7 @@ using GoodDay.BLL.Interfaces;
 using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,26 +28,46 @@ namespace GoodDay.BLL.Services
                 Blocked = false,
                 ContactName = friend.Email,
             };
-            await unitOfWork.Contacts.Add(contact);            
-            return contact;
+            try
+            {
+                await unitOfWork.Contacts.Add(contact);            
+                return contact;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<Contact> ChangeContactName(ContactDTO model)
         {
             Contact contact = await unitOfWork.Contacts.Get(model.Id);
-            if( contact!= null)
+            try
             {
-                contact.ContactName = model.ContactName;
+               if( contact!= null)
+                {
+                    contact.ContactName = model.ContactName;
+                }
+                await unitOfWork.Contacts.Edit(contact);
+                await unitOfWork.Contacts.Save();
+                return contact;
             }
-            await unitOfWork.Contacts.Edit(contact);
-            await unitOfWork.Contacts.Save();
-            return contact;
+           catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task DeleteContact(int? id)
         {
-           await unitOfWork.Contacts.Delete(id);
-
+            try
+            {
+                await unitOfWork.Contacts.Delete(id);
+            }
+           catch(Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<Contact> GetContact(int? id)
@@ -57,8 +78,15 @@ namespace GoodDay.BLL.Services
         public async Task<IEnumerable<Contact>> GetContacts(string id)
         {
             User user = await userManager.FindByIdAsync(id);
-            var contacts = user.Contacts;
-            return contacts;
+            try
+            {
+                var contacts = user.Contacts;
+                return contacts;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
