@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace GoodDay.Models.Entities
 {
@@ -11,7 +9,8 @@ namespace GoodDay.Models.Entities
     {
         public User()
         {
-
+            Dialogs = new List<Dialog>();
+            Contacts = new List<Contact>();
         }
 
         [Required(ErrorMessage = "Input your name")]
@@ -27,10 +26,9 @@ namespace GoodDay.Models.Entities
 
         public int? FileId { get; set; }
 
-        public virtual ICollection<Dialog> ResponsingForDialog { get; set; }
-        public virtual ICollection<Dialog> RequestingToDialog { get; set; }
-        public virtual ICollection<Contact> UsersContacts{ get; set; }
-        public virtual ICollection<Contact> UserInContact { get; set; }
+        public virtual ICollection<Dialog> Dialogs { get; set; }
+        public virtual ICollection<Contact> Contacts{ get; set; }
+
         [NotMapped]
         public virtual File File { get; set; }
     }

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodDay.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190529112255_initial")]
-    partial class initial
+    [Migration("20190530102953_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,21 +26,15 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<bool>("Blocked");
 
-                    b.Property<string>("ClientId");
-
                     b.Property<string>("ContactName");
 
-                    b.Property<string>("FriendId");
+                    b.Property<string>("UserFriendId");
 
                     b.Property<string>("UserId");
-
-                    b.Property<string>("UserId1");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Contacts");
                 });
@@ -56,13 +50,9 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<string>("UserId");
 
-                    b.Property<string>("UserId1");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Dialogs");
                 });
@@ -278,23 +268,15 @@ namespace GoodDay.DAL.Migrations
             modelBuilder.Entity("GoodDay.Models.Entities.Contact", b =>
                 {
                     b.HasOne("GoodDay.Models.Entities.User")
-                        .WithMany("UserInContact")
+                        .WithMany("Contacts")
                         .HasForeignKey("UserId");
-
-                    b.HasOne("GoodDay.Models.Entities.User")
-                        .WithMany("UsersContacts")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("GoodDay.Models.Entities.Dialog", b =>
                 {
                     b.HasOne("GoodDay.Models.Entities.User")
-                        .WithMany("RequestingToDialog")
+                        .WithMany("Dialogs")
                         .HasForeignKey("UserId");
-
-                    b.HasOne("GoodDay.Models.Entities.User")
-                        .WithMany("ResponsingForDialog")
-                        .HasForeignKey("UserId1");
                 });
 
             modelBuilder.Entity("GoodDay.Models.Entities.Message", b =>

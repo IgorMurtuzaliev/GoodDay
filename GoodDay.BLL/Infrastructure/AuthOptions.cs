@@ -10,7 +10,7 @@ namespace GoodDay.BLL.Infrastructure
         public const string ISSUER = "Issuer";
         public const string AUDIENCE = "Audience";
         const string KEY = "mysupersecret_secretkey!123";
-        public const int LIFETIME = 15;
+        public const int LIFETIME = 1500;
         public static SymmetricSecurityKey GetSymmetricSecurityKey()
         {
             return new SymmetricSecurityKey(Encoding.ASCII.GetBytes(KEY));

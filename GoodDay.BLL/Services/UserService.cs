@@ -1,0 +1,27 @@
+﻿using GoodDay.BLL.Interfaces;
+using GoodDay.DAL.Interfaces;
+using GoodDay.Models.Entities;
+using System.Threading.Tasks;
+
+namespace GoodDay.BLL.Services
+{
+    public class UserService : IUserService
+    {
+        private IUnitOfWork unitOfWork;
+        public UserService( IUnitOfWork _unitOfWork)
+        {
+            unitOfWork = _unitOfWork;
+        }
+
+        public async Task<User> ShowUsersProfile(string id)
+        {
+            User user = await unitOfWork.Users.Get(id);
+            return user;
+        }
+        
+        public bool UserExists(string id)
+        {
+            return unitOfWork.Users.UserExists(id);
+        }
+    }
+}

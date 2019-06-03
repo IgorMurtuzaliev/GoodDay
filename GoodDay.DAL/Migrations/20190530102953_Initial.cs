@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GoodDay.DAL.Migrations
 {
-    public partial class initial : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -181,10 +181,8 @@ namespace GoodDay.DAL.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     Blocked = table.Column<bool>(nullable: false),
                     ContactName = table.Column<string>(nullable: true),
-                    ClientId = table.Column<string>(nullable: true),
-                    FriendId = table.Column<string>(nullable: true),
                     UserId = table.Column<string>(nullable: true),
-                    UserId1 = table.Column<string>(nullable: true)
+                    UserFriendId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -192,12 +190,6 @@ namespace GoodDay.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_Contacts_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Contacts_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -211,8 +203,7 @@ namespace GoodDay.DAL.Migrations
                         .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
                     SenderId = table.Column<string>(nullable: true),
                     ReceiverId = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: true),
-                    UserId1 = table.Column<string>(nullable: true)
+                    UserId = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -220,12 +211,6 @@ namespace GoodDay.DAL.Migrations
                     table.ForeignKey(
                         name: "FK_Dialogs_AspNetUsers_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Dialogs_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -297,19 +282,9 @@ namespace GoodDay.DAL.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Contacts_UserId1",
-                table: "Contacts",
-                column: "UserId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Dialogs_UserId",
                 table: "Dialogs",
                 column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Dialogs_UserId1",
-                table: "Dialogs",
-                column: "UserId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Messages_DialogId",

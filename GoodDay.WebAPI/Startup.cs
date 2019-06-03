@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using GoodDay.BLL.Infrastructure;
 using GoodDay.BLL.Interfaces;
 using GoodDay.BLL.Services;
@@ -9,24 +6,20 @@ using GoodDay.DAL.EF;
 using GoodDay.DAL.Interfaces;
 using GoodDay.DAL.Repositories;
 using GoodDay.Models.Entities;
-using GoodDay.WebAPI.Controllers;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GoodDay.WebAPI
-{ 
+{
     public class Startup
     {
         public Startup(IConfiguration configuration, IHostingEnvironment env)
@@ -61,11 +54,13 @@ namespace GoodDay.WebAPI
                                         .AllowAnyMethod();
                 });
             });
-            //services.AddTransient<IUserService, UserService>();
-            //services.AddTransient<IRepository<User>, UserRepository>();         
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IAccountService, AccountService>();
-            services.AddTransient<IEmailSender, EmailService>();          
-           // services.AddTransient<IFileManager, FileManager>();
+            services.AddTransient<IEmailSender, EmailService>();
+            services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IContactService, ContactService>();
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -96,8 +91,6 @@ namespace GoodDay.WebAPI
                            IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
                            ValidateIssuerSigningKey = true,
                            ClockSkew = TimeSpan.Zero
-
-
                        };
 
                    })

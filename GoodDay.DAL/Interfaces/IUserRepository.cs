@@ -13,5 +13,8 @@ namespace GoodDay.DAL.Interfaces
         Task Delete(string id);
         Task<User> Get(string id);     
         Task Save();
+        bool UserExists(string id);
+        bool PhoneExists(string phone);
+        Task<User> FindByPhone(string phone);
     }
 }
