@@ -18,5 +18,7 @@ namespace GoodDay.BLL.Interfaces
         Task<User> GetClientAccount(string id);
         Task EditClientProfile(UserDTO model);
         Task<User> FindByPhoneAsync(string phone);
+        Task EditProfileImage(UserDTO model);
+        bool PhoneExists(string phone);
     }
 }

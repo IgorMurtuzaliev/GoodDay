@@ -1,6 +1,7 @@
 ﻿using MailKit.Net.Smtp;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using MimeKit;
+using System;
 using System.Threading.Tasks;
 
 namespace GoodDay.BLL.Services
@@ -17,12 +18,19 @@ namespace GoodDay.BLL.Services
             {
                 Text = htmlmessage
             };
-            using (var client = new SmtpClient())
+            try
             {
-                await client.ConnectAsync("smtp.yandex.ru", 25, false);
-                await client.AuthenticateAsync("ingwarrior.99@yandex.ru", "038161401IngWar9991");
-                await client.SendAsync(emailMessage);
-                await client.DisconnectAsync(true);
+                using (var client = new SmtpClient())
+                {
+                    await client.ConnectAsync("smtp.yandex.ru", 25, false);
+                    await client.AuthenticateAsync("ingwarrior.99@yandex.ru", "038161401IngWar9991");
+                    await client.SendAsync(emailMessage);
+                    await client.DisconnectAsync(true);
+                }
+            }
+            catch(Exception ex)
+            {
+                throw ex;
             }
         }
     }

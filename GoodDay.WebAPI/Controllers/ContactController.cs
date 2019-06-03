@@ -40,7 +40,7 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
-                    var result = await contactService.AddContact(id, friendId);
+                    var result = await contactService.AddContact(id, friendId);                   
                     return Ok(result);
                 }
             }
@@ -66,6 +66,7 @@ namespace GoodDay.WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("contacts")]
         public async Task<IActionResult> GetContacts()
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
