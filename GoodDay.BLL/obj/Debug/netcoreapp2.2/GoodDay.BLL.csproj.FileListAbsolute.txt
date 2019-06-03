@@ -48,3 +48,9 @@ C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Mi
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Core.xml
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Authorization.dll
 C:\Users\User\source\repos\GoodDay.WebAPI\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Authorization.xml
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Authorization.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Abstractions.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Core.dll
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Authorization.xml
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Abstractions.xml
+C:\Users\ingwa\source\repos\GoodDay\GoodDay.BLL\bin\Debug\netcoreapp2.2\Microsoft.AspNetCore.Mvc.Core.xml
