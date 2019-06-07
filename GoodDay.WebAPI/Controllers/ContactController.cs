@@ -1,9 +1,9 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
-using GoodDay.BLL.DTO;
 using GoodDay.BLL.Interfaces;
+using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
-using GoodDay.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,11 +22,13 @@ namespace GoodDay.WebAPI.Controllers
             userService = _userService;
         }
 
-        [HttpPost]
+        [HttpGet]
         [Authorize]
-        public async Task<IActionResult> AddContact([FromForm]string friendId)
+        [Route("add/{friendId}")]
+        public async Task<IActionResult> AddContact(string friendId)
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
+
             if(friendId == null)
             {
                 return BadRequest("Choose the user");
@@ -46,9 +48,9 @@ namespace GoodDay.WebAPI.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{id}")]
         [Authorize]
-        public async Task<IActionResult> DeleteContact(int? id)
+        public async Task<IActionResult> DeleteContact(int id)
         {
             var userId = User.Claims.First(c => c.Type == "Id").Value;
             Contact contact = await contactService.GetContact(id);
@@ -67,10 +69,15 @@ namespace GoodDay.WebAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("contacts")]
-        public async Task<IActionResult> GetContacts()
+        public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContacts()
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
-            var result = await contactService.GetContacts(id);
+            var result = new List<ContactViewModel>();
+            var contacts = await contactService.GetContacts(id);
+            foreach(var item in contacts)
+            {
+                result.Add(new ContactViewModel(item));
+            }
             return Ok(result);
         }
 
@@ -92,12 +99,7 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
-                    var contactModel = new ContactDTO
-                    {
-                        Id = model.Id,
-                        ContactName = model.ContactName
-                    };
-                    var result = await contactService.ChangeContactName(contactModel);
+                    var result = await contactService.ChangeContactName(model);
                     return Ok(result);
                 }
                

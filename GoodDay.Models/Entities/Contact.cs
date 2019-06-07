@@ -7,12 +7,16 @@ namespace GoodDay.Models.Entities
         public int Id { get; set; }        
         public bool Blocked { get; set; }
         public string ContactName { get; set; }
-        public string UserId { get; set; }    
-        public string UserFriendId { get; set; }
 
-        [NotMapped]
+        [ForeignKey("User")]
+        public string UserId { get; set; }   
+        [ForeignKey("Friend")]
+        public string FriendId { get; set; }
+
+        [NotMapped]       
         public virtual User User { get; set; }
+        [NotMapped]    
+        public virtual User Friend { get; set; }
 
-        
     }
 }

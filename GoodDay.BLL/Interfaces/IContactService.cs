@@ -1,4 +1,5 @@
-﻿using GoodDay.BLL.DTO;
+﻿
+using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -11,6 +12,6 @@ namespace GoodDay.BLL.Interfaces
         Task DeleteContact(int? id);
         Task<Contact> GetContact(int? id);
         Task<IEnumerable<Contact>> GetContacts(string id);
-        Task<Contact> ChangeContactName(ContactDTO model);
+        Task<Contact> ChangeContactName(ContactViewModel model);
     }
 }

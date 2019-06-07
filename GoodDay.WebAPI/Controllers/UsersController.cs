@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using GoodDay.BLL.DTO;
 using GoodDay.BLL.Interfaces;
+using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
-using GoodDay.WebAPI.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -20,17 +19,17 @@ namespace GoodDay.WebAPI.Controllers
         private IUserService userService;
         private UserManager<User> userManager;
 
-        public UsersController(IUserService _userService, UserManager<User> userManager)
+        public UsersController(IUserService _userService, UserManager<User> _userManager)
         {
             userService = _userService;
+            userManager = _userManager;
         }
       
 
-        [Route("{id}")]
-        [HttpGet]
+        [HttpGet("{id}")]
         [Authorize]
         public async Task<IActionResult> GetUsersProfile(string id)
-        {
+        { 
             if(id == null)
             {
                 return BadRequest(new { message = "Id is not valid" });
@@ -43,8 +42,9 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
-                    User user = await userService.ShowUsersProfile(id);
-                    return Ok(user);
+                    var user = await userManager.FindByIdAsync(id);
+                    var profile = new UserViewModel(user);
+                    return Ok(profile);;
                 }
             }
         }

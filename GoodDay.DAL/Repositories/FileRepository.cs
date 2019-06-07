@@ -26,6 +26,7 @@ namespace GoodDay.DAL.Repositories
             File file = await dbContext.Files.FindAsync(id);
             if (file != null)
                 dbContext.Files.Remove(file);
+            await Save();
         }
 
         public async Task Save()
