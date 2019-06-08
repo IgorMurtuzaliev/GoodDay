@@ -1,10 +1,12 @@
 ﻿using GoodDay.BLL.Interfaces;
 using GoodDay.BLL.ViewModels;
+using GoodDay.DAL.EF;
 using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GoodDay.BLL.Services
@@ -13,10 +15,12 @@ namespace GoodDay.BLL.Services
     {
         private UserManager<User> userManager;
         private IUnitOfWork unitOfWork;
-        public ContactService(UserManager<User> _userManager, IUnitOfWork _unitOfWork)
+        private ApplicationDbContext dbContext;
+        public ContactService(UserManager<User> _userManager, IUnitOfWork _unitOfWork, ApplicationDbContext _dbContext)
         {
             userManager = _userManager;
             unitOfWork = _unitOfWork;
+            dbContext = _dbContext;
         }
         public async Task<Contact> AddContact(string id, string friendId)
         {
@@ -87,6 +91,14 @@ namespace GoodDay.BLL.Services
             {
                 throw ex;
             }
+        }
+
+        public async Task<bool> UserHasContact(string friendId, string id)
+        {
+            User user = await userManager.FindByIdAsync(id);
+            var userHasContact = dbContext.Contacts.Where(c => c.FriendId == friendId && c.UserId == id).Count();
+            if (userHasContact == 0) return true;
+            else return false;
         }
     }
 }

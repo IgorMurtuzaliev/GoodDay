@@ -13,5 +13,6 @@ namespace GoodDay.BLL.Interfaces
         Task<Contact> GetContact(int? id);
         Task<IEnumerable<Contact>> GetContacts(string id);
         Task<Contact> ChangeContactName(ContactViewModel model);
+        Task<bool> UserHasContact(string friendId, string id);
     }
 }

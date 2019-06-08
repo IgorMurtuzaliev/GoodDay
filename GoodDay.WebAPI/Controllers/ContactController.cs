@@ -42,6 +42,11 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
+                    bool userHasContact = await contactService.UserHasContact(friendId, id);
+                    if (!userHasContact)
+                    {
+                        return BadRequest("You have contact with this user");
+                    }
                     var result = await contactService.AddContact(id, friendId);                   
                     return Ok(result);
                 }
@@ -106,5 +111,23 @@ namespace GoodDay.WebAPI.Controllers
             }           
         }
 
+        [HttpGet]
+        [Authorize]
+        [Route("icontact/{id}")]
+        public async Task<IActionResult> GetContactDetails(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id is not valid");
+            }
+            else
+            {
+                Contact contact = await contactService.GetContact(id);
+                var contactVM = new ContactViewModel(contact);
+                return Ok(contactVM);
+            }
+        }
+
+        
     }
 }
