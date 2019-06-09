@@ -49,7 +49,7 @@ namespace GoodDay.WebAPI
                 builder =>
                 {
                     builder.WithOrigins("http://localhost:4200")
-
+                    .AllowCredentials()
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();
                 });
@@ -69,7 +69,7 @@ namespace GoodDay.WebAPI
 
             });
             services.AddHttpContextAccessor();
-
+            services.AddSignalR();
 
             services.AddAuthentication(options =>
             {
@@ -125,6 +125,7 @@ namespace GoodDay.WebAPI
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
+            app.UseSignalR(routes => routes.MapHub<ChatHub>("/echo"));
             app.UseAuthentication();
             app.UseMvc(routes =>
             {

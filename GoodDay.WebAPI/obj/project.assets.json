@@ -5134,6 +5134,7 @@
           "GoodDay.DAL": "1.0.0",
           "GoodDay.Models": "1.0.0",
           "MailKit": "2.1.5.1",
+          "Microsoft.AspNetCore.SignalR": "1.1.0",
           "MimeKit": "2.1.5.1",
           "MySql.Data": "8.0.16",
           "Pomelo.EntityFrameworkCore.MySql": "2.2.0"
@@ -5152,6 +5153,7 @@
           "AutoMapper": "8.1.0",
           "GoodDay.Models": "1.0.0",
           "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "2.2.0",
+          "Microsoft.AspNetCore.SignalR": "1.1.0",
           "Microsoft.EntityFrameworkCore": "2.2.4",
           "Microsoft.EntityFrameworkCore.Proxies": "2.2.4",
           "MySql.Data": "8.0.16",
@@ -5169,6 +5171,7 @@
         "framework": ".NETCoreApp,Version=v2.2",
         "dependencies": {
           "AutoMapper": "8.1.0",
+          "Microsoft.AspNetCore.SignalR": "1.1.0",
           "MySql.Data": "8.0.16",
           "Pomelo.EntityFrameworkCore.MySql": "2.2.0"
         },
@@ -14112,6 +14115,7 @@
       "GoodDay.Models >= 1.0.0",
       "Microsoft.AspNetCore.App >= 2.2.0",
       "Microsoft.AspNetCore.Razor.Design >= 2.2.0",
+      "Microsoft.AspNetCore.SignalR >= 1.1.0",
       "Microsoft.NETCore.App >= 2.2.0",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 2.2.3",
       "MySql.Data >= 8.0.16",
@@ -14183,6 +14187,10 @@
             "suppressParent": "All",
             "target": "Package",
             "version": "[2.2.0, )"
+          },
+          "Microsoft.AspNetCore.SignalR": {
+            "target": "Package",
+            "version": "[1.1.0, )"
           },
           "Microsoft.NETCore.App": {
             "suppressParent": "All",
