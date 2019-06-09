@@ -1,12 +1,14 @@
 ﻿using AutoMapper;
-using GoodDay.BLL.DTO;
 using GoodDay.BLL.Infrastructure;
 using GoodDay.BLL.Interfaces;
+using GoodDay.BLL.ViewModels;
 using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -35,11 +37,12 @@ namespace GoodDay.BLL.Services
             unitOfWork = _unitOfWork;
             appEnvironment = _appEnvironment;
         }
-        public async Task<IdentityResult> Create(RegisterDTO model, string url)
+        public async Task<IdentityResult> Create(RegisterViewModel model, string url)
         {
-            Mapper.Initialize(cfg => cfg.CreateMap<RegisterDTO, User>()
-                    .ForMember("UserName", opt => opt.MapFrom(src => src.Email)));
-            User user = Mapper.Map<RegisterDTO, User>(model);
+            Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, User>()
+                    .ForMember("UserName", opt => opt.MapFrom(src => src.Email))
+                    .ForMember("Phone", opt => opt.MapFrom(src => "+375"+ src.Phone)));
+            User user = Mapper.Map<RegisterViewModel, User>(model);
             Mapper.Reset();
             try
             {
@@ -81,9 +84,9 @@ namespace GoodDay.BLL.Services
             var token = tokenHandler.WriteToken(securityToken);
             return token;
         }
-        public async Task<object> LogIn(LoginDTO model)
+        public async Task<object> LogIn(string email)
         {
-            return await TokenGeneration(model.Email);
+            return await TokenGeneration(email);
         }
         public async Task<IdentityResult> ConfirmEmail(string userId, string code)
         {
@@ -92,14 +95,8 @@ namespace GoodDay.BLL.Services
             return success;
         }
 
-    
-        public async Task<User> GetClientAccount(string id)
-        {
-            User user = await userManager.FindByIdAsync(id);
-            return user;
-        }
 
-        public async Task EditClientProfile(UserDTO model)
+        public async Task EditClientProfile(EditUserInfoViewModel model)
         {
             User user = await userManager.FindByIdAsync(model.Id);
             try
@@ -125,23 +122,28 @@ namespace GoodDay.BLL.Services
         {
             return unitOfWork.Users.PhoneExists(phone);
         }
-        public async Task EditProfileImage(UserDTO model)
+        public async Task EditProfileImage(string id, IFormFile file)
         {
-            User user = await userManager.FindByIdAsync(model.Id);
+            User user = await userManager.FindByIdAsync(id);
             try
             {
-                string path = appEnvironment.WebRootPath + "\\Avatar\\" + user.UserName + "\\" + model.Avatar.FileName;
-                string directory = Path.Combine(appEnvironment.WebRootPath + "\\Avatar\\" + user.UserName);
+                string path = "\\Avatar\\" + user.UserName + "\\" + file.FileName;
+                string directory = Path.Combine(appEnvironment.WebRootPath + "\\Avatar\\" + user.UserName + "\\");
                
                 if (!Directory.Exists(directory))
                 {
                     Directory.CreateDirectory(directory);
                 }
-                using (var fileStream = new FileStream(path, FileMode.Create))
+                using (var fileStream = new FileStream(directory + file.FileName, FileMode.Create))
                 {
-                    await model.Avatar.CopyToAsync(fileStream);
+                    await file.CopyToAsync(fileStream);
                 }
-                File newfile = new File { Name = model.Avatar.FileName, Path = path, UserId = user.Id };
+
+                File newfile = new File { Name = file.FileName, Path = path, UserId = user.Id };
+                await unitOfWork.Files.Delete(user.FileId);
+                user.File = null;
+                user.FileId = null;
+                await unitOfWork.Users.Edit(user);
                 await unitOfWork.Files.Add(newfile);
                 user.FileId = newfile.Id;
                 await unitOfWork.Users.Edit(user);

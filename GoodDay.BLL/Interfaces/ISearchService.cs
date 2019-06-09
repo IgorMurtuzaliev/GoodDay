@@ -6,6 +6,6 @@ namespace GoodDay.BLL.Interfaces
 {
     public interface ISearchService
     {
-        Task<IEnumerable<User>> Search (string search);
+        Task<IEnumerable<User>> Search (string id, string search);
     }
 }

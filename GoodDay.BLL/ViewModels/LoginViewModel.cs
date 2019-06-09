@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GoodDay.WebAPI.ViewModels
+namespace GoodDay.BLL.ViewModels
 {
     public class LoginViewModel
     {

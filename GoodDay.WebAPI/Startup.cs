@@ -48,7 +48,7 @@ namespace GoodDay.WebAPI
                 options.AddPolicy("MyAllowSpecificOrigins",
                 builder =>
                 {
-                    builder.WithOrigins("http://localhost:4200", "https://accounts.google.com")
+                    builder.WithOrigins("http://localhost:4200")
 
                                         .AllowAnyHeader()
                                         .AllowAnyMethod();

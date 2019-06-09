@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GoodDay.BLL.DTO
+namespace GoodDay.BLL.ViewModels
 {
-    public class RegisterDTO
+    public class RegisterViewModel
     {
         [Required(ErrorMessage = "Input your name")]
         public string Name { get; set; }
@@ -13,6 +13,7 @@ namespace GoodDay.BLL.DTO
         [Required(ErrorMessage = "Input your email")]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "Input your phone number")]
         public string Phone { get; set; }
 
         [Required(ErrorMessage = "Input your password"), MinLength(6)]

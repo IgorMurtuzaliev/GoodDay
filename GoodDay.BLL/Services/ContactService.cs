@@ -1,10 +1,12 @@
-﻿using GoodDay.BLL.DTO;
-using GoodDay.BLL.Interfaces;
+﻿using GoodDay.BLL.Interfaces;
+using GoodDay.BLL.ViewModels;
+using GoodDay.DAL.EF;
 using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GoodDay.BLL.Services
@@ -13,17 +15,19 @@ namespace GoodDay.BLL.Services
     {
         private UserManager<User> userManager;
         private IUnitOfWork unitOfWork;
-        public ContactService(UserManager<User> _userManager, IUnitOfWork _unitOfWork)
+        private ApplicationDbContext dbContext;
+        public ContactService(UserManager<User> _userManager, IUnitOfWork _unitOfWork, ApplicationDbContext _dbContext)
         {
             userManager = _userManager;
             unitOfWork = _unitOfWork;
+            dbContext = _dbContext;
         }
         public async Task<Contact> AddContact(string id, string friendId)
         {
             User friend = await userManager.FindByIdAsync(friendId);
             var contact = new Contact
             {
-                UserFriendId = friendId,
+                FriendId = friendId,
                 UserId = id,
                 Blocked = false,
                 ContactName = friend.Email,
@@ -39,7 +43,7 @@ namespace GoodDay.BLL.Services
             }
         }
 
-        public async Task<Contact> ChangeContactName(ContactDTO model)
+        public async Task<Contact> ChangeContactName(ContactViewModel model)
         {
             Contact contact = await unitOfWork.Contacts.Get(model.Id);
             try
@@ -80,13 +84,21 @@ namespace GoodDay.BLL.Services
             User user = await userManager.FindByIdAsync(id);
             try
             {
-                var contacts = user.Contacts;
+                var contacts = user.UsersContacts;
                 return contacts;
             }
             catch(Exception ex)
             {
                 throw ex;
             }
+        }
+
+        public async Task<bool> UserHasContact(string friendId, string id)
+        {
+            User user = await userManager.FindByIdAsync(id);
+            var userHasContact = dbContext.Contacts.Where(c => c.FriendId == friendId && c.UserId == id).Count();
+            if (userHasContact == 0) return true;
+            else return false;
         }
     }
 }

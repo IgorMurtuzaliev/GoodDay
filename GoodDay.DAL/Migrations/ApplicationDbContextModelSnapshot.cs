@@ -26,11 +26,13 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<string>("ContactName");
 
-                    b.Property<string>("UserFriendId");
+                    b.Property<string>("FriendId");
 
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FriendId");
 
                     b.HasIndex("UserId");
 
@@ -69,6 +71,9 @@ namespace GoodDay.DAL.Migrations
                     b.Property<string>("UserId");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Files");
                 });
@@ -265,8 +270,12 @@ namespace GoodDay.DAL.Migrations
 
             modelBuilder.Entity("GoodDay.Models.Entities.Contact", b =>
                 {
-                    b.HasOne("GoodDay.Models.Entities.User")
-                        .WithMany("Contacts")
+                    b.HasOne("GoodDay.Models.Entities.User", "Friend")
+                        .WithMany("UserInContacts")
+                        .HasForeignKey("FriendId");
+
+                    b.HasOne("GoodDay.Models.Entities.User", "User")
+                        .WithMany("UsersContacts")
                         .HasForeignKey("UserId");
                 });
 
@@ -275,6 +284,13 @@ namespace GoodDay.DAL.Migrations
                     b.HasOne("GoodDay.Models.Entities.User")
                         .WithMany("Dialogs")
                         .HasForeignKey("UserId");
+                });
+
+            modelBuilder.Entity("GoodDay.Models.Entities.File", b =>
+                {
+                    b.HasOne("GoodDay.Models.Entities.User", "User")
+                        .WithOne("File")
+                        .HasForeignKey("GoodDay.Models.Entities.File", "UserId");
                 });
 
             modelBuilder.Entity("GoodDay.Models.Entities.Message", b =>
