@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Threading.Tasks;
 using GoodDay.BLL.Infrastructure;
 using GoodDay.BLL.Interfaces;
@@ -69,8 +71,11 @@ namespace GoodDay.WebAPI
                 .AddDefaultTokenProviders();
           
             services.AddHttpContextAccessor();
-            
 
+            var jwtSecurityTokenHandler = new JwtSecurityTokenHandler
+            {
+                InboundClaimTypeMap = new Dictionary<string, string>()
+            };
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -79,6 +84,7 @@ namespace GoodDay.WebAPI
             })
                    .AddJwtBearer("Bearer", options =>
                    {
+                       options.SecurityTokenValidators.Add(jwtSecurityTokenHandler);
                        options.RequireHttpsMetadata = false;
                        options.SaveToken = false;
                        options.TokenValidationParameters = new TokenValidationParameters
@@ -96,7 +102,7 @@ namespace GoodDay.WebAPI
                        {
                            OnMessageReceived = context =>
                            {
-                               if ((context.Request.Path.Value.StartsWith("/chat")) && context.Request.Query.TryGetValue("token", out StringValues token)
+                               if ((context.Request.Path.Value.StartsWith("/loo")) && context.Request.Query.TryGetValue("token", out StringValues token)
                                )
                                {
                                    context.Token = token;
@@ -151,13 +157,15 @@ namespace GoodDay.WebAPI
             app.UseStaticFiles();
             app.UseCookiePolicy();           
             app.UseAuthentication();
-            app.UseSignalR(routes => routes.MapHub<ChatHub>("/echo"));
+           
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseSignalR(routes => routes.MapHub<ChatHub>("/echo"));
         }
     }
 }

@@ -86,9 +86,9 @@ namespace GoodDay.WebAPI.Controllers
             return Ok(result);
         }
 
-        [HttpPut]
+        [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> ChangeContactName( int? id, [FromForm]ContactViewModel model)
+        public async Task<IActionResult> ChangeContactName( int? id, EditContactViewModel model)
         {          
             if (id == null)
             {
@@ -104,7 +104,7 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
-                    var result = await contactService.ChangeContactName(model);
+                    var result = await contactService.ChangeContactName(contact, model);
                     return Ok(result);
                 }
                

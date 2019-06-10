@@ -28,12 +28,14 @@ namespace GoodDay.Models.Entities
 
         public int? FileId { get; set; }
 
-
+        [JsonIgnore]
         public virtual ICollection<Dialog> Dialogs { get; set; }
-
+        [JsonIgnore]
         public virtual ICollection<Contact> UsersContacts { get; set; }
+        [JsonIgnore]
         public virtual ICollection<Contact> UserInContacts { get; set; }
         [NotMapped]
+        [JsonIgnore]
         public virtual File File { get; set; }
     }
 }

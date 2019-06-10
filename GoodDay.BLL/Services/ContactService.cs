@@ -43,9 +43,8 @@ namespace GoodDay.BLL.Services
             }
         }
 
-        public async Task<Contact> ChangeContactName(ContactViewModel model)
+        public async Task<Contact> ChangeContactName(Contact contact, EditContactViewModel model)
         {
-            Contact contact = await unitOfWork.Contacts.Get(model.Id);
             try
             {
                if( contact!= null)

@@ -12,7 +12,7 @@ namespace GoodDay.BLL.Interfaces
         Task DeleteContact(int? id);
         Task<Contact> GetContact(int? id);
         Task<IEnumerable<Contact>> GetContacts(string id);
-        Task<Contact> ChangeContactName(ContactViewModel model);
+        Task<Contact> ChangeContactName(Contact contact, EditContactViewModel model);
         Task<bool> UserHasContact(string friendId, string id);
     }
 }
