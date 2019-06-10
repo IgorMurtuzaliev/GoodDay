@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.SignalR;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,9 +10,10 @@ namespace GoodDay.WebAPI
 {
     public class ChatHub: Hub
     {
-        public void Echo(string message)
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task Echo(string message)
         {
-            Clients.All.SendAsync("Send", message);
+            await Clients.All.SendAsync("Send", message);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using GoodDay.BLL.Infrastructure;
 using GoodDay.BLL.Interfaces;
 using GoodDay.BLL.Services;
@@ -16,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 
 namespace GoodDay.WebAPI
@@ -51,7 +53,8 @@ namespace GoodDay.WebAPI
                     builder.WithOrigins("http://localhost:4200")
                     .AllowCredentials()
                                         .AllowAnyHeader()
-                                        .AllowAnyMethod();
+                                        .AllowAnyMethod()
+                    .SetIsOriginAllowed((host) => true);
                 });
             });
             services.AddTransient<IUserService, UserService>();
@@ -64,12 +67,9 @@ namespace GoodDay.WebAPI
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
-            services.AddMvc(options =>
-            {
-
-            });
+          
             services.AddHttpContextAccessor();
-            services.AddSignalR();
+            
 
             services.AddAuthentication(options =>
             {
@@ -77,7 +77,7 @@ namespace GoodDay.WebAPI
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
             })
-                   .AddJwtBearer(options =>
+                   .AddJwtBearer("Bearer", options =>
                    {
                        options.RequireHttpsMetadata = false;
                        options.SaveToken = false;
@@ -92,7 +92,24 @@ namespace GoodDay.WebAPI
                            ValidateIssuerSigningKey = true,
                            ClockSkew = TimeSpan.Zero
                        };
+                       options.Events = new JwtBearerEvents
+                       {
+                           OnMessageReceived = context =>
+                           {
+                               if ((context.Request.Path.Value.StartsWith("/chat")) && context.Request.Query.TryGetValue("token", out StringValues token)
+                               )
+                               {
+                                   context.Token = token;
+                               }
 
+                               return Task.CompletedTask;
+                           },
+                           OnAuthenticationFailed = context =>
+                           {
+                               var te = context.Exception;
+                               return Task.CompletedTask;
+                           }
+                       };
                    })
                     .AddGoogle("Google", options =>
                      {
@@ -100,6 +117,14 @@ namespace GoodDay.WebAPI
                          options.ClientId = "405558759348-k906i53f8256bh7qf1ikneve7280s25i.apps.googleusercontent.com";
                          options.ClientSecret = "XqziAwV3i4Hms5k06T00165c";
                      });
+            services.AddMvc(options =>
+            {
+
+            });
+            services.AddSignalR(options=>
+            {
+                options.EnableDetailedErrors = true;
+            });
             services.AddMemoryCache();
             services.AddSession(opts =>
             {
@@ -124,9 +149,9 @@ namespace GoodDay.WebAPI
             app.UseSession();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
-            app.UseSignalR(routes => routes.MapHub<ChatHub>("/echo"));
+            app.UseCookiePolicy();           
             app.UseAuthentication();
+            app.UseSignalR(routes => routes.MapHub<ChatHub>("/echo"));
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
