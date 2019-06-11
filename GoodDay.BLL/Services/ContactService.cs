@@ -25,16 +25,27 @@ namespace GoodDay.BLL.Services
         public async Task<Contact> AddContact(string id, string friendId)
         {
             User friend = await userManager.FindByIdAsync(friendId);
+            User user = await userManager.FindByIdAsync(id);
             var contact = new Contact
             {
                 FriendId = friendId,
                 UserId = id,
                 Blocked = false,
+                Confirmed = true,
                 ContactName = friend.Email,
+            };
+            var anotherContact = new Contact
+            {
+                FriendId = id,
+                UserId = friendId,
+                Blocked = false,
+                Confirmed = false,
+                ContactName = user.Email,
             };
             try
             {
-                await unitOfWork.Contacts.Add(contact);            
+                await unitOfWork.Contacts.Add(contact);
+                await unitOfWork.Contacts.Add(anotherContact);
                 return contact;
             }
             catch(Exception ex)
@@ -68,6 +79,49 @@ namespace GoodDay.BLL.Services
                 await unitOfWork.Contacts.Delete(id);
             }
            catch(Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task ConfirmContact(int? id)
+        {
+            try
+            {
+                var contact = await unitOfWork.Contacts.Get(id);
+                contact.Confirmed = true;
+                await unitOfWork.Contacts.Edit(contact);
+                await unitOfWork.Contacts.Save();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task BlockContact(int? id)
+        {
+            try
+            {
+                var contact = await unitOfWork.Contacts.Get(id);
+                contact.Blocked = true;
+                await unitOfWork.Contacts.Edit(contact);
+                await unitOfWork.Contacts.Save();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task UnlockContact(int? id)
+        {
+            try
+            {
+                var contact = await unitOfWork.Contacts.Get(id);
+                contact.Blocked = false;
+                await unitOfWork.Contacts.Edit(contact);
+                await unitOfWork.Contacts.Save();
+            }
+            catch (Exception ex)
             {
                 throw ex;
             }

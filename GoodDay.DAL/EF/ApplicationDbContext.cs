@@ -34,10 +34,21 @@ namespace GoodDay.DAL.EF
                 .HasOne(a => a.User)
                 .WithMany(b => b.UsersContacts)
                 .HasForeignKey(c => c.UserId);
+
             modelBuilder.Entity<Contact>()
                 .HasOne(a => a.Friend)
                 .WithMany(b => b.UserInContacts)
                 .HasForeignKey(c => c.FriendId);
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Dialog>()
+               .HasOne(a => a.Sender)
+               .WithMany(b => b.UsersDialog)
+               .HasForeignKey(c => c.SenderId);
+            modelBuilder.Entity<Dialog>()
+               .HasOne(a => a.Receiver)
+               .WithMany(b => b.InterlocutorsDialog)
+               .HasForeignKey(c => c.ReceiverId);
+            base.OnModelCreating(modelBuilder);
             base.OnModelCreating(modelBuilder);
         }
     }

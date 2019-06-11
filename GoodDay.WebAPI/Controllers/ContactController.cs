@@ -73,6 +73,63 @@ namespace GoodDay.WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
+        [Route("confirm/{id}")]
+        public async Task<IActionResult> ConfirmContact(int id)
+        {
+            var userId = User.Claims.First(c => c.Type == "Id").Value;
+            Contact contact = await contactService.GetContact(id);
+            if (contact != null)
+            {
+                if (contact.UserId == userId)
+                {
+                    await contactService.ConfirmContact(id);
+                    return Ok(contact);
+                }
+                else return BadRequest("Contact not found");
+            }
+            else return BadRequest("Contact not found");
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("block/{id}")]
+        public async Task<IActionResult> BlockContact(int id)
+        {
+            var userId = User.Claims.First(c => c.Type == "Id").Value;
+            Contact contact = await contactService.GetContact(id);
+            if (contact != null)
+            {
+                if (contact.UserId == userId)
+                {
+                    await contactService.BlockContact(id);
+                    return Ok(contact);
+                }
+                else return BadRequest("Contact not found");
+            }
+            else return BadRequest("Contact not found");
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("unlock/{id}")]
+        public async Task<IActionResult> UnlockContact(int id)
+        {
+            var userId = User.Claims.First(c => c.Type == "Id").Value;
+            Contact contact = await contactService.GetContact(id);
+            if (contact != null)
+            {
+                if (contact.UserId == userId)
+                {
+                    await contactService.UnlockContact(id);
+                    return Ok(contact);
+                }
+                else return BadRequest("Contact not found");
+            }
+            else return BadRequest("Contact not found");
+        }
+
+        [HttpGet]
+        [Authorize]
         [Route("contacts")]
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContacts()
         {

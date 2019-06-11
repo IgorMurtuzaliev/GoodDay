@@ -7,6 +7,7 @@ namespace GoodDay.BLL.ViewModels
     {
         public int Id { get; set; }
         public bool Blocked { get; set; }
+        public bool Confirmed { get; set; }
         public string ContactName { get; set; }
         public string UserId { get; set; }
         public string FriendId { get; set; }
@@ -21,7 +22,7 @@ namespace GoodDay.BLL.ViewModels
             {
                 { Id = contact.Id; }
                 { Blocked = contact.Blocked; }
-               
+                { Confirmed = contact.Confirmed; }
                 if (!String.IsNullOrEmpty(contact.ContactName))
                 {
                     { ContactName = contact.ContactName; }

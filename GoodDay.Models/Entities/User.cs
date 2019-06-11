@@ -10,7 +10,8 @@ namespace GoodDay.Models.Entities
     {
         public User()
         {
-            Dialogs = new List<Dialog>();
+            UsersDialog = new List<Dialog>();
+            InterlocutorsDialog = new List<Dialog>();
             UsersContacts = new List<Contact>();
             UserInContacts = new List<Contact>();
         }
@@ -29,7 +30,9 @@ namespace GoodDay.Models.Entities
         public int? FileId { get; set; }
 
         [JsonIgnore]
-        public virtual ICollection<Dialog> Dialogs { get; set; }
+        public virtual ICollection<Dialog> UsersDialog { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Dialog> InterlocutorsDialog { get; set; }
         [JsonIgnore]
         public virtual ICollection<Contact> UsersContacts { get; set; }
         [JsonIgnore]

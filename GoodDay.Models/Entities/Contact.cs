@@ -6,6 +6,7 @@ namespace GoodDay.Models.Entities
     {
         public int Id { get; set; }        
         public bool Blocked { get; set; }
+        public bool Confirmed { get; set; }
         public string ContactName { get; set; }
 
         [ForeignKey("User")]
