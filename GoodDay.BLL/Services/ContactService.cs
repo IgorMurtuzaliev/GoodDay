@@ -32,20 +32,22 @@ namespace GoodDay.BLL.Services
                 UserId = id,
                 Blocked = false,
                 Confirmed = true,
-                ContactName = friend.Email,
+                ContactName = friend.Name+" "+friend.Surname,
             };
+            
             var anotherContact = new Contact
             {
                 FriendId = id,
                 UserId = friendId,
                 Blocked = false,
                 Confirmed = false,
-                ContactName = user.Email,
+                ContactName = user.Name+""+user.Surname,
             };
             try
             {
                 await unitOfWork.Contacts.Add(contact);
-                await unitOfWork.Contacts.Add(anotherContact);
+                if(!unitOfWork.Contacts.IsUserInContact(friendId, id)) { await unitOfWork.Contacts.Add(anotherContact); }
+                
                 return contact;
             }
             catch(Exception ex)
@@ -78,7 +80,7 @@ namespace GoodDay.BLL.Services
             {
                 await unitOfWork.Contacts.Delete(id);
             }
-           catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -130,6 +132,11 @@ namespace GoodDay.BLL.Services
         public async Task<Contact> GetContact(int? id)
         {
             return await unitOfWork.Contacts.Get(id);
+        }
+
+        public  async Task<Contact> FindContact(string id, string friendId)
+        {
+            return await unitOfWork.Contacts.FindContact(id, friendId);
         }
 
         public async Task<IEnumerable<Contact>> GetContacts(string id)

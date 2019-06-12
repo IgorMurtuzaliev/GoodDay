@@ -13,12 +13,15 @@ namespace GoodDay.BLL.ViewModels
         public string Phone { get; set; }
         public  string Email { get; set; }
         public string AvatarPath { get; set; }
-
+        public bool IsBlocked { get; set; }
+        public bool IsInContacts { get; set; }
+        public int ContactWithUserId { get; set; }
         public UserViewModel(User user)
         {
             if (user != null)
             {
                 { Id = user.Id; }
+
                 if (!String.IsNullOrEmpty(user.Name)){
                     { Name = user.Name; }
                 }
@@ -38,6 +41,7 @@ namespace GoodDay.BLL.ViewModels
                 {
                     { AvatarPath = user.File.Path; }
                 }
+
                 else AvatarPath = "\\Shared\\user.png";
             }
         }

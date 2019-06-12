@@ -9,11 +9,12 @@ namespace GoodDay.BLL.Interfaces
     public interface IContactService
     {
         Task<Contact> AddContact(string id, string friendId);
-        Task DeleteContact(int? id);
+        Task DeleteContact(int?id);
         Task<Contact> GetContact(int? id);
         Task<IEnumerable<Contact>> GetContacts(string id);
         Task<Contact> ChangeContactName(Contact contact, EditContactViewModel model);
         Task<bool> UserHasContact(string friendId, string id);
+        Task<Contact> FindContact(string id, string friendId);
         Task ConfirmContact(int? id);
         Task BlockContact(int? id);
         Task UnlockContact(int? id);

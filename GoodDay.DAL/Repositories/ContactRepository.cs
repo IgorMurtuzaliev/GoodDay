@@ -4,12 +4,13 @@ using GoodDay.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GoodDay.DAL.Repositories
 {
-    public class ContactRepository : IRepository<Contact>
+    public class ContactRepository : IContactRepository
     {
         private readonly ApplicationDbContext dbContext;
         public ContactRepository(ApplicationDbContext _dbContext)
@@ -45,7 +46,15 @@ namespace GoodDay.DAL.Repositories
         {
             return await dbContext.Contacts.ToListAsync();
         }
+        public bool IsUserInContact(string id, string friendId)
+        {
+            return dbContext.Contacts.Any(c => c.UserId == id && c.FriendId == friendId);
 
+        }
+        public async Task<Contact> FindContact(string id, string friendId)
+        {
+            return await dbContext.Contacts.SingleAsync(c => c.UserId == id && c.FriendId == friendId);
+        }
         public async Task Save()
         {
             await dbContext.SaveChangesAsync();

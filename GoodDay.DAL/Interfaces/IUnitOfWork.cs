@@ -11,8 +11,9 @@ namespace GoodDay.DAL.Interfaces
         IUserRepository Users { get; }
         IFileRepository Files { get; }
         IMessageRepository Messages { get; }
-        IRepository<Contact> Contacts { get; }
-        IRepository<Dialog> Dialogs { get; }
+        IBlockRepository Blocks { get; }
+        IContactRepository Contacts { get; }
+        IDialogRepository Dialogs { get; }
         Task Save();
         void Dispose(bool disposing);
     }

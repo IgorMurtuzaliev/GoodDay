@@ -19,6 +19,7 @@ namespace GoodDay.DAL.EF
             optionsBuilder.UseLazyLoadingProxies();
         }
 
+        public DbSet<BlockList> BlockLists { get; set; }
         public DbSet<Message> Messages { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
@@ -39,16 +40,27 @@ namespace GoodDay.DAL.EF
                 .HasOne(a => a.Friend)
                 .WithMany(b => b.UserInContacts)
                 .HasForeignKey(c => c.FriendId);
-            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Dialog>()
                .HasOne(a => a.Sender)
                .WithMany(b => b.UsersDialog)
                .HasForeignKey(c => c.SenderId);
+
             modelBuilder.Entity<Dialog>()
                .HasOne(a => a.Receiver)
                .WithMany(b => b.InterlocutorsDialog)
                .HasForeignKey(c => c.ReceiverId);
-            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<BlockList>()
+               .HasOne(a => a.User)
+               .WithMany(b => b.UsersBlockList)
+               .HasForeignKey(c => c.UserId);
+
+            modelBuilder.Entity<BlockList>()
+                .HasOne(a => a.Friend)
+                .WithMany(b => b.UserInBlockList)
+                .HasForeignKey(c => c.FriendId);
+
             base.OnModelCreating(modelBuilder);
         }
     }

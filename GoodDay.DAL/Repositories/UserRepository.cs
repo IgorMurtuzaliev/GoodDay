@@ -57,5 +57,6 @@ namespace GoodDay.DAL.Repositories
         {
             return await dbContext.Users.SingleAsync(c => c.Phone == phone);
         }
+        
     }
 }

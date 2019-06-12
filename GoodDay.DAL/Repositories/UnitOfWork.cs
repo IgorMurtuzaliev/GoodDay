@@ -17,7 +17,7 @@ namespace GoodDay.DAL.Repositories
         private DialogRepository dialogRepository;
         private MessageRepository messageRepository;
         private ContactRepository contactRepository;
-
+        private BlockRepository blockRepository;
         public UnitOfWork(ApplicationDbContext _dbContext)
         {
             dbContext = _dbContext;
@@ -32,7 +32,7 @@ namespace GoodDay.DAL.Repositories
             }
         }
 
-        public IRepository<Contact> Contacts
+        public IContactRepository Contacts
         {
             get
             {
@@ -42,7 +42,7 @@ namespace GoodDay.DAL.Repositories
             }
         }
 
-        public IRepository<Dialog> Dialogs
+        public IDialogRepository Dialogs
         {
             get
             {
@@ -67,6 +67,15 @@ namespace GoodDay.DAL.Repositories
                 if (fileRepository == null)
                     fileRepository = new FileRepository(dbContext);
                 return fileRepository;
+            }
+        }
+        public IBlockRepository Blocks
+        {
+            get
+            {
+                if (blockRepository == null)
+                    blockRepository = new BlockRepository(dbContext);
+                return blockRepository;
             }
         }
         public async Task Save()

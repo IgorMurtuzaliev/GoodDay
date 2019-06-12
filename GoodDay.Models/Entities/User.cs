@@ -37,6 +37,10 @@ namespace GoodDay.Models.Entities
         public virtual ICollection<Contact> UsersContacts { get; set; }
         [JsonIgnore]
         public virtual ICollection<Contact> UserInContacts { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<BlockList> UsersBlockList { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<BlockList> UserInBlockList { get; set; }
         [NotMapped]
         [JsonIgnore]
         public virtual File File { get; set; }

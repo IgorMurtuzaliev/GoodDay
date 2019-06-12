@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GoodDay.DAL.Repositories
 {
-     public class DialogRepository : IRepository<Dialog>
+     public class DialogRepository : IDialogRepository
     {
         private readonly ApplicationDbContext dbContext;
         public DialogRepository(ApplicationDbContext _dbContext)

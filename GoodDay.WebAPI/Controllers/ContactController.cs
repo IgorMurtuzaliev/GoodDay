@@ -53,6 +53,7 @@ namespace GoodDay.WebAPI.Controllers
             }
         }
 
+
         [HttpDelete("{id}")]
         [Authorize]
         public async Task<IActionResult> DeleteContact(int id)
@@ -61,7 +62,7 @@ namespace GoodDay.WebAPI.Controllers
             Contact contact = await contactService.GetContact(id);
             if (contact != null)
             {
-                if(contact.UserId == userId)
+                if (contact.UserId == userId)
                 {
                     await contactService.DeleteContact(id);
                     return Ok(contact);
