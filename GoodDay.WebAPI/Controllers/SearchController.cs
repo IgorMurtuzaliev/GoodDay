@@ -12,10 +12,15 @@ namespace GoodDay.WebAPI.Controllers
     [ApiController]
     public class SearchController : ControllerBase
     {
+        private IUserService userService;
         private ISearchService searchService;
-        public SearchController(ISearchService _searchService)
-        {
+        private IContactService contactService;
+        
+        public SearchController(ISearchService _searchService, IUserService _userService, IContactService _contactService)
+        { 
             searchService = _searchService;
+            userService = _userService;
+            contactService = _contactService;
         }
 
         [HttpGet]
@@ -38,7 +43,20 @@ namespace GoodDay.WebAPI.Controllers
               
                 foreach(var item in searchResult)
                 {
-                    result.Add(new UserViewModel(item));
+                    var profile = new UserViewModel(item);
+                    result.Add(profile);
+                    if (userService.IsUserBlocked(id, item.Id))
+                    {
+                        profile.IsBlocked = true;
+                    }
+                    else profile.IsBlocked = false;
+                    if (userService.IsInContacts(id, item.Id))
+                    {
+                        var contact = await contactService.FindContact(id, item.Id);
+                        profile.ContactWithUserId = contact.Id;
+                        profile.IsInContacts = true;
+                    }
+                    else profile.IsInContacts = false;
 
                 }
             return result;

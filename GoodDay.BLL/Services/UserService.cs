@@ -35,12 +35,15 @@ namespace GoodDay.BLL.Services
         }
         public async Task BlockUser(string id, string friendId)
         {
-            var contact = await unitOfWork.Contacts.FindContact(id, friendId);
-            if (contact != null)
+            if (IsInContacts(id, friendId))
             {
-                await contactService.DeleteContact(contact.Id);
+                 var contact = await unitOfWork.Contacts.FindContact(id, friendId);
+                if (contact != null)
+                {
+                    await contactService.DeleteContact(contact.Id);
+                }
             }
-
+           
             BlockList block = new BlockList
             {
                 UserId = id,
@@ -63,5 +66,6 @@ namespace GoodDay.BLL.Services
             if (unitOfWork.Contacts.IsUserInContact(id, friendId)) return true;
             else return false;
         }
+
     }
 }

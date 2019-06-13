@@ -66,6 +66,8 @@ namespace GoodDay.WebAPI
             services.AddTransient<IEmailSender, EmailService>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IContactService, ContactService>();
+            services.AddTransient<IBlockListService, BlockListService>();
+            services.AddTransient<IBlockRepository, BlockRepository>();
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();

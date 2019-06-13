@@ -19,12 +19,14 @@ namespace GoodDay.WebAPI.Controllers
         private IUserService userService;
         private UserManager<User> userManager;
         private IContactService contactService;
+        private IBlockListService blockListService;
 
-        public UsersController(IUserService _userService, UserManager<User> _userManager, IContactService _contactService)
+        public UsersController(IUserService _userService, UserManager<User> _userManager, IContactService _contactService, IBlockListService _blockListService)
         {
             userService = _userService;
             userManager = _userManager;
             contactService = _contactService;
+            blockListService = _blockListService;
         }
       
 
@@ -109,6 +111,21 @@ namespace GoodDay.WebAPI.Controllers
                     return Ok(); ;
                 }
             }
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("blackList")]
+        public async Task<ActionResult<IEnumerable<BlockListViewModel>>> GetContacts()
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            var result = new List<BlockListViewModel>();
+            var blocks = await blockListService.GetBlockList(id);
+            foreach (var item in blocks)
+            {
+                result.Add(new BlockListViewModel(item));
+            }
+            return Ok(result);
         }
     }
 }
