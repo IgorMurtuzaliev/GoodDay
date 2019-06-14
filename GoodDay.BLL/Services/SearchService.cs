@@ -16,16 +16,16 @@ namespace GoodDay.BLL.Services
         {
             dbContext = _dbContext;
         }
-        public async Task<IEnumerable<User>> Search(string id,string search)            
+        public async Task<IEnumerable<User>> Search(string id, string search)
         {
             try
             {
-                return await dbContext.Users.Where(p => p.Email.Contains(search) || p.Phone.Contains(search)).Where(p=>p.Id!=id).ToListAsync(); 
+                return await dbContext.Users.Where(p => p.Email.Contains(search) || p.Phone.Contains(search)).Where(p => p.Id != id).ToListAsync();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
-            }      
+            }
         }
     }
 }

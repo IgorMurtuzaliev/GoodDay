@@ -28,7 +28,7 @@ namespace GoodDay.BLL.Services
                     await client.DisconnectAsync(true);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

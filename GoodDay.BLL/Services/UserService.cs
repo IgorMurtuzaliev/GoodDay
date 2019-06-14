@@ -10,7 +10,7 @@ namespace GoodDay.BLL.Services
     {
         private IUnitOfWork unitOfWork;
         private IContactService contactService;
-        public UserService( IUnitOfWork _unitOfWork, IContactService _contactService)
+        public UserService(IUnitOfWork _unitOfWork, IContactService _contactService)
         {
             unitOfWork = _unitOfWork;
             contactService = _contactService;
@@ -23,12 +23,12 @@ namespace GoodDay.BLL.Services
                 User user = await unitOfWork.Users.Get(id);
                 return user;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
-            }          
+            }
         }
-        
+
         public bool UserExists(string id)
         {
             return unitOfWork.Users.UserExists(id);
@@ -37,19 +37,28 @@ namespace GoodDay.BLL.Services
         {
             if (IsInContacts(id, friendId))
             {
-                 var contact = await unitOfWork.Contacts.FindContact(id, friendId);
+                var contact = await unitOfWork.Contacts.FindContact(id, friendId);
                 if (contact != null)
                 {
                     await contactService.DeleteContact(contact.Id);
                 }
             }
-           
-            BlockList block = new BlockList
+
+            try
             {
-                UserId = id,
-                FriendId = friendId
-            };
-            await unitOfWork.Blocks.Add(block);
+                BlockList block = new BlockList
+                {
+                    UserId = id,
+                    FriendId = friendId
+                };
+                await unitOfWork.Blocks.Add(block);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+
         }
         public async Task UnlockUser(string id, string friendId)
         {

@@ -14,6 +14,8 @@ namespace GoodDay.Models.Entities
             InterlocutorsDialog = new List<Dialog>();
             UsersContacts = new List<Contact>();
             UserInContacts = new List<Contact>();
+            UsersBlockList = new List<BlockList>();
+            UserInBlockList = new List<BlockList>();
         }
 
         [Required(ErrorMessage = "Input your name")]
@@ -24,8 +26,6 @@ namespace GoodDay.Models.Entities
 
         [Phone, Required(ErrorMessage = "Input you phone number")]
         public string Phone { get; set; }
-        
-        //public DateTime? LastLogin { get; set; }
 
         public int? FileId { get; set; }
 

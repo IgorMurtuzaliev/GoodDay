@@ -95,7 +95,6 @@ namespace GoodDay.BLL.Services
             return success;
         }
 
-
         public async Task EditClientProfile(EditUserInfoViewModel model)
         {
             User user = await userManager.FindByIdAsync(model.Id);

@@ -24,33 +24,34 @@ namespace GoodDay.BLL.Services
         }
         public async Task<Contact> AddContact(string id, string friendId)
         {
-            User friend = await userManager.FindByIdAsync(friendId);
-            User user = await userManager.FindByIdAsync(id);
-            var contact = new Contact
-            {
-                FriendId = friendId,
-                UserId = id,
-                Blocked = false,
-                Confirmed = true,
-                ContactName = friend.Name+" "+friend.Surname,
-            };
-            
-            var anotherContact = new Contact
-            {
-                FriendId = id,
-                UserId = friendId,
-                Blocked = false,
-                Confirmed = false,
-                ContactName = user.Name+""+user.Surname,
-            };
             try
             {
+                User friend = await userManager.FindByIdAsync(friendId);
+                User user = await userManager.FindByIdAsync(id);
+
+                var contact = new Contact
+                {
+                    FriendId = friendId,
+                    UserId = id,
+                    Blocked = false,
+                    Confirmed = true,
+                    ContactName = friend.Name + " " + friend.Surname,
+                };
+
+                var anotherContact = new Contact
+                {
+                    FriendId = id,
+                    UserId = friendId,
+                    Blocked = false,
+                    Confirmed = false,
+                    ContactName = user.Name + "" + user.Surname,
+                };
                 await unitOfWork.Contacts.Add(contact);
-                if(!unitOfWork.Contacts.IsUserInContact(friendId, id)) { await unitOfWork.Contacts.Add(anotherContact); }
-                
+                if (!unitOfWork.Contacts.IsUserInContact(friendId, id)) { await unitOfWork.Contacts.Add(anotherContact); }
+
                 return contact;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -60,7 +61,7 @@ namespace GoodDay.BLL.Services
         {
             try
             {
-               if( contact!= null)
+                if (contact != null)
                 {
                     contact.ContactName = model.ContactName;
                 }
@@ -68,7 +69,7 @@ namespace GoodDay.BLL.Services
                 await unitOfWork.Contacts.Save();
                 return contact;
             }
-           catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -134,7 +135,7 @@ namespace GoodDay.BLL.Services
             return await unitOfWork.Contacts.Get(id);
         }
 
-        public  async Task<Contact> FindContact(string id, string friendId)
+        public async Task<Contact> FindContact(string id, string friendId)
         {
             return await unitOfWork.Contacts.FindContact(id, friendId);
         }
@@ -147,7 +148,7 @@ namespace GoodDay.BLL.Services
                 var contacts = user.UsersContacts;
                 return contacts;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

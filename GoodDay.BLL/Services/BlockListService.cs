@@ -20,7 +20,6 @@ namespace GoodDay.BLL.Services
         }
         public async Task<IEnumerable<BlockList>> GetBlockList(string id)
         {
-            User user = await userManager.FindByIdAsync(id);
             try
             {
                 var blocks = await unitOfWork.Blocks.GetBlockedUsers(id);
