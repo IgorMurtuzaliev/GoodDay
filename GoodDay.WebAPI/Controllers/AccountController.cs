@@ -116,8 +116,12 @@ namespace GoodDay.WebAPI.Controllers
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
             User user = await userManager.FindByIdAsync(id);
-            var profile = new UserViewModel(user);
-            return Ok(profile);
+            if (user != null)
+            {
+                var profile = new UserViewModel(user);
+                return Ok(profile);
+            }
+            else return BadRequest();
         }
 
         [HttpPut]

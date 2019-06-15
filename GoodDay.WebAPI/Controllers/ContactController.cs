@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodDay.BLL.Interfaces;
@@ -16,10 +17,12 @@ namespace GoodDay.WebAPI.Controllers
 
         private IContactService contactService;
         private IUserService userService;
-        public ContactController(IContactService _contactService, IUserService _userService)
+        private IBlockListService blockListService;
+        public ContactController(IContactService _contactService, IUserService _userService, IBlockListService _blockListService)
         {
             contactService = _contactService;
             userService = _userService;
+            blockListService = _blockListService;
         }
 
         [HttpGet]
@@ -43,9 +46,14 @@ namespace GoodDay.WebAPI.Controllers
                 else
                 {
                     bool userHasContact = await contactService.UserHasContact(friendId, id);
+                    var isUserBlocked =  userService.IsUserBlocked(id, friendId);
                     if (!userHasContact)
                     {
                         return BadRequest("You have contact with this user");
+                    }
+                    if (isUserBlocked == true)
+                    {
+                        return BadRequest("Unlock this user");
                     }
                     var result = await contactService.AddContact(id, friendId);                   
                     return Ok(result);
@@ -83,6 +91,10 @@ namespace GoodDay.WebAPI.Controllers
             {
                 if (contact.UserId == userId)
                 {
+                    if(contact.Confirmed == true)
+                    {
+                        return BadRequest("Contact is confirmed");
+                    }
                     await contactService.ConfirmContact(id);
                     return Ok(contact);
                 }
@@ -102,6 +114,10 @@ namespace GoodDay.WebAPI.Controllers
             {
                 if (contact.UserId == userId)
                 {
+                    if(contact.Blocked == true)
+                    {
+                        return BadRequest("Contact is blocked");
+                    }
                     await contactService.BlockContact(id);
                     return Ok(contact);
                 }
@@ -121,6 +137,10 @@ namespace GoodDay.WebAPI.Controllers
             {
                 if (contact.UserId == userId)
                 {
+                    if (contact.Blocked == false)
+                    {
+                        return BadRequest("Contact is unlocked");
+                    }
                     await contactService.UnlockContact(id);
                     return Ok(contact);
                 }
@@ -174,6 +194,8 @@ namespace GoodDay.WebAPI.Controllers
         [Route("icontact/{id}")]
         public async Task<IActionResult> GetContactDetails(int? id)
         {
+            try
+            {
             if (id == null)
             {
                 return BadRequest("Id is not valid");
@@ -183,6 +205,11 @@ namespace GoodDay.WebAPI.Controllers
                 Contact contact = await contactService.GetContact(id);
                 var contactVM = new ContactViewModel(contact);
                 return Ok(contactVM);
+            }
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
             }
         }
 
