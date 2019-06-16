@@ -10,9 +10,8 @@ namespace GoodDay.DAL.Interfaces
     {
         Task Add(BlockList item);
         Task Delete(BlockList block);
-        bool IsUserBlocked(string id, string friendId);
-        Task<BlockList> BlockedUser(string id, string friendId);
-        Task<IEnumerable<BlockList>> GetBlockedUsers(string id);
+        bool IsUserBlocked(User user, string friendId);
+        BlockList BlockedUser(User user, string friendId);
         Task Save();
     }
 }

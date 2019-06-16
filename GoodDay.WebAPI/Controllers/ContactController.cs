@@ -6,6 +6,7 @@ using GoodDay.BLL.Interfaces;
 using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GoodDay.WebAPI.Controllers
@@ -18,11 +19,13 @@ namespace GoodDay.WebAPI.Controllers
         private IContactService contactService;
         private IUserService userService;
         private IBlockListService blockListService;
-        public ContactController(IContactService _contactService, IUserService _userService, IBlockListService _blockListService)
+        private UserManager<User> userManager;
+        public ContactController(IContactService _contactService, IUserService _userService, IBlockListService _blockListService, UserManager<User> _userManager)
         {
             contactService = _contactService;
             userService = _userService;
             blockListService = _blockListService;
+            userManager = _userManager;
         }
 
         [HttpGet]
@@ -31,7 +34,6 @@ namespace GoodDay.WebAPI.Controllers
         public async Task<IActionResult> AddContact(string friendId)
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
-
             if(friendId == null)
             {
                 return BadRequest("Choose the user");
@@ -51,7 +53,7 @@ namespace GoodDay.WebAPI.Controllers
                     {
                         return BadRequest("You have contact with this user");
                     }
-                    if (isUserBlocked == true)
+                    if (await isUserBlocked == true)
                     {
                         return BadRequest("Unlock this user");
                     }

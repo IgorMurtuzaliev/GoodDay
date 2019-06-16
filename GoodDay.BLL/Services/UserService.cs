@@ -1,6 +1,7 @@
 ﻿using GoodDay.BLL.Interfaces;
 using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Threading.Tasks;
 
@@ -10,10 +11,12 @@ namespace GoodDay.BLL.Services
     {
         private IUnitOfWork unitOfWork;
         private IContactService contactService;
-        public UserService(IUnitOfWork _unitOfWork, IContactService _contactService)
+        private UserManager<User> userManager;
+        public UserService(IUnitOfWork _unitOfWork, IContactService _contactService, UserManager<User> _userManager)
         {
             unitOfWork = _unitOfWork;
             contactService = _contactService;
+            userManager = _userManager;
         }
 
         public async Task<User> ShowUsersProfile(string id)
@@ -33,11 +36,12 @@ namespace GoodDay.BLL.Services
         {
             return unitOfWork.Users.UserExists(id);
         }
-        public async Task BlockUser(string id, string friendId)
+        public async Task BlockUser(string id,string friendId)
         {
-            if (IsInContacts(id, friendId))
+            User user = await userManager.FindByIdAsync(id);
+            if (await IsInContacts(id, friendId))
             {
-                var contact = await unitOfWork.Contacts.FindContact(id, friendId);
+                var contact = unitOfWork.Contacts.FindContact(user, friendId);
                 if (contact != null)
                 {
                     await contactService.DeleteContact(contact.Id);
@@ -62,17 +66,20 @@ namespace GoodDay.BLL.Services
         }
         public async Task UnlockUser(string id, string friendId)
         {
-            var block = await unitOfWork.Blocks.BlockedUser(id, friendId);
+            User user = await userManager.FindByIdAsync(id);
+            var block = unitOfWork.Blocks.BlockedUser(user, friendId);
             await unitOfWork.Blocks.Delete(block);
         }
-        public bool IsUserBlocked(string id, string friendId)
+        public async Task<bool> IsUserBlocked(string id, string friendId)
         {
-            if (unitOfWork.Blocks.IsUserBlocked(id, friendId)) return true;
+            User user = await userManager.FindByIdAsync(id);
+            if (unitOfWork.Blocks.IsUserBlocked(user, friendId)) return true;
             else return false;
         }
-        public bool IsInContacts(string id, string friendId)
+        public async Task<bool> IsInContacts(string id, string friendId)
         {
-            if (unitOfWork.Contacts.IsUserInContact(id, friendId)) return true;
+            User user = await userManager.FindByIdAsync(id);
+            if (unitOfWork.Contacts.IsUserInContact(user, friendId)) return true;
             else return false;
         }
 

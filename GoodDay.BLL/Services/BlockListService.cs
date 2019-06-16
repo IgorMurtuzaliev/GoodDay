@@ -4,6 +4,7 @@ using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,9 +21,10 @@ namespace GoodDay.BLL.Services
         }
         public async Task<IEnumerable<BlockList>> GetBlockList(string id)
         {
+            User user = await userManager.FindByIdAsync(id);
             try
             {
-                var blocks = await unitOfWork.Blocks.GetBlockedUsers(id);
+                var blocks = user.UsersBlockList;
                 return blocks;
             }
             catch (Exception ex)

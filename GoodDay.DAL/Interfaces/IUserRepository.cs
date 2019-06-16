@@ -8,7 +8,6 @@ namespace GoodDay.DAL.Interfaces
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetAll();
         Task Edit(User item);      
         Task Delete(string id);
         Task<User> Get(string id);     

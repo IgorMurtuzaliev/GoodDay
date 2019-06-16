@@ -28,14 +28,16 @@ namespace GoodDay.BLL.Services
         private readonly IEmailSender emailService;
         private readonly IUnitOfWork unitOfWork;
         private readonly IHostingEnvironment appEnvironment;
+        private readonly IFileManager fileManager;
 
-        public AccountService(UserManager<User> _userManager, SignInManager<User> _signInManager, IEmailSender _emailService, IUnitOfWork _unitOfWork, IHostingEnvironment _appEnvironment)
+        public AccountService(UserManager<User> _userManager, SignInManager<User> _signInManager, IEmailSender _emailService, IUnitOfWork _unitOfWork, IHostingEnvironment _appEnvironment, IFileManager _fileManager)
         {
             userManager = _userManager;
             signInManager = _signInManager;
             emailService = _emailService;
             unitOfWork = _unitOfWork;
             appEnvironment = _appEnvironment;
+            fileManager = _fileManager;
         }
         public async Task<IdentityResult> Create(RegisterViewModel model, string url)
         {
@@ -54,8 +56,7 @@ namespace GoodDay.BLL.Services
                     var callbackurl = new StringBuilder("https://").AppendFormat(url).AppendFormat("/api/account/confirmemail").AppendFormat($"?userId={user.Id}&code={encode}");
                     await emailService.SendEmailAsync(user.Email, "Тема письма", $"Please confirm your account by <a href='{callbackurl}'>clicking here</a>.We hope you enjoy it and tell your friends about our chat!");
                     return result;
-                }
-            
+                }          
             return result;
             }
             catch(Exception ex)
@@ -63,7 +64,6 @@ namespace GoodDay.BLL.Services
                 throw ex;
             }
         }
-
         public async Task<object> TokenGeneration(string email)
         {
             IdentityOptions options = new IdentityOptions();
@@ -126,19 +126,7 @@ namespace GoodDay.BLL.Services
             User user = await userManager.FindByIdAsync(id);
             try
             {
-                string path = "\\Avatar\\" + user.UserName + "\\" + file.FileName;
-                string directory = Path.Combine(appEnvironment.WebRootPath + "\\Avatar\\" + user.UserName + "\\");
-               
-                if (!Directory.Exists(directory))
-                {
-                    Directory.CreateDirectory(directory);
-                }
-                using (var fileStream = new FileStream(directory + file.FileName, FileMode.Create))
-                {
-                    await file.CopyToAsync(fileStream);
-                }
-
-                File newfile = new File { Name = file.FileName, Path = path, UserId = user.Id };
+                var newfile = await fileManager.EditImage(user, file);
                 await unitOfWork.Files.Delete(user.FileId);
                 user.File = null;
                 user.FileId = null;

@@ -37,7 +37,6 @@ namespace GoodDay.BLL.Services
                     Confirmed = true,
                     ContactName = friend.Name + " " + friend.Surname,
                 };
-
                 var anotherContact = new Contact
                 {
                     FriendId = id,
@@ -47,7 +46,7 @@ namespace GoodDay.BLL.Services
                     ContactName = user.Name + "" + user.Surname,
                 };
                 await unitOfWork.Contacts.Add(contact);
-                if (!unitOfWork.Contacts.IsUserInContact(friendId, id)) { await unitOfWork.Contacts.Add(anotherContact); }
+                if (!unitOfWork.Contacts.IsUserInContact(friend, id)) { await unitOfWork.Contacts.Add(anotherContact); }
 
                 return contact;
             }
@@ -137,7 +136,8 @@ namespace GoodDay.BLL.Services
 
         public async Task<Contact> FindContact(string id, string friendId)
         {
-            return await unitOfWork.Contacts.FindContact(id, friendId);
+            User user = await userManager.FindByIdAsync(id);
+            return unitOfWork.Contacts.FindContact(user, friendId);
         }
 
         public async Task<IEnumerable<Contact>> GetContacts(string id)
@@ -157,7 +157,7 @@ namespace GoodDay.BLL.Services
         public async Task<bool> UserHasContact(string friendId, string id)
         {
             User user = await userManager.FindByIdAsync(id);
-            var userHasContact = dbContext.Contacts.Where(c => c.FriendId == friendId && c.UserId == id).Count();
+            var userHasContact = user.UsersContacts.Where(c => c.FriendId == friendId).Count();
             if (userHasContact == 0) return true;
             else return false;
         }

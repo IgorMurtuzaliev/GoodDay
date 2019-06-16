@@ -44,7 +44,6 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     return BadRequest("The phone number is already taken");
                 }
-
             }
             catch (Exception ex)
             {
@@ -155,14 +154,12 @@ namespace GoodDay.WebAPI.Controllers
                 var length = file.Length;
                 if (type != correctType)
                 {
-                    ModelState.AddModelError("Uploads", "Error, allowed image resolution jpg / jpeg");
-                    return BadRequest(ModelState);
+                    return BadRequest("Error, allowed image resolution jpg / jpeg");
                 }
 
                 if (length>lengthMax)
                 {
-                    ModelState.AddModelError("Uploads", "Error, image size should not be more than 2 MB");
-                    return BadRequest(ModelState);
+                    return BadRequest("Error, image size should not be more than 2 MB");
                 }
                 else
                 {

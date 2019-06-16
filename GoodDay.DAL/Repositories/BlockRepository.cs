@@ -29,26 +29,19 @@ namespace GoodDay.DAL.Repositories
             dbContext.BlockLists.Remove(block);
             await Save();
         }
-        public async Task<IEnumerable<BlockList>> BlackList(string id)
+        public bool IsUserBlocked(User user, string friendId)
         {
-            return await dbContext.BlockLists.Where(c => c.UserId == id).ToListAsync();
+            return user.UsersBlockList.Any(c =>c.FriendId == friendId);
         }
-        public bool IsUserBlocked(string id, string friendId)
+        public BlockList BlockedUser(User user, string friendId)
         {
-            return dbContext.BlockLists.Any(c => c.UserId == id && c.FriendId == friendId);
-        }
-        public async Task<BlockList> BlockedUser(string id, string friendId)
-        {
-            return await dbContext.BlockLists.SingleAsync(c => c.UserId == id && c.FriendId == friendId);
+            return  user.UsersBlockList.Single(c => c.FriendId == friendId);
         }
 
         public async Task Save()
         {
             await dbContext.SaveChangesAsync();
         }
-        public async Task<IEnumerable<BlockList>> GetBlockedUsers(string id)
-        {
-            return await dbContext.BlockLists.Where(c => c.UserId == id).ToListAsync();
-        }
+  
     }
 }

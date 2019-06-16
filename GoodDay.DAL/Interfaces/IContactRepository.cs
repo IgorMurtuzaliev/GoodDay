@@ -8,13 +8,12 @@ namespace GoodDay.DAL.Interfaces
 {
     public interface IContactRepository
     {
-        Task<IEnumerable<Contact>> GetAll();
         Task<Contact> Get(int? id);
         Task Add(Contact item);
         Task Edit(Contact item);
         Task Delete(int? id);
-        bool IsUserInContact(string id, string friendId);
-        Task<Contact> FindContact(string id, string friendId);
+        bool IsUserInContact(User user, string friendId);
+        Contact FindContact(User user, string friendId);
         Task Save();
     }
 }

@@ -49,12 +49,12 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     var user = await userManager.FindByIdAsync(friendId);
                     var profile = new UserViewModel(user);
-                    if (userService.IsUserBlocked(id, friendId))
+                    if (await userService.IsUserBlocked(id, friendId))
                     {
                         profile.IsBlocked = true;
                     }
                     else profile.IsBlocked = false;
-                    if (userService.IsInContacts(id, friendId))
+                    if (await userService.IsInContacts(id, friendId))
                     {
                         var contact = await contactService.FindContact(id, friendId);
                         profile.ContactWithUserId = contact.Id;
@@ -116,11 +116,11 @@ namespace GoodDay.WebAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("blackList")]
-        public async Task<ActionResult<IEnumerable<BlockListViewModel>>> GetContacts()
+        public async Task<ActionResult<IEnumerable<BlockListViewModel>>> GetBlackList()
         {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
+            var id = User.Claims.First(c => c.Type == "Id").Value; ;
             var result = new List<BlockListViewModel>();
-            var blocks = await blockListService.GetBlockList(id);
+            var blocks =  await blockListService.GetBlockList(id);
             foreach (var item in blocks)
             {
                 result.Add(new BlockListViewModel(item));

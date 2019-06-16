@@ -39,25 +39,22 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     return BadRequest("Not found by your response");
                 }
-
-              
                 foreach(var item in searchResult)
                 {
                     var profile = new UserViewModel(item);
                     result.Add(profile);
-                    if (userService.IsUserBlocked(id, item.Id))
+                    if (await userService.IsUserBlocked(id, item.Id))
                     {
                         profile.IsBlocked = true;
                     }
                     else profile.IsBlocked = false;
-                    if (userService.IsInContacts(id, item.Id))
+                    if (await userService.IsInContacts(id, item.Id))
                     {
                         var contact = await contactService.FindContact(id, item.Id);
                         profile.ContactWithUserId = contact.Id;
                         profile.IsInContacts = true;
                     }
                     else profile.IsInContacts = false;
-
                 }
             return result;
             }

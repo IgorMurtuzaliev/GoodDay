@@ -42,18 +42,14 @@ namespace GoodDay.DAL.Repositories
             return await dbContext.Contacts.FindAsync(id);
         }
 
-        public async Task<IEnumerable<Contact>> GetAll()
+        public bool IsUserInContact(User user, string friendId)
         {
-            return await dbContext.Contacts.ToListAsync();
-        }
-        public bool IsUserInContact(string id, string friendId)
-        {
-            return dbContext.Contacts.Any(c => c.UserId == id && c.FriendId == friendId);
+            return user.UsersContacts.Any(c => c.FriendId == friendId);
 
         }
-        public async Task<Contact> FindContact(string id, string friendId)
+        public Contact FindContact(User user, string friendId)
         {
-            return await dbContext.Contacts.SingleAsync(c => c.UserId == id && c.FriendId == friendId);
+            return user.UsersContacts.Single(c => c.FriendId == friendId);
         }
         public async Task Save()
         {

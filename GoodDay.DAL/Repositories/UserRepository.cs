@@ -35,11 +35,6 @@ namespace GoodDay.DAL.Repositories
             return await dbContext.Users.FindAsync(id);
         }
 
-        public async Task<IEnumerable<User>> GetAll()
-        {
-            return await dbContext.Users.ToListAsync();
-        }
-
         public async Task Save()
         {
             await dbContext.SaveChangesAsync();
