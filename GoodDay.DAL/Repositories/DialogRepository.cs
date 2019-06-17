@@ -4,6 +4,7 @@ using GoodDay.Models.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,11 +36,6 @@ namespace GoodDay.DAL.Repositories
             await Save();
         }
 
-        public async Task<Dialog> Get(int? id)
-        {
-            return await dbContext.Dialogs.FindAsync(id);
-        }
-
         public async Task<IEnumerable<Dialog>> GetAll()
         {
             return await dbContext.Dialogs.ToListAsync();
@@ -48,6 +44,14 @@ namespace GoodDay.DAL.Repositories
         public async Task Save()
         {
             await dbContext.SaveChangesAsync();
+        }
+        public bool UserHasDialog(User user, string friendId)
+        {
+            return user.UsersDialogs.Any(c => c.ReceiverId == friendId);
+        }
+        public Dialog GetDialog(User user, string friendId)
+        {
+            return user.UsersDialogs.Single(c => c.ReceiverId == friendId);
         }
     }
 }

@@ -10,10 +10,10 @@ namespace GoodDay.WebAPI
 {
     public class ChatHub: Hub
     {
-        [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task Echo(string message)
+        //[Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task Echo(string friendId, string message)
         {
-            await Clients.All.SendAsync("Send", message);
+            await Clients.User(friendId).SendAsync("Send", message);
         }
     }
 }

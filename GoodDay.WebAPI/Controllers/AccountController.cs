@@ -172,5 +172,24 @@ namespace GoodDay.WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }   
         }
+        [HttpPut]
+        [Authorize]
+        [Route("editPassword")]
+        public IActionResult ChangePassword(ChangePasswordViewModel model)
+        {
+            try
+            {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            if (accountService.ChangePassword(id, model).IsCompletedSuccessfully)
+            {
+                return Ok();
+            }
+            else return BadRequest("ergergerge");
+            }
+            catch(Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
     }
 }

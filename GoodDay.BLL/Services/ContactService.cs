@@ -100,34 +100,6 @@ namespace GoodDay.BLL.Services
                 throw ex;
             }
         }
-        public async Task BlockContact(int? id)
-        {
-            try
-            {
-                var contact = await unitOfWork.Contacts.Get(id);
-                contact.Blocked = true;
-                await unitOfWork.Contacts.Edit(contact);
-                await unitOfWork.Contacts.Save();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
-        public async Task UnlockContact(int? id)
-        {
-            try
-            {
-                var contact = await unitOfWork.Contacts.Get(id);
-                contact.Blocked = false;
-                await unitOfWork.Contacts.Edit(contact);
-                await unitOfWork.Contacts.Save();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
 
         public async Task<Contact> GetContact(int? id)
         {
@@ -159,6 +131,12 @@ namespace GoodDay.BLL.Services
             User user = await userManager.FindByIdAsync(id);
             var userHasContact = user.UsersContacts.Where(c => c.FriendId == friendId).Count();
             if (userHasContact == 0) return true;
+            else return false;
+        }
+        public async Task<bool> IsInContacts(string id, string friendId)
+        {
+            User user = await userManager.FindByIdAsync(id);
+            if (unitOfWork.Contacts.IsUserInContact(user, friendId)) return true;
             else return false;
         }
     }

@@ -16,7 +16,6 @@ namespace GoodDay.BLL.Interfaces
         Task<bool> UserHasContact(string friendId, string id);
         Task<Contact> FindContact(string id, string friendId);
         Task ConfirmContact(int? id);
-        Task BlockContact(int? id);
-        Task UnlockContact(int? id);
+        Task<bool> IsInContacts(string id, string friendId);
     }
 }

@@ -9,5 +9,8 @@ namespace GoodDay.BLL.Interfaces
     public interface IBlockListService
     {
         Task<IEnumerable<BlockList>> GetBlockList(string id);
+        Task BlockUser(string id, string friendId);
+        Task<bool> IsUserBlocked(string id, string friendId);
+        Task UnlockUser(string id, string friendId);
     }
 }

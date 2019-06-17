@@ -48,7 +48,7 @@ namespace GoodDay.WebAPI.Controllers
                 else
                 {
                     bool userHasContact = await contactService.UserHasContact(friendId, id);
-                    var isUserBlocked =  userService.IsUserBlocked(id, friendId);
+                    var isUserBlocked =  blockListService.IsUserBlocked(id, friendId);
                     if (!userHasContact)
                     {
                         return BadRequest("You have contact with this user");
@@ -98,52 +98,6 @@ namespace GoodDay.WebAPI.Controllers
                         return BadRequest("Contact is confirmed");
                     }
                     await contactService.ConfirmContact(id);
-                    return Ok(contact);
-                }
-                else return BadRequest("Contact not found");
-            }
-            else return BadRequest("Contact not found");
-        }
-
-        [HttpGet]
-        [Authorize]
-        [Route("block/{id}")]
-        public async Task<IActionResult> BlockContact(int id)
-        {
-            var userId = User.Claims.First(c => c.Type == "Id").Value;
-            Contact contact = await contactService.GetContact(id);
-            if (contact != null)
-            {
-                if (contact.UserId == userId)
-                {
-                    if(contact.Blocked == true)
-                    {
-                        return BadRequest("Contact is blocked");
-                    }
-                    await contactService.BlockContact(id);
-                    return Ok(contact);
-                }
-                else return BadRequest("Contact not found");
-            }
-            else return BadRequest("Contact not found");
-        }
-
-        [HttpGet]
-        [Authorize]
-        [Route("unlock/{id}")]
-        public async Task<IActionResult> UnlockContact(int id)
-        {
-            var userId = User.Claims.First(c => c.Type == "Id").Value;
-            Contact contact = await contactService.GetContact(id);
-            if (contact != null)
-            {
-                if (contact.UserId == userId)
-                {
-                    if (contact.Blocked == false)
-                    {
-                        return BadRequest("Contact is unlocked");
-                    }
-                    await contactService.UnlockContact(id);
                     return Ok(contact);
                 }
                 else return BadRequest("Contact not found");

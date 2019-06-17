@@ -141,5 +141,21 @@ namespace GoodDay.BLL.Services
                 throw ex;
             }
         }
+        public async Task ChangePassword(string id, ChangePasswordViewModel model)
+        {
+            try
+            {
+                User user = await userManager.FindByIdAsync(id);
+                var newPassword = userManager.PasswordHasher.HashPassword(user, model.NewPassword);
+                user.PasswordHash = null;
+                user.PasswordHash = newPassword;
+                await unitOfWork.Users.Edit(user);
+                await unitOfWork.Users.Save();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

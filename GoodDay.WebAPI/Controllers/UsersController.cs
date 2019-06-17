@@ -49,12 +49,12 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     var user = await userManager.FindByIdAsync(friendId);
                     var profile = new UserViewModel(user);
-                    if (await userService.IsUserBlocked(id, friendId))
+                    if (await blockListService.IsUserBlocked(id, friendId))
                     {
                         profile.IsBlocked = true;
                     }
                     else profile.IsBlocked = false;
-                    if (await userService.IsInContacts(id, friendId))
+                    if (await contactService.IsInContacts(id, friendId))
                     {
                         var contact = await contactService.FindContact(id, friendId);
                         profile.ContactWithUserId = contact.Id;
@@ -84,7 +84,7 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
-                    await userService.BlockUser(id, friendId);
+                    await blockListService.BlockUser(id, friendId);
                     return Ok(); ;
                 }
             }
@@ -107,7 +107,7 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
-                    await userService.UnlockUser(id, friendId);
+                    await blockListService.UnlockUser(id, friendId);
                     return Ok(); ;
                 }
             }

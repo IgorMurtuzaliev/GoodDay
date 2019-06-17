@@ -7,9 +7,12 @@ using System.Threading.Tasks;
 
 namespace GoodDay.WebAPI.Hubs
 {
-    [Authorize(AuthenticationSchemes = "Bearer")]
+
     public class UserDialogHub:Hub
     {
-        
+        public Task SendPrivateTweet(string user, string message)
+        {
+            return Clients.User(user).SendAsync("ReceiveTweet", user, message);
+        }
     }
 }
