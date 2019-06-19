@@ -24,13 +24,13 @@ namespace GoodDay.BLL.Services
             User friend = await userManager.FindByIdAsync(friendId);
             var usersDialog = new Dialog
             {
-                SenderId = id,
-                ReceiverId = friendId
+                User1Id = id,
+                User2Id = friendId
             };
             var friendsDialog = new Dialog
             {
-                SenderId = friendId,
-                ReceiverId = id
+                User1Id = friendId,
+                User2Id = id
             };
             await dialogRepository.Add(usersDialog);
             if(!await HasUserDialog(friendId, id))

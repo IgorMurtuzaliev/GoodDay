@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoodDay.BLL.Interfaces;
+using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,31 +20,28 @@ namespace GoodDay.WebAPI.Controllers
         public UserManager<User> userManager;
         private ChatHub chatHub;
         private IBlockListService blockListService;
-        public ChatController(UserManager<User> _userManager, ChatHub _chatHub, IBlockListService _blockListService)
+        private IChatService chatService;
+        public ChatController(UserManager<User> _userManager,IBlockListService _blockListService, IChatService _chatService)
         {
             userManager = _userManager;
-            chatHub = _chatHub;
             blockListService = _blockListService;
+            chatService = _chatService;
         }
-
-        //public async Task<ActionResult<Dialog>> StartDialog(string friendId)
-        //{
-        //    var id = User.Claims.First(c => c.Type == "Id").Value;
-        //    var isFriendBlocked = await  blockListService.IsUserBlocked(id, friendId);
-        //    var isUserBlocked =  await blockListService.IsUserBlocked(friendId, id);
-        //    if ( isUserBlocked)
-        //    {
-        //        return BadRequest("This user blocked you");
-        //    }
-        //    if (isFriendBlocked)
-        //    {
-        //        return BadRequest("You blocked this user");
-        //    }
-        //    else
-        //    {
-                
-        //    }
-        //}
-
+        [HttpGet]
+        [Authorize]
+        [Route("dialogs")]
+        public async Task<List<DialogViewModel>> GetAllDialogs()
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            return await chatService.GetAllDialogs(id);
+        }
+        [HttpGet]
+        [Authorize]
+        [Route("dialog/{friendId}")]
+        public async Task<DialogViewModel> GetDialog(string friendId)
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            return await chatService.GetDialog(id, friendId);
+        }
     }
 }

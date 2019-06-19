@@ -6,7 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GoodDay.Models.Entities
 {
-    public class User:IdentityUser
+    public class User : IdentityUser
     {
         public User()
         {
@@ -39,6 +39,8 @@ namespace GoodDay.Models.Entities
         public virtual ICollection<Contact> UserInContacts { get; set; }
         [JsonIgnore]
         public virtual ICollection<BlockList> UsersBlockList { get; set; }
+        [JsonIgnore]
+        public virtual ICollection<Message> Messages { get; set; }
         [JsonIgnore]
         public virtual ICollection<BlockList> UserInBlockList { get; set; }
         [NotMapped]

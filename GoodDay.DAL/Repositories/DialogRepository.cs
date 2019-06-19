@@ -47,11 +47,11 @@ namespace GoodDay.DAL.Repositories
         }
         public bool UserHasDialog(User user, string friendId)
         {
-            return user.UsersDialogs.Any(c => c.ReceiverId == friendId);
+            return user.UsersDialogs.Any(c => c.User2Id == friendId || c.User1Id == friendId) || user.InterlocutorsDialogs.Any(c => c.User2Id == friendId || c.User1Id == friendId);
         }
         public Dialog GetDialog(User user, string friendId)
         {
-            return user.UsersDialogs.Single(c => c.ReceiverId == friendId);
+            return user.UsersDialogs.Single(c => c.User2Id == friendId || c.User1Id == friendId);
         }
     }
 }

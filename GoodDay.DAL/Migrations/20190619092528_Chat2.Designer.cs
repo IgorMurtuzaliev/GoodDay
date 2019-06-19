@@ -3,14 +3,16 @@ using System;
 using GoodDay.DAL.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GoodDay.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190619092528_Chat2")]
+    partial class Chat2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -118,8 +120,6 @@ namespace GoodDay.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DialogId");
-
-                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
@@ -338,10 +338,6 @@ namespace GoodDay.DAL.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("DialogId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GoodDay.Models.Entities.User", "Sender")
-                        .WithMany("Messages")
-                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

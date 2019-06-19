@@ -22,17 +22,35 @@ namespace GoodDay.BLL.Services
         }
         public async Task AddNewMessage(string senderId, string recevierId, string message, DateTime time)
         {
-            User user = await userManager.FindByIdAsync(senderId);
-            var dialog = user.UsersDialogs.Single(c => c.ReceiverId == recevierId);
-            var newMessage = new Message
+            try
             {
-                DialogId = dialog.Id,
-                SenderId = senderId,
-                Text = message,
-                SendingTime = time
-            };
-            await unitOfWork.Messages.Add(newMessage);
-            await unitOfWork.Save();
+                User user = await userManager.FindByIdAsync(senderId);
+                var dialog = new Dialog();
+                if (user.UsersDialogs.Any(c => c.User2Id == recevierId || c.User1Id == recevierId))
+                {
+                    var usersDialog = user.UsersDialogs.Single(c => c.User2Id == recevierId || c.User1Id == recevierId);
+                    dialog = usersDialog;
+                }
+                if (user.InterlocutorsDialogs.Any(c => c.User2Id == recevierId || c.User1Id == recevierId))
+                {
+                    var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == recevierId || c.User1Id == recevierId);
+                    dialog = interlocutorsDialog;
+                }
+                var newMessage = new Message
+                {
+                    DialogId = dialog.Id,
+                    SenderId = senderId,
+                    Text = message,
+                    SendingTime = time,
+                    Receiverid = recevierId
+                };
+                await unitOfWork.Messages.Add(newMessage);
+                await unitOfWork.Save();
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task CreateDialog(string userId, string friendId)
@@ -41,25 +59,17 @@ namespace GoodDay.BLL.Services
             User friend = await userManager.FindByIdAsync(friendId);
             var usersDialog = new Dialog
             {
-                SenderId = userId,
-                ReceiverId = friendId
-            };
-            var friendsDialog = new Dialog
-            {
-                SenderId = friendId,
-                ReceiverId = userId
+                User1Id = userId,
+                User2Id = friendId
             };
             await unitOfWork.Dialogs.Add(usersDialog);
-            if (!await IsDialogExists(friendId, userId))
-            {
-                await unitOfWork.Dialogs.Add(friendsDialog);
-            }
         }
 
         public async Task<List<MessageViewModel>> GetAllDialogMessages(string userId, string friendId)
         {
             User user = await userManager.FindByIdAsync(userId);
-            var dialog = user.UsersDialogs.Single(c => c.ReceiverId == friendId);
+            var dialogList = user.UsersDialogs.Union(user.InterlocutorsDialogs);
+            var dialog = dialogList.Single(c => (c.User2Id == friendId && c.User1Id == userId) || (c.User1Id == friendId && c.User2Id == userId));
             var result = new List<MessageViewModel>();
             var messagesList = dialog.Messages;
             foreach (var item in messagesList)
@@ -72,20 +82,44 @@ namespace GoodDay.BLL.Services
         public async Task<List<DialogViewModel>> GetAllDialogs(string userId)
         {
             User user = await userManager.FindByIdAsync(userId);
-            var dialogList = user.UsersDialogs;
+            var dialogList = user.UsersDialogs.Union(user.InterlocutorsDialogs);
             var result = new List<DialogViewModel>();
-            foreach(var item in dialogList)
+            foreach (var item in dialogList)
             {
-                result.Add( new DialogViewModel(item));
+                var dialogVM = new DialogViewModel(item, user);
+                result.Add(dialogVM);
+                var messagesList = item.Messages;
+                var messagesListVM = new List<MessageViewModel>();
+                foreach (var message in messagesList)
+                {
+                    var messageVM = new MessageViewModel(message);
+                    messagesListVM.Add(messageVM);
+                }
+                dialogVM.Messages = messagesListVM;
             }
             return result;
         }
+        //public async Task<DialogViewModel> GetDialog(string userId, string friendId)
+        //{
+        //    User user = await userManager.FindByIdAsync(userId);
+        //    var dialog = 
+        //}
 
         public async Task<DialogViewModel> GetDialog(string userId, string friendId)
         {
-            User user = await userManager.FindByIdAsync(userId);
-            var dialog = user.UsersDialogs.Single(c => c.ReceiverId == friendId);
-            return new DialogViewModel(dialog);
+            try
+            {
+                User user = await userManager.FindByIdAsync(userId);
+                var dialogList = user.UsersDialogs.Union(user.InterlocutorsDialogs);
+                var dialog = dialogList.Single(c => (c.User2Id == friendId && c.User1Id == userId) || (c.User1Id == friendId && c.User2Id == userId));
+                var dialogVM = new DialogViewModel(dialog, user);
+                dialogVM.Messages =  await GetAllDialogMessages(userId, friendId);
+                return dialogVM;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
 
         }
 

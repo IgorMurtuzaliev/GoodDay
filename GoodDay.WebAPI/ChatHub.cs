@@ -43,7 +43,7 @@ namespace GoodDay.WebAPI
         {
             UserIds receiver, caller;
             FindCallerReceiverByIds(receiverId, out caller, out receiver);
-            //await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
+            await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
             await Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
             if (receiver != null)
             {
@@ -76,17 +76,19 @@ namespace GoodDay.WebAPI
             if (dialogExists)
             {
                 await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
+                await Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
                 await Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
             }
             else
             {
-                await chatService.CreateDialog(receiverId, caller.userId);
+                await chatService.CreateDialog(caller.userId, receiverId);
                 await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
-                var chatRoomVM = await chatService.GetDialog(caller.userId, receiverId);
-                var res = JsonConvert.SerializeObject(chatRoomVM);
+                //var chatRoomVM = await chatService.GetDialog(caller.userId, receiverId);
+                //var res = JsonConvert.SerializeObject(chatRoomVM);
                 if (receiver != null)
                 {
-                    await Clients.Client(receiver.connectionId).SendAsync("AddNewDialog", message, res);
+                    await Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                    await Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
                 }
             }
             
