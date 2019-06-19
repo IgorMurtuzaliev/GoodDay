@@ -50,6 +50,11 @@ namespace GoodDay.DAL.EF
                .HasOne(a => a.Receiver)
                .WithMany(b => b.InterlocutorsDialogs)
                .HasForeignKey(c => c.ReceiverId);
+            modelBuilder.Entity<Message>()
+               .HasOne(a => a.Dialog)
+               .WithMany(b => b.Messages)
+               .HasForeignKey(c => c.DialogId);
+
 
             modelBuilder.Entity<BlockList>()
                .HasOne(a => a.User)

@@ -16,6 +16,7 @@ namespace GoodDay.BLL.Interfaces
         Task<User> FindByPhoneAsync(string phone);
         Task EditProfileImage(string id, IFormFile file);
         bool PhoneExists(string phone);
-        Task ChangePassword(string id, ChangePasswordViewModel model);
+        Task<IdentityResult> ChangePassword(string id, string currentPassword, string newPassword);
+        Task<string> FindIdByEmail(string email);
     }
 }

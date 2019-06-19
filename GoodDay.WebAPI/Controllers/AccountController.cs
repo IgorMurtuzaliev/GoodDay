@@ -175,16 +175,17 @@ namespace GoodDay.WebAPI.Controllers
         [HttpPut]
         [Authorize]
         [Route("editPassword")]
-        public IActionResult ChangePassword(ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
             try
             {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            if (accountService.ChangePassword(id, model).IsCompletedSuccessfully)
+              var id = User.Claims.First(c => c.Type == "Id").Value;
+                var result = await accountService.ChangePassword(id, model.CurrentPassword, model.NewPassword);
+            if (result.Succeeded)
             {
-                return Ok();
+                return Ok(result);
             }
-            else return BadRequest("ergergerge");
+            else return BadRequest("Password changing failed");
             }
             catch(Exception ex)
             {

@@ -141,21 +141,28 @@ namespace GoodDay.BLL.Services
                 throw ex;
             }
         }
-        public async Task ChangePassword(string id, ChangePasswordViewModel model)
+        public async Task<IdentityResult> ChangePassword(string id, string currentPassword, string newPassword)
         {
             try
             {
                 User user = await userManager.FindByIdAsync(id);
-                var newPassword = userManager.PasswordHasher.HashPassword(user, model.NewPassword);
-                user.PasswordHash = null;
-                user.PasswordHash = newPassword;
-                await unitOfWork.Users.Edit(user);
-                await unitOfWork.Users.Save();
+                var result = await userManager.ChangePasswordAsync(user, currentPassword, newPassword);
+                return result;
             }
             catch (Exception ex)
             {
                 throw ex;
             }
+        }
+
+        public async Task<string> FindIdByEmail(string email)
+        {
+            User user = await userManager.FindByEmailAsync(email);
+            if (user != null)
+            {
+                return user.Id;
+            }
+            else return null;
         }
     }
 }

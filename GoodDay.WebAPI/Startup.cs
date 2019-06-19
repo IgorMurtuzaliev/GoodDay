@@ -65,6 +65,7 @@ namespace GoodDay.WebAPI
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IEmailSender, EmailService>();
             services.AddTransient<ISearchService, SearchService>();
+            services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IBlockListService, BlockListService>();
             services.AddTransient<IBlockRepository, BlockRepository>();
@@ -105,17 +106,12 @@ namespace GoodDay.WebAPI
                        {
                            OnMessageReceived = context =>
                            {
-                               if ((context.Request.Path.Value.StartsWith("/loo")) && context.Request.Query.TryGetValue("token", out StringValues token)
-                               )
+                               var accessToken = context.Request.Query["access_token"];
+                               var path = context.HttpContext.Request.Path;
+                               if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/echo")))
                                {
-                                   context.Token = token;
+                                   context.Token = accessToken;
                                }
-
-                               return Task.CompletedTask;
-                           },
-                           OnAuthenticationFailed = context =>
-                           {
-                               var te = context.Exception;
                                return Task.CompletedTask;
                            }
                        };
