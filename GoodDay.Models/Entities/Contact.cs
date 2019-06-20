@@ -11,6 +11,7 @@ namespace GoodDay.Models.Entities
 
         [ForeignKey("User")]
         public string UserId { get; set; }   
+
         [ForeignKey("Friend")]
         public string FriendId { get; set; }
 

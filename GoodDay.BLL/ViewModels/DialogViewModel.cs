@@ -25,56 +25,57 @@ namespace GoodDay.BLL.ViewModels
         {
             if (dialog != null)
             {
-                { Id = dialog.Id; }
+                Id = dialog.Id;
                 if (user.Id == dialog.User1Id)
                 {
                     if (!String.IsNullOrEmpty(dialog.User2Id))
                     {
-                        { FriendId = dialog.User2Id; }
+                        FriendId = dialog.User2Id;
                     }
                     if (dialog.User2 != null)
                     {
-                        { FriendName = dialog.User2.Name; }
-                        { FriendSurname = dialog.User2.Surname; }
-                        { FriendEmail = dialog.User2.Email; }
-                        { FriendPhone = dialog.User2.Phone; }
+                        FriendName = dialog.User2.Name;
+                        FriendSurname = dialog.User2.Surname;
+                        FriendEmail = dialog.User2.Email;
+                        FriendPhone = dialog.User2.Phone;
                         if (dialog.User2.File != null)
                         {
-                            { FriendImage = dialog.User2.File.Path; }
+                            FriendImage = dialog.User2.File.Path;
                         }
-                        else FriendImage = "\\Shared\\user.png";
-                    }                  
+                    }
+                    else FriendImage = "\\Shared\\user.png";
                 }
-                if (user.Id == dialog.User2Id)
+            }
+            if (user.Id == dialog.User2Id)
+            {
+                if (!String.IsNullOrEmpty(dialog.User1Id))
                 {
-                    if (!String.IsNullOrEmpty(dialog.User1Id))
-                    {
-                        { FriendId = dialog.User1Id; }
-                    }
-                    if (dialog.User1 != null)
-                    {
-                        { FriendName = dialog.User1.Name; }
-                        { FriendSurname = dialog.User1.Surname; }
-                        { FriendEmail = dialog.User1.Email; }
-                        { FriendPhone = dialog.User1.Phone; }
-                        if (dialog.User1.File != null)
-                        {
-                            { FriendImage = dialog.User1.File.Path; }
-                        }
-                        else FriendImage = "\\Shared\\user.png";
-                    }
+                    FriendId = dialog.User1Id;
                 }
-                if (dialog.Messages.Count != 0)
+                if (dialog.User1 != null)
                 {
-                    var lastmessage = dialog.Messages.LastOrDefault();
-                    { LastMessage = lastmessage.Text; }
-                    if (lastmessage.Sender.File != null)
+                    FriendName = dialog.User1.Name;
+                    FriendSurname = dialog.User1.Surname;
+                    FriendEmail = dialog.User1.Email;
+                    FriendPhone = dialog.User1.Phone;
+                    if (dialog.User1.File != null)
                     {
-                        { LastMessageSenderImage = lastmessage.Sender.File.Path; }
+                        FriendImage = dialog.User1.File.Path;
                     }
-                    else LastMessageSenderImage = "\\Shared\\user.png";
+                    else FriendImage = "\\Shared\\user.png";
                 }
+            }
+            if (dialog.Messages.Count != 0)
+            {
+                var lastmessage = dialog.Messages.LastOrDefault();
+                LastMessage = lastmessage.Text;
+                if (lastmessage.Sender.File != null)
+                {
+                    LastMessageSenderImage = lastmessage.Sender.File.Path;
+                }
+                else LastMessageSenderImage = "\\Shared\\user.png";
             }
         }
     }
 }
+

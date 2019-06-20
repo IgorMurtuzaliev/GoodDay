@@ -15,24 +15,24 @@ namespace GoodDay.BLL.ViewModels
         public string FriendEmail { get; set; }
         public string FriendPhone { get; set; }
         public string UserAvatar { get; set; }
-        public BlockListViewModel(BlockList block )
+        public BlockListViewModel(BlockList block)
         {
             if (block != null)
             {
-                { Id = block.Id; }
+                Id = block.Id;
                 if (!String.IsNullOrEmpty(block.FriendId))
                 {
-                    { FriendId = block.FriendId; }
+                    FriendId = block.FriendId;
                 }
                 if (block.Friend != null)
                 {
-                    { FriendName = block.Friend.Name; }
-                    { FriendSurname = block.Friend.Surname; }
-                    { FriendEmail = block.Friend.Email; }
-                    { FriendPhone = block.Friend.Phone; }
+                    FriendName = block.Friend.Name;
+                    FriendSurname = block.Friend.Surname;
+                    FriendEmail = block.Friend.Email;
+                    FriendPhone = block.Friend.Phone;
                     if (block.Friend.File != null)
                     {
-                        { UserAvatar = block.Friend.File.Path; }
+                        UserAvatar = block.Friend.File.Path;
                     }
                     else UserAvatar = "\\Shared\\user.png";
                 }

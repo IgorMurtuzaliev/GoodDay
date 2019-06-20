@@ -21,7 +21,7 @@ using File = GoodDay.Models.Entities.File;
 
 namespace GoodDay.BLL.Services
 {
-    public class AccountService:IAccountService
+    public class AccountService : IAccountService
     {
         private readonly UserManager<User> userManager;
         private readonly SignInManager<User> signInManager;
@@ -43,7 +43,7 @@ namespace GoodDay.BLL.Services
         {
             Mapper.Initialize(cfg => cfg.CreateMap<RegisterViewModel, User>()
                     .ForMember("UserName", opt => opt.MapFrom(src => src.Email))
-                    .ForMember("Phone", opt => opt.MapFrom(src => "+375"+ src.Phone)));
+                    .ForMember("Phone", opt => opt.MapFrom(src => "+375" + src.Phone)));
             User user = Mapper.Map<RegisterViewModel, User>(model);
             Mapper.Reset();
             try
@@ -56,10 +56,10 @@ namespace GoodDay.BLL.Services
                     var callbackurl = new StringBuilder("https://").AppendFormat(url).AppendFormat("/api/account/confirmemail").AppendFormat($"?userId={user.Id}&code={encode}");
                     await emailService.SendEmailAsync(user.Email, "Тема письма", $"Please confirm your account by <a href='{callbackurl}'>clicking here</a>.We hope you enjoy it and tell your friends about our chat!");
                     return result;
-                }          
-            return result;
+                }
+                return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -107,7 +107,7 @@ namespace GoodDay.BLL.Services
                     await unitOfWork.Users.Edit(user);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }
@@ -115,9 +115,9 @@ namespace GoodDay.BLL.Services
         public async Task<User> FindByPhoneAsync(string phone)
         {
             User user = await unitOfWork.Users.FindByPhone(phone);
-            return user;        
+            return user;
         }
-         public bool PhoneExists(string phone)
+        public bool PhoneExists(string phone)
         {
             return unitOfWork.Users.PhoneExists(phone);
         }
@@ -127,16 +127,16 @@ namespace GoodDay.BLL.Services
             try
             {
                 var newfile = await fileManager.EditImage(user, file);
-                await unitOfWork.Files.Delete(user.FileId);
-                user.File = null;
-                user.FileId = null;
-                await unitOfWork.Users.Edit(user);
-                await unitOfWork.Files.Add(newfile);
+                //await unitOfWork.Files.Delete(user.FileId);
+                //user.File = null;
+                //user.FileId = null;
+                //await unitOfWork.Users.Edit(user);
+                //await unitOfWork.Files.Add(newfile);
                 user.FileId = newfile.Id;
                 await unitOfWork.Users.Edit(user);
                 await unitOfWork.Save();
             }
-           catch(Exception ex)
+            catch (Exception ex)
             {
                 throw ex;
             }

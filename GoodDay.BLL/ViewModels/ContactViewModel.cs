@@ -17,29 +17,29 @@ namespace GoodDay.BLL.ViewModels
         public string FriendPhone { get; set; }
         public string ContactImage { get; set; }
         public ContactViewModel(Contact contact)
-         {
+        {
             if (contact != null)
             {
-                { Id = contact.Id; }
-                { Blocked = contact.Blocked; }
-                { Confirmed = contact.Confirmed; }
+                Id = contact.Id;
+                Blocked = contact.Blocked;
+                Confirmed = contact.Confirmed;
                 if (!String.IsNullOrEmpty(contact.ContactName))
                 {
-                    { ContactName = contact.ContactName; }
+                    ContactName = contact.ContactName;
                 }
                 if (!String.IsNullOrEmpty(contact.FriendId))
                 {
-                    { FriendId = contact.FriendId; }
+                    FriendId = contact.FriendId;
                 }
                 if (contact.Friend != null)
                 {
-                    { FriendName = contact.Friend.Name; }
-                    { FriendSurname = contact.Friend.Surname; }
-                    { FriendEmail = contact.Friend.Email; }
-                    { FriendPhone = contact.Friend.Phone; }
+                    FriendName = contact.Friend.Name;
+                    FriendSurname = contact.Friend.Surname;
+                    FriendEmail = contact.Friend.Email;
+                    FriendPhone = contact.Friend.Phone;
                     if (contact.Friend.File != null)
                     {
-                        { ContactImage = contact.Friend.File.Path; }
+                        ContactImage = contact.Friend.File.Path;
                     }
                     else ContactImage = "\\Shared\\user.png";
                 }

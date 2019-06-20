@@ -8,7 +8,7 @@ namespace GoodDay.BLL.ViewModels
     public class MessageViewModel
     {
         public int Id { get; set; }
-        public string  SenderId { get; set; }
+        public string SenderId { get; set; }
         public string UserName { get; set; }
         public string ReceiverId { get; set; }
         public string MessageText { get; set; }
@@ -16,25 +16,26 @@ namespace GoodDay.BLL.ViewModels
         public string UserImage { get; set; }
         public MessageViewModel(Message message)
         {
-            { Id = message.Id; }
+            Id = message.Id;
+            TimeOfSending = DateTime.Now;
             if (!String.IsNullOrEmpty(message.SenderId))
             {
-                { SenderId = message.SenderId; }
+                SenderId = message.SenderId;
             }
             if (!String.IsNullOrEmpty(message.Receiverid))
             {
-                { ReceiverId = message.Receiverid; }
+                ReceiverId = message.Receiverid;
             }
             if (!String.IsNullOrEmpty(message.Text))
             {
-                MessageText = message.Text; 
+                MessageText = message.Text;
             }
             if (message.Sender != null)
             {
-                { UserName = message.Sender.UserName; }
+                UserName = message.Sender.UserName;
                 if (message.Sender.File != null)
                 {
-                    { UserImage = message.Sender.File.Path; }
+                    UserImage = message.Sender.File.Path;
                 }
                 else UserImage = "\\Shared\\user.png";
             }

@@ -8,9 +8,8 @@ namespace GoodDay.DAL.Interfaces
 {
     public interface IUserRepository
     {
-        Task Edit(User item);      
-        Task Delete(string id);
-        Task<User> Get(string id);     
+        Task Edit(User item);
+        Task<User> Get(string id);
         Task Save();
         bool UserExists(string id);
         bool PhoneExists(string phone);

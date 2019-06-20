@@ -17,13 +17,6 @@ namespace GoodDay.DAL.Repositories
         {
             dbContext = _dbContext;
         }
-        public async Task Delete(string id)
-        {
-            User user = await dbContext.Users.FindAsync(id);
-            if (user != null)
-                dbContext.Users.Remove(user);
-        }
-
         public async Task Edit(User item)
         {
             dbContext.Entry(item).State = EntityState.Modified;
@@ -52,6 +45,6 @@ namespace GoodDay.DAL.Repositories
         {
             return await dbContext.Users.SingleAsync(c => c.Phone == phone);
         }
-        
+
     }
 }

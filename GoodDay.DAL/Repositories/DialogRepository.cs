@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace GoodDay.DAL.Repositories
 {
-     public class DialogRepository : IDialogRepository
+    public class DialogRepository : IDialogRepository
     {
         private readonly ApplicationDbContext dbContext;
         public DialogRepository(ApplicationDbContext _dbContext)
@@ -28,12 +28,6 @@ namespace GoodDay.DAL.Repositories
             Dialog dialog = await dbContext.Dialogs.FindAsync(id);
             if (dialog != null)
                 dbContext.Dialogs.Remove(dialog);
-        }
-
-        public async Task Edit(Dialog item)
-        {
-            dbContext.Entry(item).State = EntityState.Modified;
-            await Save();
         }
 
         public async Task<IEnumerable<Dialog>> GetAll()

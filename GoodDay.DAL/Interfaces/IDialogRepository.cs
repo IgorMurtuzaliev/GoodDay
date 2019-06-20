@@ -12,7 +12,6 @@ namespace GoodDay.DAL.Interfaces
         Dialog GetDialog(User user, string friendId);
         Task Add(Dialog item);
         bool UserHasDialog(User user, string friendId);
-        Task Edit(Dialog item);
         Task Delete(int? id);
         Task Save();
     }

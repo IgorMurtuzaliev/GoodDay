@@ -22,12 +22,10 @@ namespace GoodDay.WebAPI.Controllers
     {
         readonly IAccountService accountService;
         private readonly UserManager<User> userManager;
-        private readonly SignInManager<User> signInManager;
-        public AccountController(UserManager<User> _userManager, IAccountService _accountService, SignInManager<User> _signInManager)
+        public AccountController(UserManager<User> _userManager, IAccountService _accountService)
         {
             accountService = _accountService;
             userManager = _userManager;
-            signInManager = _signInManager;
         }
         [HttpPost]
         [Route("register")]
@@ -157,7 +155,7 @@ namespace GoodDay.WebAPI.Controllers
                     return BadRequest("Error, allowed image resolution jpg / jpeg");
                 }
 
-                if (length>lengthMax)
+                if (length > lengthMax)
                 {
                     return BadRequest("Error, image size should not be more than 2 MB");
                 }
@@ -165,12 +163,12 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     await accountService.EditProfileImage(id, file);
                     return Ok();
-                }  
                 }
-              catch(Exception ex)
+            }
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
-            }   
+            }
         }
         [HttpPut]
         [Authorize]
@@ -179,15 +177,15 @@ namespace GoodDay.WebAPI.Controllers
         {
             try
             {
-              var id = User.Claims.First(c => c.Type == "Id").Value;
+                var id = User.Claims.First(c => c.Type == "Id").Value;
                 var result = await accountService.ChangePassword(id, model.CurrentPassword, model.NewPassword);
-            if (result.Succeeded)
-            {
-                return Ok(result);
+                if (result.Succeeded)
+                {
+                    return Ok(result);
+                }
+                else return BadRequest("Password changing failed");
             }
-            else return BadRequest("Password changing failed");
-            }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }

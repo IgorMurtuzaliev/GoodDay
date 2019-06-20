@@ -18,13 +18,10 @@ namespace GoodDay.WebAPI.Controllers
     {
 
         public UserManager<User> userManager;
-        private ChatHub chatHub;
-        private IBlockListService blockListService;
         private IChatService chatService;
-        public ChatController(UserManager<User> _userManager,IBlockListService _blockListService, IChatService _chatService)
+        public ChatController(UserManager<User> _userManager, IChatService _chatService)
         {
             userManager = _userManager;
-            blockListService = _blockListService;
             chatService = _chatService;
         }
         [HttpGet]

@@ -11,8 +11,9 @@ namespace GoodDay.Models.Entities
         public int Id { get; set; }
         public string Name { get; set; }
         public string Path { get; set; }
-
+        [ForeignKey("User")]
         public string UserId { get; set; }
+        [ForeignKey("Message")]
         public int MessageId { get; set; }
 
         [NotMapped]

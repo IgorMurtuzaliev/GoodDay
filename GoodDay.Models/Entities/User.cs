@@ -26,7 +26,6 @@ namespace GoodDay.Models.Entities
 
         [Phone, Required(ErrorMessage = "Input you phone number")]
         public string Phone { get; set; }
-
         public int? FileId { get; set; }
 
         [JsonIgnore]

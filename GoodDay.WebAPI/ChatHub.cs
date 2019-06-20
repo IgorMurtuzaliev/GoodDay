@@ -17,44 +17,26 @@ namespace GoodDay.WebAPI
         public string userId;
         public string connectionId;
     }
-    public class ChatHub: Hub
+    public class ChatHub : Hub
     {
-        private IAccountService accountService;
         private IChatService chatService;
-        private UserManager<User> userManager;
-        public ChatHub(IAccountService _accountService, IChatService _chatService, UserManager<User> _userManager)
+        public ChatHub(IChatService _chatService)
         {
-            accountService = _accountService;
             chatService = _chatService;
-            userManager = _userManager;
         }
-        //[Authorize(AuthenticationSchemes = "Bearer")]
         static List<UserIds> usersList = new List<UserIds>();
 
         public async override Task OnConnectedAsync()
         {
             var id = Context.User.Claims.First(c => c.Type == "Id").Value;
-            //User user = await userManager.FindByIdAsync(id);
-            var callerId = id;
-            UpdateList(callerId);
+            UpdateList(id);
             await base.OnConnectedAsync();
         }
-        public async Task Send(string message, string receiverId)
-        {
-            UserIds receiver, caller;
-            FindCallerReceiverByIds(receiverId, out caller, out receiver);
-            await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
-            await Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
-            if (receiver != null)
-            {
-                await Clients.Clients(receiver.connectionId).SendAsync("Send", message, caller.userId);
-            }
-            
-        }
+
         void UpdateList(string callerId)
         {
             var index = usersList.FindIndex(i => i.userId == callerId);
-            if(index!=-1 && usersList[index].connectionId != Context.ConnectionId)
+            if (index != -1 && usersList[index].connectionId != Context.ConnectionId)
             {
                 usersList[index].connectionId = Context.ConnectionId;
             }
@@ -83,15 +65,12 @@ namespace GoodDay.WebAPI
             {
                 await chatService.CreateDialog(caller.userId, receiverId);
                 await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
-                //var chatRoomVM = await chatService.GetDialog(caller.userId, receiverId);
-                //var res = JsonConvert.SerializeObject(chatRoomVM);
                 if (receiver != null)
                 {
                     await Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
                     await Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
                 }
             }
-            
         }
         public async override Task OnDisconnectedAsync(Exception exception)
         {
