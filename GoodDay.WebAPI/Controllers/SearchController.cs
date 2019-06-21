@@ -5,6 +5,7 @@ using GoodDay.BLL.Interfaces;
 using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace GoodDay.WebAPI.Controllers
 {
@@ -16,13 +17,15 @@ namespace GoodDay.WebAPI.Controllers
         private ISearchService searchService;
         private IContactService contactService;
         private IBlockListService blockListService;
+        private IChatHub chatHub;
         
-        public SearchController(ISearchService _searchService, IUserService _userService, IContactService _contactService, IBlockListService _blockListService)
+        public SearchController(ISearchService _searchService, IUserService _userService, IContactService _contactService, IBlockListService _blockListService, IChatHub _chatHub)
         { 
             searchService = _searchService;
             userService = _userService;
             contactService = _contactService;
             blockListService = _blockListService;
+            chatHub = _chatHub;
         }
 
         [HttpGet]
@@ -45,6 +48,11 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     var profile = new UserViewModel(item);
                     result.Add(profile);
+                    if (chatHub.IsOnline(item.Id))
+                    {
+                        profile.IsOnline = true;
+                    }
+                    else profile.IsOnline = false;
                     if (await blockListService.IsUserBlocked(id, item.Id))
                     {
                         profile.IsBlocked = true;

@@ -65,6 +65,7 @@ namespace GoodDay.WebAPI
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IAccountService, AccountService>();
             services.AddTransient<IEmailSender, EmailService>();
+            services.AddTransient<IChatHub, ChatHub>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IChatService, ChatService>();
             services.AddTransient<IContactService, ContactService>();

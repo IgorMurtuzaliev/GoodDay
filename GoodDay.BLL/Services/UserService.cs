@@ -12,6 +12,7 @@ namespace GoodDay.BLL.Services
         private IUnitOfWork unitOfWork;
         private IContactService contactService;
         private UserManager<User> userManager;
+        //private ChatHub 
         public UserService(IUnitOfWork _unitOfWork, IContactService _contactService, UserManager<User> _userManager)
         {
             unitOfWork = _unitOfWork;

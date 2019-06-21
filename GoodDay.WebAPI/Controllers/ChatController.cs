@@ -42,32 +42,9 @@ namespace GoodDay.WebAPI.Controllers
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
             return await chatService.GetDialog(id, friendId);
-
         }
 
-        [Route("files")]
-        [HttpPost]
-        public async Task<IActionResult> UploadFiles(IFormFile file)
-        {
-            if (ModelState.IsValid)
-            {
-                if (file.Length > 0)
-                {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await file.CopyToAsync(memoryStream);
+       
 
-                        var imageMessage = new Models.Entities.File
-                        {
-                            Name = file.Name,
-                            Stream = memoryStream.ToString()
-                        };
-
-                        await hubContext.Clients.All.SendAsync("ImageMessage", imageMessage);
-                    }
-                }
-            }
-            return Ok();
-        }
     }
 }

@@ -16,6 +16,7 @@ namespace GoodDay.BLL.ViewModels
         public bool IsBlocked { get; set; }
         public bool IsInContacts { get; set; }
         public int ContactWithUserId { get; set; }
+        public bool IsOnline { get; set; }
         public UserViewModel(User user)
         {
             if (user != null)

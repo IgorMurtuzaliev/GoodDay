@@ -42,8 +42,9 @@ namespace GoodDay.BLL.ViewModels
                         {
                             FriendImage = dialog.User2.File.Path;
                         }
+                        else FriendImage = "\\Shared\\user.png";
                     }
-                    else FriendImage = "\\Shared\\user.png";
+
                 }
             }
             if (user.Id == dialog.User2Id)

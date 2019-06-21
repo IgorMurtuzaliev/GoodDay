@@ -20,13 +20,15 @@ namespace GoodDay.WebAPI.Controllers
         private UserManager<User> userManager;
         private IContactService contactService;
         private IBlockListService blockListService;
+        private IChatHub chatHub;
 
-        public UsersController(IUserService _userService, UserManager<User> _userManager, IContactService _contactService, IBlockListService _blockListService)
+        public UsersController(IUserService _userService, UserManager<User> _userManager, IContactService _contactService, IBlockListService _blockListService, IChatHub _chatHub)
         {
             userService = _userService;
             userManager = _userManager;
             contactService = _contactService;
             blockListService = _blockListService;
+            chatHub = _chatHub;
         }
       
 
@@ -49,6 +51,11 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     var user = await userManager.FindByIdAsync(friendId);
                     var profile = new UserViewModel(user);
+                    if (chatHub.IsOnline(friendId))
+                    {
+                        profile.IsOnline = true;
+                    }
+                    else profile.IsOnline = false;
                     if (await blockListService.IsUserBlocked(id, friendId))
                     {
                         profile.IsBlocked = true;

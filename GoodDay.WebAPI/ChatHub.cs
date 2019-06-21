@@ -17,14 +17,14 @@ namespace GoodDay.WebAPI
         public string userId;
         public string connectionId;
     }
-    public class ChatHub : Hub
+    public class ChatHub : Hub, IChatHub
     {
         private IChatService chatService;
         public ChatHub(IChatService _chatService)
         {
             chatService = _chatService;
         }
-        static List<UserIds> usersList = new List<UserIds>();
+        public static List<UserIds> usersList = new List<UserIds>();
 
         public async override Task OnConnectedAsync()
         {
@@ -33,7 +33,7 @@ namespace GoodDay.WebAPI
             await base.OnConnectedAsync();
         }
 
-        void UpdateList(string callerId)
+         void UpdateList(string callerId)
         {
             var index = usersList.FindIndex(i => i.userId == callerId);
             if (index != -1 && usersList[index].connectionId != Context.ConnectionId)
@@ -45,7 +45,7 @@ namespace GoodDay.WebAPI
                 usersList.Add(new UserIds { connectionId = Context.ConnectionId, userId = callerId });
             }
         }
-        void FindCallerReceiverByIds(string receiverId, out UserIds caller, out UserIds receiver)
+         void FindCallerReceiverByIds(string receiverId, out UserIds caller, out UserIds receiver)
         {
             receiver = usersList.Find(i => i.userId == receiverId);
             caller = usersList.Find(i => i.connectionId == Context.ConnectionId);
@@ -77,13 +77,30 @@ namespace GoodDay.WebAPI
             usersList.Remove(usersList.Find(c => c.connectionId == Context.ConnectionId));
             await base.OnDisconnectedAsync(exception);
         }
-
-        public async Task ImageMessage(File file, string receiverId)
+        public void Disconnect(string id)
         {
-            UserIds receiver, caller;
-            FindCallerReceiverByIds(receiverId, out caller, out receiver);
-            await Clients.Clients(caller.connectionId).SendAsync("ImageMessage", file);
-            await Clients.Client(receiver.connectionId).SendAsync("ImageMessage", file, caller.userId);
+            if(usersList.Any(c => c.userId == id))
+            {
+              usersList.Remove(usersList.Find(c => c.userId == id));
+            }
+            
+        }
+        public bool IsOnline(string id)
+        {
+            if (usersList.Any(c => c.userId == id))
+            {
+                return true;
+            }
+            else return false;
+        }
+        void IChatHub.UpdateList(string callerId)
+        {
+            throw new NotImplementedException();
+        }
+
+        void IChatHub.FindCallerReceiverByIds(string receiverId, out UserIds caller, out UserIds receiver)
+        {
+            throw new NotImplementedException();
         }
     }
 }

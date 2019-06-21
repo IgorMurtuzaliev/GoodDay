@@ -22,10 +22,12 @@ namespace GoodDay.WebAPI.Controllers
     {
         readonly IAccountService accountService;
         private readonly UserManager<User> userManager;
-        public AccountController(UserManager<User> _userManager, IAccountService _accountService)
+        private IChatHub chatHub;
+        public AccountController(UserManager<User> _userManager, IAccountService _accountService, IChatHub _chatHub)
         {
             accountService = _accountService;
             userManager = _userManager;
+            chatHub = _chatHub;
         }
         [HttpPost]
         [Route("register")]
@@ -189,6 +191,15 @@ namespace GoodDay.WebAPI.Controllers
             {
                 return StatusCode(500, ex.Message);
             }
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("disconnect")]
+        public void Logout()
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            chatHub.Disconnect(id);
         }
     }
 }
