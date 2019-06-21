@@ -10,6 +10,7 @@ namespace GoodDay.Models.Entities
         }
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Stream { get; set; }
         public string Path { get; set; }
         [ForeignKey("User")]
         public string UserId { get; set; }

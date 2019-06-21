@@ -12,12 +12,12 @@ namespace GoodDay.BLL.ViewModels
         public string UserName { get; set; }
         public string ReceiverId { get; set; }
         public string MessageText { get; set; }
-        public DateTime TimeOfSending { get; set; }
+        public string TimeOfSending { get; set; }
         public string UserImage { get; set; }
         public MessageViewModel(Message message)
         {
             Id = message.Id;
-            TimeOfSending = DateTime.Now;
+            TimeOfSending = message.SendingTime.ToString("MM/dd/yyyy h:mm tt");
             if (!String.IsNullOrEmpty(message.SenderId))
             {
                 SenderId = message.SenderId;

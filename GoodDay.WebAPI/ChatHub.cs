@@ -77,5 +77,13 @@ namespace GoodDay.WebAPI
             usersList.Remove(usersList.Find(c => c.connectionId == Context.ConnectionId));
             await base.OnDisconnectedAsync(exception);
         }
+
+        public async Task ImageMessage(File file, string receiverId)
+        {
+            UserIds receiver, caller;
+            FindCallerReceiverByIds(receiverId, out caller, out receiver);
+            await Clients.Clients(caller.connectionId).SendAsync("ImageMessage", file);
+            await Clients.Client(receiver.connectionId).SendAsync("ImageMessage", file, caller.userId);
+        }
     }
 }
