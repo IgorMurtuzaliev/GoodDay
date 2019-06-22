@@ -52,7 +52,7 @@ namespace GoodDay.BLL.Services
                 {
                     await file.CopyToAsync(fileStream);
                 }
-                File newfile = new File { Name = file.FileName, Path = path, MessageId = messageId };
+                File newfile = new File { Name = file.FileName, Path = path, MessageId = messageId};
                 await unitOfWork.Files.Add(newfile);
                 fileCollection.Add(newfile);
             }
