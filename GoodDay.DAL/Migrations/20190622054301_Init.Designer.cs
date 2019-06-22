@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GoodDay.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20190618142306_Message")]
-    partial class Message
+    [Migration("20190622054301_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -66,15 +66,15 @@ namespace GoodDay.DAL.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ReceiverId");
+                    b.Property<string>("User1Id");
 
-                    b.Property<string>("SenderId");
+                    b.Property<string>("User2Id");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ReceiverId");
+                    b.HasIndex("User1Id");
 
-                    b.HasIndex("SenderId");
+                    b.HasIndex("User2Id");
 
                     b.ToTable("Dialogs");
                 });
@@ -94,6 +94,8 @@ namespace GoodDay.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MessageId");
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
@@ -107,8 +109,6 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<int>("DialogId");
 
-                    b.Property<int?>("FileId");
-
                     b.Property<string>("Receiverid");
 
                     b.Property<string>("SenderId");
@@ -120,6 +120,8 @@ namespace GoodDay.DAL.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("DialogId");
+
+                    b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
                 });
@@ -316,17 +318,22 @@ namespace GoodDay.DAL.Migrations
 
             modelBuilder.Entity("GoodDay.Models.Entities.Dialog", b =>
                 {
-                    b.HasOne("GoodDay.Models.Entities.User", "Receiver")
-                        .WithMany("InterlocutorsDialogs")
-                        .HasForeignKey("ReceiverId");
-
-                    b.HasOne("GoodDay.Models.Entities.User", "Sender")
+                    b.HasOne("GoodDay.Models.Entities.User", "User1")
                         .WithMany("UsersDialogs")
-                        .HasForeignKey("SenderId");
+                        .HasForeignKey("User1Id");
+
+                    b.HasOne("GoodDay.Models.Entities.User", "User2")
+                        .WithMany("InterlocutorsDialogs")
+                        .HasForeignKey("User2Id");
                 });
 
             modelBuilder.Entity("GoodDay.Models.Entities.File", b =>
                 {
+                    b.HasOne("GoodDay.Models.Entities.Message")
+                        .WithMany("Files")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("GoodDay.Models.Entities.User", "User")
                         .WithOne("File")
                         .HasForeignKey("GoodDay.Models.Entities.File", "UserId");
@@ -338,6 +345,10 @@ namespace GoodDay.DAL.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("DialogId")
                         .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("GoodDay.Models.Entities.User", "Sender")
+                        .WithMany("Messages")
+                        .HasForeignKey("SenderId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

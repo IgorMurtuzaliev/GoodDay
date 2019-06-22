@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GoodDay.Models.Entities
@@ -22,8 +23,6 @@ namespace GoodDay.Models.Entities
         [ForeignKey("Dialog")]
         public int DialogId { get; set;}
 
-        [ForeignKey("File")]
-        public int? FileId { get; set; }
 
         [NotMapped]
         public virtual User Sender { get; set; }
@@ -31,8 +30,7 @@ namespace GoodDay.Models.Entities
         public virtual User Receiver { get; set; }
         [NotMapped]
         public virtual Dialog Dialog { get; set; }
-        [NotMapped]
-        public virtual File File { get; set; }
+        public virtual ICollection<File> Files { get; set; }
 
     }
 }

@@ -21,11 +21,13 @@ namespace GoodDay.WebAPI.Controllers
         private IHubContext<ChatHub> hubContext;
         private UserManager<User> userManager;
         private IChatService chatService;
-        public ChatController(UserManager<User> _userManager, IChatService _chatService, IHubContext<ChatHub> _hubContext)
+        private IChatHub chatHub;
+        public ChatController(UserManager<User> _userManager, IChatService _chatService, IHubContext<ChatHub> _hubContext, IChatHub _chatHub)
         {
             userManager = _userManager;
             chatService = _chatService;
             hubContext = _hubContext;
+            chatHub = _chatHub;
         }
         [HttpGet]
         [Authorize]
@@ -44,7 +46,14 @@ namespace GoodDay.WebAPI.Controllers
             return await chatService.GetDialog(id, friendId);
         }
 
-       
-
+        [HttpPost]
+        [Authorize]
+        [Route("send")]
+        public async Task SendMessage(PostMessageViewModel postMessage)
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            await chatHub.SendFaraway()
+        }
+        
     }
 }

@@ -92,6 +92,8 @@ namespace GoodDay.DAL.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MessageId");
+
                     b.HasIndex("UserId")
                         .IsUnique();
 
@@ -104,8 +106,6 @@ namespace GoodDay.DAL.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<int>("DialogId");
-
-                    b.Property<int?>("FileId");
 
                     b.Property<string>("Receiverid");
 
@@ -327,6 +327,11 @@ namespace GoodDay.DAL.Migrations
 
             modelBuilder.Entity("GoodDay.Models.Entities.File", b =>
                 {
+                    b.HasOne("GoodDay.Models.Entities.Message")
+                        .WithMany("Files")
+                        .HasForeignKey("MessageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("GoodDay.Models.Entities.User", "User")
                         .WithOne("File")
                         .HasForeignKey("GoodDay.Models.Entities.File", "UserId");
