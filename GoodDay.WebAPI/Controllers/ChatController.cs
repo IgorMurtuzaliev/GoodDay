@@ -60,8 +60,8 @@ namespace GoodDay.WebAPI.Controllers
                 if (dialogExists)
                 {
                     var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
-                    await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePath);
-                    await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePath, caller.userId);
+                    await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePaths);
+                    await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePaths, caller.userId);
                 }
                 else
                 {
@@ -69,8 +69,8 @@ namespace GoodDay.WebAPI.Controllers
                     var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
                     if (receiver != null)
                     {
-                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePath);
-                        await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePath, caller.userId);
+                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePaths);
+                        await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePaths, caller.userId);
                     }
                 }
             }

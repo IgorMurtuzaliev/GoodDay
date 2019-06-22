@@ -45,11 +45,11 @@ namespace GoodDay.BLL.Services
                     Text = postMessage.Text,
                     SendingTime = time,
                     Receiverid = postMessage.ReceiverId
+
                 };
-                var file = await fileManager.UploadMessagesFiles(dialog.Id, postMessage.Attachment);
-                newMessage.FilePaths = file.Path;
                 await unitOfWork.Messages.Add(newMessage);
                 await unitOfWork.Save();
+                var files = await fileManager.UploadMessagesFiles(dialog.Id, newMessage.Id, postMessage.Attachment);
                 var messageVM = new MessageViewModel(newMessage);
                 return messageVM;
             }

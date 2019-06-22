@@ -30,8 +30,8 @@ namespace GoodDay.Models.Entities
         public virtual User Receiver { get; set; }
         [NotMapped]
         public virtual Dialog Dialog { get; set; }
-
-        public string FilePaths { get; set; }
+        [NotMapped]
+        public virtual ICollection<File> Files { get; set; }
 
     }
 }

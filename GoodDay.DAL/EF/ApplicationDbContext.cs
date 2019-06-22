@@ -70,6 +70,10 @@ namespace GoodDay.DAL.EF
                 .WithMany(b => b.UserInBlockList)
                 .HasForeignKey(c => c.FriendId);
 
+            modelBuilder.Entity<File>()
+                .HasOne(a => a.Message)
+                .WithMany(b => b.Files)
+                .HasForeignKey(c => c.MessageId);
             base.OnModelCreating(modelBuilder);
         }
     }
