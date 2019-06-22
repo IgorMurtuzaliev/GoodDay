@@ -15,37 +15,43 @@ namespace GoodDay.BLL.Services
     {
         private UserManager<User> userManager;
         private IUnitOfWork unitOfWork;
-        public ChatService(UserManager<User> _userManager, IUnitOfWork _unitOfWork)
+        private IFileManager fileManager;
+        public ChatService(UserManager<User> _userManager, IUnitOfWork _unitOfWork, IFileManager _fileManager)
         {
             userManager = _userManager;
             unitOfWork = _unitOfWork;
+            fileManager = _fileManager;
         }
-        public async Task AddNewMessage(string senderId, string recevierId, string message, DateTime time)
+        public async Task<MessageViewModel> AddNewMessage(string senderId, PostMessageViewModel postMessage, DateTime time)
         {
             try
             {
                 User user = await userManager.FindByIdAsync(senderId);
                 var dialog = new Dialog();
-                if (user.UsersDialogs.Any(c => c.User2Id == recevierId || c.User1Id == recevierId))
+                if (user.UsersDialogs.Any(c => c.User2Id == postMessage.ReceiverId || c.User1Id == postMessage.ReceiverId))
                 {
-                    var usersDialog = user.UsersDialogs.Single(c => c.User2Id == recevierId || c.User1Id == recevierId);
+                    var usersDialog = user.UsersDialogs.Single(c => c.User2Id == postMessage.ReceiverId || c.User1Id == postMessage.ReceiverId);
                     dialog = usersDialog;
                 }
-                if (user.InterlocutorsDialogs.Any(c => c.User2Id == recevierId || c.User1Id == recevierId))
+                if (user.InterlocutorsDialogs.Any(c => c.User2Id == postMessage.ReceiverId || c.User1Id == postMessage.ReceiverId))
                 {
-                    var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == recevierId || c.User1Id == recevierId);
+                    var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == postMessage.ReceiverId || c.User1Id == postMessage.ReceiverId);
                     dialog = interlocutorsDialog;
                 }
                 var newMessage = new Message
                 {
                     DialogId = dialog.Id,
                     SenderId = senderId,
-                    Text = message,
+                    Text = postMessage.Text,
                     SendingTime = time,
-                    Receiverid = recevierId
+                    Receiverid = postMessage.ReceiverId
                 };
+                var file = await fileManager.UploadMessagesFiles(dialog.Id, postMessage.Attachment);
+                newMessage.FilePaths = file.Path;
                 await unitOfWork.Messages.Add(newMessage);
                 await unitOfWork.Save();
+                var messageVM = new MessageViewModel(newMessage);
+                return messageVM;
             }
             catch (Exception ex)
             {

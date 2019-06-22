@@ -45,15 +45,40 @@ namespace GoodDay.WebAPI.Controllers
             var id = User.Claims.First(c => c.Type == "Id").Value;
             return await chatService.GetDialog(id, friendId);
         }
-
+  
         [HttpPost]
         [Authorize]
-        [Route("send")]
-        public async Task SendMessage(PostMessageViewModel postMessage)
+        [Route("sendMessage")]
+        public async Task SendMessage([FromForm]PostMessageViewModel postMessage)
         {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            await chatHub.SendFaraway()
+            try
+            {
+                var id = User.Claims.First(c => c.Type == "Id").Value;
+                UserIds receiver, caller;
+                chatHub.FindCallerReceiverByIds(postMessage.ReceiverId, id, out caller, out receiver);
+                bool dialogExists = await chatService.IsDialogExists(caller.userId, postMessage.ReceiverId);
+                if (dialogExists)
+                {
+                    var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
+                    await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePath);
+                    await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePath, caller.userId);
+                }
+                else
+                {
+                    await chatService.CreateDialog(caller.userId, postMessage.ReceiverId);
+                    var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
+                    if (receiver != null)
+                    {
+                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePath);
+                        await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePath, caller.userId);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
-        
+
     }
 }

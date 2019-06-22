@@ -14,6 +14,7 @@ namespace GoodDay.BLL.ViewModels
         public string MessageText { get; set; }
         public string TimeOfSending { get; set; }
         public string UserImage { get; set; }
+        public string FilePath { get; set; }
         public MessageViewModel(Message message)
         {
             Id = message.Id;
@@ -29,6 +30,10 @@ namespace GoodDay.BLL.ViewModels
             if (!String.IsNullOrEmpty(message.Text))
             {
                 MessageText = message.Text;
+            }
+            if (!String.IsNullOrEmpty(message.FilePaths))
+            {
+                FilePath = message.FilePaths;
             }
             if (message.Sender != null)
             {

@@ -35,5 +35,22 @@ namespace GoodDay.BLL.Services
             File newfile = new File { Name = file.FileName, Path = path, UserId = user.Id };
             return newfile;
         }
+        public async Task<File> UploadMessagesFiles(int dialogId, IFormFile file)
+        {
+            string path = "\\Dialogs\\" + dialogId.ToString() + "\\" + file.FileName;
+            string directory = Path.Combine(appEnvironment.WebRootPath + "\\Dialogs\\" + dialogId + "\\");
+
+            if (!Directory.Exists(directory))
+            {
+                Directory.CreateDirectory(directory);
+            }
+            using (var fileStream = new FileStream(directory + file.FileName, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            File newfile = new File { Name = file.FileName, Path = path};
+            return newfile;
+        }
     }
 }

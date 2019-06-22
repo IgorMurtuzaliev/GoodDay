@@ -1,4 +1,5 @@
 ﻿using GoodDay.BLL.Interfaces;
+using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -33,7 +34,7 @@ namespace GoodDay.WebAPI
             await base.OnConnectedAsync();
         }
 
-         void UpdateList(string callerId)
+        void UpdateList(string callerId)
         {
             var index = usersList.FindIndex(i => i.userId == callerId);
             if (index != -1 && usersList[index].connectionId != Context.ConnectionId)
@@ -45,33 +46,33 @@ namespace GoodDay.WebAPI
                 usersList.Add(new UserIds { connectionId = Context.ConnectionId, userId = callerId });
             }
         }
-         void FindCallerReceiverByIds(string receiverId, out UserIds caller, out UserIds receiver)
+        void FindCallerReceiverByIds(string receiverId, string id, out UserIds caller, out UserIds receiver)
         {
             receiver = usersList.Find(i => i.userId == receiverId);
-            caller = usersList.Find(i => i.connectionId == Context.ConnectionId);
+            caller = usersList.Find(i => i.userId == id);
         }
-        public async Task SendFaraway(string message, string receiverId)
-        {
-            UserIds receiver, caller;
-            FindCallerReceiverByIds(receiverId, out caller, out receiver);
-            bool dialogExists = await chatService.IsDialogExists(caller.userId, receiverId);
-            if (dialogExists)
-            {
-                await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
-                await Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
-                await Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
-            }
-            else
-            {
-                await chatService.CreateDialog(caller.userId, receiverId);
-                await chatService.AddNewMessage(caller.userId, receiverId, message, DateTime.Now);
-                if (receiver != null)
-                {
-                    await Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
-                    await Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
-                }
-            }
-        }
+        //public async Task SendFaraway(PostMessageViewModel postMessage, string id)
+        //{
+        //    UserIds receiver, caller;
+        //    FindCallerReceiverByIds(postMessage.ReceiverId ,id,  out caller, out receiver);
+        //    bool dialogExists = await chatService.IsDialogExists(caller.userId, postMessage.ReceiverId);
+        //    if (dialogExists)
+        //    {
+        //        await chatService.AddNewMessage(caller.userId, postMessage.ReceiverId, postMessage.Text, DateTime.Now);
+        //        await Clients.Clients(caller.connectionId).SendAsync("SendMyself", postMessage.Text);
+        //        await Clients.Client(receiver.connectionId).SendAsync("Send", postMessage.Text, caller.userId);
+        //    }
+        //    else
+        //    {
+        //        await chatService.CreateDialog(caller.userId, postMessage.ReceiverId);
+        //        await chatService.AddNewMessage(caller.userId, postMessage.ReceiverId, postMessage.Text, DateTime.Now);
+        //        if (receiver != null)
+        //        {
+        //            await Clients.Clients(caller.connectionId).SendAsync("SendMyself", postMessage.Text);
+        //            await Clients.Client(receiver.connectionId).SendAsync("Send", postMessage.Text, caller.userId);
+        //        }
+        //    }
+        //}
         public async override Task OnDisconnectedAsync(Exception exception)
         {
             usersList.Remove(usersList.Find(c => c.connectionId == Context.ConnectionId));
@@ -79,11 +80,11 @@ namespace GoodDay.WebAPI
         }
         public void Disconnect(string id)
         {
-            if(usersList.Any(c => c.userId == id))
+            if (usersList.Any(c => c.userId == id))
             {
-              usersList.Remove(usersList.Find(c => c.userId == id));
+                usersList.Remove(usersList.Find(c => c.userId == id));
             }
-            
+
         }
         public bool IsOnline(string id)
         {
@@ -98,9 +99,10 @@ namespace GoodDay.WebAPI
             throw new NotImplementedException();
         }
 
-        void IChatHub.FindCallerReceiverByIds(string receiverId, out UserIds caller, out UserIds receiver)
+        void IChatHub.FindCallerReceiverByIds(string receiverId, string id, out UserIds caller, out UserIds receiver)
         {
-            throw new NotImplementedException();
+            receiver = usersList.Find(i => i.userId == receiverId);
+            caller = usersList.Find(i => i.userId == id);
         }
     }
 }
