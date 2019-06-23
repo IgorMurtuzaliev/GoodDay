@@ -13,7 +13,8 @@ namespace GoodDay.Models.Entities
         public int Id { get; set; }
         public string Text { get; set; }
         public DateTime SendingTime { get; set; }
-
+        public string SharedUserId { get; set; }
+        public string SharedUserName { get; set; }
         [ForeignKey("Sender")]
         public string SenderId { get; set; }
 

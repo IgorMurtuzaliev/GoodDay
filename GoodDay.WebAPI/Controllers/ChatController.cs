@@ -95,5 +95,63 @@ namespace GoodDay.WebAPI.Controllers
                 throw ex;
             }
         }
+        [HttpPost]
+        [Authorize]
+        [Route("shareUserLink")]
+        public async Task<IActionResult> ShareUserLink([FromForm]ShareUserMessageViewModel viewModel)
+        {
+            try
+            {
+                if (viewModel.Link != null)
+                {
+                    var id = User.Claims.First(c => c.Type == "Id").Value;
+                    UserIds receiver, caller;
+                    chatHub.FindCallerReceiverByIds(viewModel.ReceiverId, id, out caller, out receiver);
+                    bool dialogExists = await chatService.IsDialogExists(caller.userId, viewModel.ReceiverId);
+                    if (dialogExists)
+                    {
+                        var message = await chatService.ShareLink(caller.userId, viewModel, DateTime.Now);
+                        if (chatService.IsOnline(viewModel.ReceiverId))
+                        {
+                            await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                            await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                        }
+                        else
+                        {
+                            await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                        }
+                        return Ok(message);
+                    }
+                    else
+                    {
+                        await chatService.CreateDialog(caller.userId, viewModel.ReceiverId);
+                        var message = await chatService.ShareLink(caller.userId, viewModel, DateTime.Now);
+                        if (receiver != null)
+                        {
+                            if (chatService.IsOnline(viewModel.ReceiverId))
+                            {
+                                await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                                await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                            }
+                            else
+                            {
+                                await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                            }
+                        }
+                        return Ok(message);
+                    }
+                    
+                }
+                else
+                {
+                    return BadRequest("You didn't choose the user to share");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

@@ -28,7 +28,7 @@ namespace GoodDay.BLL.Services
         {
             try
             {
-                User user = await userManager.FindByIdAsync(id);
+                User user = await userManager.FindByIdAsync(friendId);
                 var profile = new UserViewModel(user);
                 if (chatService.IsOnline(friendId))
                 {

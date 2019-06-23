@@ -19,7 +19,7 @@ namespace GoodDay.BLL.ViewModels
         public string FriendImage { get; set; }
         public string LastMessage { get; set; }
         public string LastMessageSenderImage { get; set; }
-
+        public bool BlockedClient { get; set; }
         public List<MessageViewModel> Messages { get; set; }
         public DialogViewModel(Dialog dialog, User user)
         {

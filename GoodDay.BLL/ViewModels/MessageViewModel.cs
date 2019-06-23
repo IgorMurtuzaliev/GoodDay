@@ -15,6 +15,8 @@ namespace GoodDay.BLL.ViewModels
         public string MessageText { get; set; }
         public string TimeOfSending { get; set; }
         public string UserImage { get; set; }
+        public string SharedUserId { get; set; }
+        public string SharedUserName { get; set; }
         public ICollection<FileViewModel> FilePaths { get; set; }
         public MessageViewModel(Message message)
         {
@@ -49,6 +51,11 @@ namespace GoodDay.BLL.ViewModels
                     UserImage = message.Sender.FilePath;
                 }
                 else UserImage = "\\Shared\\user.png";
+            }
+            if (message.SharedUserId != null)
+            {
+                SharedUserId = message.SharedUserId;
+                SharedUserName = message.SharedUserName;
             }
         }
     }

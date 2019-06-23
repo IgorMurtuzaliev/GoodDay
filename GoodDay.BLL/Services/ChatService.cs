@@ -17,11 +17,13 @@ namespace GoodDay.BLL.Services
         private UserManager<User> userManager;
         private IUnitOfWork unitOfWork;
         private IFileManager fileManager;
-        public ChatService(UserManager<User> _userManager, IUnitOfWork _unitOfWork, IFileManager _fileManager)
+        private IBlockListService blockListService;
+        public ChatService(UserManager<User> _userManager, IUnitOfWork _unitOfWork, IFileManager _fileManager, IBlockListService _blockListService)
         {
             userManager = _userManager;
             unitOfWork = _unitOfWork;
             fileManager = _fileManager;
+            blockListService = _blockListService;
         }
         public async Task<MessageViewModel> AddNewMessage(string senderId, PostMessageViewModel postMessage, DateTime time)
         {
@@ -54,6 +56,44 @@ namespace GoodDay.BLL.Services
                 {
                     var files = await fileManager.UploadMessagesFiles(dialog.Id, newMessage.Id, postMessage.Attachment);
                 }
+                var messageVM = new MessageViewModel(newMessage);
+                return messageVM;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+        public async Task<MessageViewModel> ShareLink(string senderId, ShareUserMessageViewModel viewModel, DateTime time)
+        {
+            try
+            {
+                User user = await userManager.FindByIdAsync(senderId);
+                User friend = await userManager.FindByIdAsync(viewModel.Link);
+                var dialog = new Dialog();
+                if (user.UsersDialogs.Any(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId))
+                {
+                    var usersDialog = user.UsersDialogs.Single(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId);
+                    dialog = usersDialog;
+                }
+                if (user.InterlocutorsDialogs.Any(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId))
+                {
+                    var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId);
+                    dialog = interlocutorsDialog;
+                }
+                var newMessage = new Message
+                {
+                    DialogId = dialog.Id,
+                    SenderId = senderId,
+                    Text = "",
+                    SendingTime = time,
+                    Receiverid = viewModel.ReceiverId,
+                    SharedUserId = viewModel.Link,
+                    SharedUserName = friend.Name +" "+friend.Surname,
+                    Files = null
+                };
+                await unitOfWork.Messages.Add(newMessage);
+                await unitOfWork.Save();
                 var messageVM = new MessageViewModel(newMessage);
                 return messageVM;
             }
@@ -140,6 +180,11 @@ namespace GoodDay.BLL.Services
                 var dialog = dialogList.Single(c => (c.User2Id == friendId && c.User1Id == userId) || (c.User1Id == friendId && c.User2Id == userId));
                 var dialogVM = new DialogViewModel(dialog, user);
                 dialogVM.Messages = await GetAllDialogMessages(userId, friendId);
+                if(await blockListService.IsUserBlocked(friendId, userId))
+                {
+                    dialogVM.BlockedClient = true;
+                }
+                else dialogVM.BlockedClient = false;
                 return dialogVM;
             }
             catch (Exception ex)
