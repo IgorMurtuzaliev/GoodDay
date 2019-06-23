@@ -153,5 +153,63 @@ namespace GoodDay.WebAPI.Controllers
                 throw ex;
             }
         }
+        [HttpPost]
+        [Authorize]
+        [Route("resendMessage")]
+        public async Task<IActionResult> ResendMessage([FromForm]ResendMessageViewModel viewModel)
+        {
+            try
+            {
+                if (viewModel.MessageId != null)
+                {
+                    var id = User.Claims.First(c => c.Type == "Id").Value;
+                    UserIds receiver, caller;
+                    chatHub.FindCallerReceiverByIds(viewModel.ReceiverId, id, out caller, out receiver);
+                    bool dialogExists = await chatService.IsDialogExists(caller.userId, viewModel.ReceiverId);
+                    if (dialogExists)
+                    {
+                        var message = await chatService.ResendMessage(caller.userId, viewModel, DateTime.Now);
+                        if (chatService.IsOnline(viewModel.ReceiverId))
+                        {
+                            await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                            await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                        }
+                        else
+                        {
+                            await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                        }
+                        return Ok(message);
+                    }
+                    else
+                    {
+                        await chatService.CreateDialog(caller.userId, viewModel.ReceiverId);
+                        var message = await chatService.ResendMessage(caller.userId, viewModel, DateTime.Now);
+                        if (receiver != null)
+                        {
+                            if (chatService.IsOnline(viewModel.ReceiverId))
+                            {
+                                await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                                await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                            }
+                            else
+                            {
+                                await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                            }
+                        }
+                        return Ok(message);
+                    }
+
+                }
+                else
+                {
+                    return BadRequest("You didn't choose the message to resend");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
     }
 }

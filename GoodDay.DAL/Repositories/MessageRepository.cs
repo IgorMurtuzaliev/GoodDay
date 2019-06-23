@@ -26,5 +26,11 @@ namespace GoodDay.DAL.Repositories
             if (message != null)
                 dbContext.Messages.Remove(message);
         }
+        public async Task<Message> GetUser(int? id)
+        {
+            Message message = await dbContext.Messages.FindAsync(id);
+            return message;
+
+        }
     }
 }

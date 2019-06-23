@@ -10,5 +10,6 @@ namespace GoodDay.DAL.Interfaces
     {
         Task Add(Message item);
         Task Delete(int? id);
+        Task<Message> GetUser(int? id);
     }
 }

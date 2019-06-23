@@ -102,6 +102,45 @@ namespace GoodDay.BLL.Services
                 throw ex;
             }
         }
+        public async Task<MessageViewModel> ResendMessage(string senderId, ResendMessageViewModel viewModel, DateTime time)
+        {
+            try
+            {
+                
+                User user = await userManager.FindByIdAsync(senderId);
+                Message message = await unitOfWork.Messages.GetUser(Convert.ToInt32(viewModel.MessageId));
+                User sender = await userManager.FindByIdAsync(message.SenderId);
+                var dialog = new Dialog();
+                if (user.UsersDialogs.Any(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId))
+                {
+                    var usersDialog = user.UsersDialogs.Single(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId);
+                    dialog = usersDialog;
+                }
+                if (user.InterlocutorsDialogs.Any(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId))
+                {
+                    var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId);
+                    dialog = interlocutorsDialog;
+                }
+                var newMessage = new Message
+                {
+                    DialogId = dialog.Id,
+                    SenderId = senderId,
+                    Text = message.Text,
+                    SendingTime = time,
+                    Receiverid = viewModel.ReceiverId,
+                    ResendUserFrom = sender.Name + sender.Surname,
+                    Files = message.Files
+                };
+                await unitOfWork.Messages.Add(newMessage);
+                await unitOfWork.Save();
+                var messageVM = new MessageViewModel(newMessage);
+                return messageVM;
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
 
         public async Task CreateDialog(string userId, string friendId)
         {

@@ -15,6 +15,7 @@ namespace GoodDay.Models.Entities
         public DateTime SendingTime { get; set; }
         public string SharedUserId { get; set; }
         public string SharedUserName { get; set; }
+        public string ResendUserFrom { get; set; }
         [ForeignKey("Sender")]
         public string SenderId { get; set; }
 

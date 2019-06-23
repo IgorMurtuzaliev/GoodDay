@@ -8,7 +8,7 @@ namespace GoodDay.BLL.ViewModels
 {
     public class MessageViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string SenderId { get; set; }
         public string UserName { get; set; }
         public string ReceiverId { get; set; }
@@ -17,10 +17,11 @@ namespace GoodDay.BLL.ViewModels
         public string UserImage { get; set; }
         public string SharedUserId { get; set; }
         public string SharedUserName { get; set; }
+        public string ResendUserFrom { get; set; }
         public ICollection<FileViewModel> FilePaths { get; set; }
         public MessageViewModel(Message message)
         {
-            Id = message.Id;
+            Id = message.Id.ToString();
             TimeOfSending = message.SendingTime.ToString("MM/dd/yyyy h:mm tt");
             if (!String.IsNullOrEmpty(message.SenderId))
             {
@@ -56,6 +57,15 @@ namespace GoodDay.BLL.ViewModels
             {
                 SharedUserId = message.SharedUserId;
                 SharedUserName = message.SharedUserName;
+            }
+            if (message.SharedUserId != null)
+            {
+                SharedUserId = message.SharedUserId;
+                SharedUserName = message.SharedUserName;
+            }
+            if (message.ResendUserFrom != null)
+            {
+                ResendUserFrom = message.ResendUserFrom;
             }
         }
     }
