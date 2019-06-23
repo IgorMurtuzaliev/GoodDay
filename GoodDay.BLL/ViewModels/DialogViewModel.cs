@@ -38,9 +38,9 @@ namespace GoodDay.BLL.ViewModels
                         FriendSurname = dialog.User2.Surname;
                         FriendEmail = dialog.User2.Email;
                         FriendPhone = dialog.User2.Phone;
-                        if (dialog.User2.File != null)
+                        if (dialog.User2.FilePath != null)
                         {
-                            FriendImage = dialog.User2.File.Path;
+                            FriendImage = dialog.User2.FilePath;
                         }
                         else FriendImage = "\\Shared\\user.png";
                     }
@@ -59,9 +59,9 @@ namespace GoodDay.BLL.ViewModels
                     FriendSurname = dialog.User1.Surname;
                     FriendEmail = dialog.User1.Email;
                     FriendPhone = dialog.User1.Phone;
-                    if (dialog.User1.File != null)
+                    if (dialog.User1.FilePath != null)
                     {
-                        FriendImage = dialog.User1.File.Path;
+                        FriendImage = dialog.User1.FilePath;
                     }
                     else FriendImage = "\\Shared\\user.png";
                 }
@@ -70,9 +70,9 @@ namespace GoodDay.BLL.ViewModels
             {
                 var lastmessage = dialog.Messages.LastOrDefault();
                 LastMessage = lastmessage.Text;
-                if (lastmessage.Sender.File != null)
+                if (lastmessage.Sender.FilePath != null)
                 {
-                    LastMessageSenderImage = lastmessage.Sender.File.Path;
+                    LastMessageSenderImage = lastmessage.Sender.FilePath;
                 }
                 else LastMessageSenderImage = "\\Shared\\user.png";
             }

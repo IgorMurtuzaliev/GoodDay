@@ -88,14 +88,9 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<string>("Path");
 
-                    b.Property<string>("UserId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("MessageId");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Files");
                 });
@@ -139,7 +134,7 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<bool>("EmailConfirmed");
 
-                    b.Property<int?>("FileId");
+                    b.Property<string>("FilePath");
 
                     b.Property<DateTime>("LastTimeOnline");
 
@@ -333,10 +328,6 @@ namespace GoodDay.DAL.Migrations
                         .WithMany("Files")
                         .HasForeignKey("MessageId")
                         .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("GoodDay.Models.Entities.User", "User")
-                        .WithOne("File")
-                        .HasForeignKey("GoodDay.Models.Entities.File", "UserId");
                 });
 
             modelBuilder.Entity("GoodDay.Models.Entities.Message", b =>

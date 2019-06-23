@@ -34,21 +34,21 @@ namespace GoodDay.WebAPI.Controllers
         public async Task<IActionResult> AddContact(string friendId)
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
-            if(friendId == null)
+            if (friendId == null)
             {
                 return BadRequest("Choose the user");
             }
             else
             {
                 bool userExists = userService.UserExists(friendId);
-                if(userExists == false)
+                if (userExists == false)
                 {
                     return BadRequest("User doesn't exist");
                 }
                 else
                 {
                     bool userHasContact = await contactService.UserHasContact(friendId, id);
-                    var isUserBlocked =  blockListService.IsUserBlocked(id, friendId);
+                    var isUserBlocked = blockListService.IsUserBlocked(id, friendId);
                     if (!userHasContact)
                     {
                         return BadRequest("You have contact with this user");
@@ -57,7 +57,7 @@ namespace GoodDay.WebAPI.Controllers
                     {
                         return BadRequest("Unlock this user");
                     }
-                    var result = await contactService.AddContact(id, friendId);                   
+                    var result = await contactService.AddContact(id, friendId);
                     return Ok(result);
                 }
             }
@@ -93,7 +93,7 @@ namespace GoodDay.WebAPI.Controllers
             {
                 if (contact.UserId == userId)
                 {
-                    if(contact.Confirmed == true)
+                    if (contact.Confirmed == true)
                     {
                         return BadRequest("Contact is confirmed");
                     }
@@ -110,20 +110,27 @@ namespace GoodDay.WebAPI.Controllers
         [Route("contacts")]
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContacts()
         {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            var result = new List<ContactViewModel>();
-            var contacts = await contactService.GetContacts(id);
-            foreach(var item in contacts)
+            try
             {
-                result.Add(new ContactViewModel(item));
+                var id = User.Claims.First(c => c.Type == "Id").Value;
+                var result = new List<ContactViewModel>();
+                var contacts = await contactService.GetContacts(id);
+                foreach (var item in contacts)
+                {
+                    result.Add(new ContactViewModel(item));
+                }
+                return Ok(result);
             }
-            return Ok(result);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPut("{id}")]
         [Authorize]
-        public async Task<IActionResult> ChangeContactName( int? id, EditContactViewModel model)
-        {          
+        public async Task<IActionResult> ChangeContactName(int? id, EditContactViewModel model)
+        {
             if (id == null)
             {
                 return BadRequest("Id is not valid");
@@ -132,7 +139,7 @@ namespace GoodDay.WebAPI.Controllers
             {
                 Contact contact = await contactService.GetContact(id);
                 var userId = User.Claims.First(c => c.Type == "Id").Value;
-                if (userId!= contact.UserId )
+                if (userId != contact.UserId)
                 {
                     return BadRequest("This id is not current user id");
                 }
@@ -141,8 +148,7 @@ namespace GoodDay.WebAPI.Controllers
                     var result = await contactService.ChangeContactName(contact, model);
                     return Ok(result);
                 }
-               
-            }           
+            }
         }
 
         [HttpGet]
@@ -152,23 +158,21 @@ namespace GoodDay.WebAPI.Controllers
         {
             try
             {
-            if (id == null)
-            {
-                return BadRequest("Id is not valid");
+                if (id == null)
+                {
+                    return BadRequest("Id is not valid");
+                }
+                else
+                {
+                    Contact contact = await contactService.GetContact(id);
+                    var contactVM = new ContactViewModel(contact);
+                    return Ok(contactVM);
+                }
             }
-            else
-            {
-                Contact contact = await contactService.GetContact(id);
-                var contactVM = new ContactViewModel(contact);
-                return Ok(contactVM);
-            }
-            }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return StatusCode(500, ex.Message);
             }
         }
-
-        
     }
 }

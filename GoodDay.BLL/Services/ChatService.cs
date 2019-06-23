@@ -1,4 +1,5 @@
-﻿using GoodDay.BLL.Interfaces;
+﻿using GoodDay.BLL.Infrastructure;
+using GoodDay.BLL.Interfaces;
 using GoodDay.BLL.ViewModels;
 using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
@@ -102,15 +103,6 @@ namespace GoodDay.BLL.Services
             }
 
         }
-
-        //public async Task DeleteDialogFromList(string userId, int dialogId)
-        //{
-        //    User user = await userManager.FindByIdAsync(userId);
-        //    var dialogList = user.UsersDialogs.Union(user.InterlocutorsDialogs);
-        //    var dialog = dialogList.Single(c => c.Id == dialogId);
-        //    dialog.Messages = null;
-        //    await unitOfWork.Users.Edit(user);
-        //}
         public async Task<List<DialogViewModel>> GetAllDialogs(string userId)
         {
             try
@@ -168,6 +160,14 @@ namespace GoodDay.BLL.Services
             {
                 throw ex;
             }
+        }
+        public bool IsOnline(string id)
+        {
+            if (UserIds.usersList.Any(c => c.userId == id))
+            {
+                return true;
+            }
+            else return false;
         }
     }
 }

@@ -127,12 +127,7 @@ namespace GoodDay.BLL.Services
             try
             {
                 var newfile = await fileManager.EditImage(user, file);
-                await unitOfWork.Files.Delete(user.FileId);
-                user.File = null;
-                user.FileId = null;
-                await unitOfWork.Users.Edit(user);
-                await unitOfWork.Files.Add(newfile);
-                user.FileId = newfile.Id;
+                user.FilePath = newfile.Path;
                 await unitOfWork.Users.Edit(user);
                 await unitOfWork.Save();
             }

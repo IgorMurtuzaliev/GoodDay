@@ -39,9 +39,9 @@ namespace GoodDay.BLL.ViewModels
                     FriendSurname = contact.Friend.Surname;
                     FriendEmail = contact.Friend.Email;
                     FriendPhone = contact.Friend.Phone;
-                    if (contact.Friend.File != null)
+                    if (contact.Friend.FilePath != null)
                     {
-                        ContactImage = contact.Friend.File.Path;
+                        ContactImage = contact.Friend.FilePath;
                     }
                     else ContactImage = "\\Shared\\user.png";
                 }

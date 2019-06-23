@@ -17,22 +17,21 @@ namespace GoodDay.WebAPI.Controllers
         private ISearchService searchService;
         private IContactService contactService;
         private IBlockListService blockListService;
-        private IChatHub chatHub;
+        private IChatService chatService;
         
-        public SearchController(ISearchService _searchService, IUserService _userService, IContactService _contactService, IBlockListService _blockListService, IChatHub _chatHub)
+        public SearchController(ISearchService _searchService, IUserService _userService, IContactService _contactService, IBlockListService _blockListService, IChatService _chatService)
         { 
             searchService = _searchService;
             userService = _userService;
             contactService = _contactService;
             blockListService = _blockListService;
-            chatHub = _chatHub;
+            chatService = _chatService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserViewModel>>> Search(string search)
         {
             var id = User.Claims.First(c => c.Type == "Id").Value;
-            var result = new List<UserViewModel>();
             if (string.IsNullOrEmpty(search))
             {
                 return BadRequest("The search string is empty");
@@ -44,33 +43,7 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     return BadRequest("Not found by your response");
                 }
-                foreach(var item in searchResult)
-                {
-                    var profile = new UserViewModel(item);
-                    result.Add(profile);
-                    if (chatHub.IsOnline(item.Id))
-                    {
-                        profile.IsOnline = true;
-                    }
-                    else
-                    {
-                        profile.LastTimeOnline = item.LastTimeOnline.ToString("MM/dd/yyyy h:mm tt");
-                        profile.IsOnline = false;
-                    }
-                    if (await blockListService.IsUserBlocked(id, item.Id))
-                    {
-                        profile.IsBlocked = true;
-                    }
-                    else profile.IsBlocked = false;
-                    if (await contactService.IsInContacts(id, item.Id))
-                    {
-                        var contact = await contactService.FindContact(id, item.Id);
-                        profile.ContactWithUserId = contact.Id;
-                        profile.IsInContacts = true;
-                    }
-                    else profile.IsInContacts = false;
-                }
-            return result;
+            return Ok(searchResult);
             }
         }
        

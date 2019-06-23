@@ -33,7 +33,7 @@ namespace GoodDay.BLL.Services
                 await file.CopyToAsync(fileStream);
             }
 
-            File newfile = new File { Name = file.FileName, Path = path, UserId = user.Id };
+            File newfile = new File { Name = file.FileName, Path = path };
             return newfile;
         }
         public async Task<ICollection<File>> UploadMessagesFiles(int dialogId, int messageId, IFormFileCollection files)

@@ -30,9 +30,9 @@ namespace GoodDay.BLL.ViewModels
                     FriendSurname = block.Friend.Surname;
                     FriendEmail = block.Friend.Email;
                     FriendPhone = block.Friend.Phone;
-                    if (block.Friend.File != null)
+                    if (block.Friend.FilePath != null)
                     {
-                        UserAvatar = block.Friend.File.Path;
+                        UserAvatar = block.Friend.FilePath;
                     }
                     else UserAvatar = "\\Shared\\user.png";
                 }

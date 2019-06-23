@@ -39,9 +39,9 @@ namespace GoodDay.BLL.ViewModels
                 {
                      Phone = user.Phone; 
                 }
-                if (user.File != null)
+                if (user.FilePath != null)
                 {
-                     AvatarPath = user.File.Path; 
+                     AvatarPath = user.FilePath; 
                 }
 
                 else AvatarPath = "\\Shared\\user.png";

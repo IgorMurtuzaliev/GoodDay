@@ -26,10 +26,10 @@ namespace GoodDay.DAL.EF
         public DbSet<Contact> Contacts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<User>()
-            .HasOne<File>(s => s.File)
-            .WithOne(ad => ad.User)
-            .HasForeignKey<File>(ad => ad.UserId);
+            //modelBuilder.Entity<User>()
+            //.HasOne<File>(s => s.File)
+            //.WithOne(ad => ad.User)
+            //.HasForeignKey<File>(ad => ad.UserId);
 
             modelBuilder.Entity<Contact>()
                 .HasOne(a => a.User)
@@ -74,6 +74,8 @@ namespace GoodDay.DAL.EF
                 .HasOne(a => a.Message)
                 .WithMany(b => b.Files)
                 .HasForeignKey(c => c.MessageId);
+
+
             base.OnModelCreating(modelBuilder);
         }
     }

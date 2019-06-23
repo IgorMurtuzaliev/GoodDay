@@ -27,8 +27,8 @@ namespace GoodDay.Models.Entities
 
         [Phone, Required(ErrorMessage = "Input you phone number")]
         public string Phone { get; set; }
-        public int? FileId { get; set; }
         public DateTime LastTimeOnline { get; set; }
+        public string FilePath { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Dialog> UsersDialogs { get; set; }
@@ -44,8 +44,6 @@ namespace GoodDay.Models.Entities
         public virtual ICollection<Message> Messages { get; set; }
         [JsonIgnore]
         public virtual ICollection<BlockList> UserInBlockList { get; set; }
-        [NotMapped]
-        [JsonIgnore]
-        public virtual File File { get; set; }
+
     }
 }

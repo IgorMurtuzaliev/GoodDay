@@ -21,14 +21,15 @@ namespace GoodDay.WebAPI.Controllers
         private IContactService contactService;
         private IBlockListService blockListService;
         private IChatHub chatHub;
-
-        public UsersController(IUserService _userService, UserManager<User> _userManager, IContactService _contactService, IBlockListService _blockListService, IChatHub _chatHub)
+        private IChatService chatService;
+        public UsersController(IUserService _userService, UserManager<User> _userManager, IContactService _contactService, IBlockListService _blockListService, IChatHub _chatHub, IChatService _chatService)
         {
             userService = _userService;
             userManager = _userManager;
             contactService = _contactService;
             blockListService = _blockListService;
             chatHub = _chatHub;
+            chatService = _chatService;
         }
       
 
@@ -49,30 +50,7 @@ namespace GoodDay.WebAPI.Controllers
                 }
                 else
                 {
-                    var user = await userManager.FindByIdAsync(friendId);
-                    var profile = new UserViewModel(user);
-                    if (chatHub.IsOnline(friendId))
-                    {
-                        profile.IsOnline = true;
-                    }
-                    else
-                    {
-                        profile.IsOnline = false;
-                        profile.LastTimeOnline = user.LastTimeOnline.ToString("MM/dd/yyyy h:mm tt");
-                    }
-                    if (await blockListService.IsUserBlocked(id, friendId))
-                    {
-                        profile.IsBlocked = true;
-                    }
-                    else profile.IsBlocked = false;
-                    if (await contactService.IsInContacts(id, friendId))
-                    {
-                        var contact = await contactService.FindContact(id, friendId);
-                        profile.ContactWithUserId = contact.Id;
-                        profile.IsInContacts = true;
-                    }
-                    else profile.IsInContacts = false;
-
+                    var profile = await userService.ShowUsersProfile(id,friendId);
                     return Ok(profile);;
                 }
             }

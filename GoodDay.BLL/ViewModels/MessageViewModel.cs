@@ -44,9 +44,9 @@ namespace GoodDay.BLL.ViewModels
             if (message.Sender != null)
             {
                 UserName = message.Sender.UserName;
-                if (message.Sender.File != null)
+                if (message.Sender.FilePath != null)
                 {
-                    UserImage = message.Sender.File.Path;
+                    UserImage = message.Sender.FilePath;
                 }
                 else UserImage = "\\Shared\\user.png";
             }

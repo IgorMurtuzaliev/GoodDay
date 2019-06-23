@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using GoodDay.BLL.Infrastructure;
 using GoodDay.BLL.Interfaces;
 using GoodDay.BLL.ViewModels;
 using GoodDay.Models.Entities;
@@ -60,8 +61,15 @@ namespace GoodDay.WebAPI.Controllers
                 if (dialogExists)
                 {
                     var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
-                    await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
-                    await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                    if (chatService.IsOnline(postMessage.ReceiverId))
+                    {
+                        await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                    }
+                    else
+                    {
+                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                    }
                 }
                 else
                 {
@@ -69,8 +77,16 @@ namespace GoodDay.WebAPI.Controllers
                     var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
                     if (receiver != null)
                     {
-                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
-                        await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                        if (chatService.IsOnline(postMessage.ReceiverId))
+                        {
+                            await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
+                            await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                        }
+                        else
+                        {
+                            await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                        }
+
                     }
                 }
             }
@@ -79,20 +95,5 @@ namespace GoodDay.WebAPI.Controllers
                 throw ex;
             }
         }
-        //[HttpGet]
-        //[Authorize]
-        //[Route("delete/{dialogId}")]
-        //public async Task DeleteDialog(int dialogId)
-        //{
-        //    try
-        //    {
-        //        var id = User.Claims.First(c => c.Type == "Id").Value;
-        //        await chatService.DeleteDialogFromList(id, dialogId);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw ex;
-        //    }
-        //}
     }
 }

@@ -192,7 +192,6 @@ namespace GoodDay.WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-
         [HttpGet]
         [Authorize]
         [Route("disconnect")]
@@ -203,14 +202,11 @@ namespace GoodDay.WebAPI.Controllers
                 var id = User.Claims.First(c => c.Type == "Id").Value;
                 chatHub.Disconnect(id);
                 await accountService.SetLastTimeOnline(id);
-
-
             }
             catch (Exception ex)
             {
                 throw ex;
             }
-
         }
     }
 }
