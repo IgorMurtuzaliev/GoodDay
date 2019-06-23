@@ -15,6 +15,8 @@ namespace GoodDay.BLL.ViewModels
         public string FriendSurname { get; set; }
         public string FriendEmail { get; set; }
         public string FriendPhone { get; set; }
+        public bool UserOnline { get; set; }
+        public string LastTimeOnline { get; set; }
         public string ContactImage { get; set; }
         public ContactViewModel(Contact contact)
         {

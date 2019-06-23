@@ -14,5 +14,6 @@ namespace GoodDay.BLL.Interfaces
         Task<bool> IsDialogExists(string senderId, string recevierId);
         Task<DialogViewModel> GetDialog(string userId, string friendId);
         Task CreateDialog(string userId, string friendId);
+        //Task DeleteDialogFromList(string userId, int dialogId);
     }
 }

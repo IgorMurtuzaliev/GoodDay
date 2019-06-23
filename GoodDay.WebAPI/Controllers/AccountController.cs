@@ -196,10 +196,21 @@ namespace GoodDay.WebAPI.Controllers
         [HttpGet]
         [Authorize]
         [Route("disconnect")]
-        public void Logout()
+        public async Task Logout()
         {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            chatHub.Disconnect(id);
+            try
+            {
+                var id = User.Claims.First(c => c.Type == "Id").Value;
+                chatHub.Disconnect(id);
+                await accountService.SetLastTimeOnline(id);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
     }
 }

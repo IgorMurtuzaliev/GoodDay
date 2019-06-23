@@ -141,6 +141,8 @@ namespace GoodDay.DAL.Migrations
 
                     b.Property<int?>("FileId");
 
+                    b.Property<DateTime>("LastTimeOnline");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");

@@ -55,7 +55,11 @@ namespace GoodDay.WebAPI.Controllers
                     {
                         profile.IsOnline = true;
                     }
-                    else profile.IsOnline = false;
+                    else
+                    {
+                        profile.IsOnline = false;
+                        profile.LastTimeOnline = user.LastTimeOnline.ToString("MM/dd/yyyy h:mm tt");
+                    }
                     if (await blockListService.IsUserBlocked(id, friendId))
                     {
                         profile.IsBlocked = true;

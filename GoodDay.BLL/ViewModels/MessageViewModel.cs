@@ -1,6 +1,7 @@
 ﻿using GoodDay.Models.Entities;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace GoodDay.BLL.ViewModels
@@ -31,7 +32,7 @@ namespace GoodDay.BLL.ViewModels
             {
                 MessageText = message.Text;
             }
-            if (message.Files.Count != 0)
+            if (message.Files!= null)
             {
                 var result = new List<FileViewModel>();
                 foreach (var file in message.Files)

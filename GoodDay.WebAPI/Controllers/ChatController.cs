@@ -45,7 +45,7 @@ namespace GoodDay.WebAPI.Controllers
             var id = User.Claims.First(c => c.Type == "Id").Value;
             return await chatService.GetDialog(id, friendId);
         }
-  
+
         [HttpPost]
         [Authorize]
         [Route("sendMessage")]
@@ -60,8 +60,8 @@ namespace GoodDay.WebAPI.Controllers
                 if (dialogExists)
                 {
                     var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
-                    await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePaths);
-                    await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePaths, caller.userId);
+                    await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                    await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
                 }
                 else
                 {
@@ -69,8 +69,8 @@ namespace GoodDay.WebAPI.Controllers
                     var message = await chatService.AddNewMessage(caller.userId, postMessage, DateTime.Now);
                     if (receiver != null)
                     {
-                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message.MessageText, message.FilePaths);
-                        await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message.MessageText, message.FilePaths, caller.userId);
+                        await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
+                        await hubContext.Clients.Client(receiver.connectionId).SendAsync("Send", message, caller.userId);
                     }
                 }
             }
@@ -79,6 +79,20 @@ namespace GoodDay.WebAPI.Controllers
                 throw ex;
             }
         }
-
+        //[HttpGet]
+        //[Authorize]
+        //[Route("delete/{dialogId}")]
+        //public async Task DeleteDialog(int dialogId)
+        //{
+        //    try
+        //    {
+        //        var id = User.Claims.First(c => c.Type == "Id").Value;
+        //        await chatService.DeleteDialogFromList(id, dialogId);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw ex;
+        //    }
+        //}
     }
 }

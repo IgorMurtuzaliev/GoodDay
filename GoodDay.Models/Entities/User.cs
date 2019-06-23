@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -27,6 +28,7 @@ namespace GoodDay.Models.Entities
         [Phone, Required(ErrorMessage = "Input you phone number")]
         public string Phone { get; set; }
         public int? FileId { get; set; }
+        public DateTime LastTimeOnline { get; set; }
 
         [JsonIgnore]
         public virtual ICollection<Dialog> UsersDialogs { get; set; }

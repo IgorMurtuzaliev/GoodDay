@@ -18,5 +18,6 @@ namespace GoodDay.BLL.Interfaces
         bool PhoneExists(string phone);
         Task<IdentityResult> ChangePassword(string id, string currentPassword, string newPassword);
         Task<string> FindIdByEmail(string email);
+        Task SetLastTimeOnline(string id);
     }
 }

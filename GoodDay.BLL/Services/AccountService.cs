@@ -164,5 +164,12 @@ namespace GoodDay.BLL.Services
             }
             else return null;
         }
+        public async Task SetLastTimeOnline(string id)
+        {
+            User user = await userManager.FindByIdAsync(id);
+            user.LastTimeOnline = DateTime.Now;
+            await unitOfWork.Users.Edit(user);
+        }
+
     }
 }

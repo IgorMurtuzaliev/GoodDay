@@ -49,7 +49,10 @@ namespace GoodDay.BLL.Services
                 };
                 await unitOfWork.Messages.Add(newMessage);
                 await unitOfWork.Save();
-                var files = await fileManager.UploadMessagesFiles(dialog.Id, newMessage.Id, postMessage.Attachment);
+                if (postMessage.Attachment != null)
+                {
+                    var files = await fileManager.UploadMessagesFiles(dialog.Id, newMessage.Id, postMessage.Attachment);
+                }
                 var messageVM = new MessageViewModel(newMessage);
                 return messageVM;
             }
@@ -100,6 +103,14 @@ namespace GoodDay.BLL.Services
 
         }
 
+        //public async Task DeleteDialogFromList(string userId, int dialogId)
+        //{
+        //    User user = await userManager.FindByIdAsync(userId);
+        //    var dialogList = user.UsersDialogs.Union(user.InterlocutorsDialogs);
+        //    var dialog = dialogList.Single(c => c.Id == dialogId);
+        //    dialog.Messages = null;
+        //    await unitOfWork.Users.Edit(user);
+        //}
         public async Task<List<DialogViewModel>> GetAllDialogs(string userId)
         {
             try
