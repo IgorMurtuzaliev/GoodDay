@@ -1,6 +1,7 @@
 ﻿using GoodDay.DAL.EF;
 using GoodDay.DAL.Interfaces;
 using GoodDay.Models.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,13 +28,30 @@ namespace GoodDay.DAL.Repositories
             if (deletedDialog != null)
                 dbContext.DeletedDialogs.Remove(deletedDialog);
         }
-        public bool Find(int? id)
+        public bool Find(int? id, string userId)
+        {
+            return dbContext.DeletedDialogs.Any(c => c.DialogId == id && c.IsDeleted == true && c.DeleteByUserId == userId);
+        }
+        public async Task Edit(DeletedDialog item)
+        {
+            dbContext.Entry(item).State = EntityState.Modified;
+            await Save();
+        }
+        public bool Check(int? id)
         {
             return dbContext.DeletedDialogs.Any(c => c.DialogId == id && c.IsDeleted == true);
         }
-        public DeletedDialog Get(int? id)
+        public bool CheckForMessageOutput(int? id, string userId)
         {
-            return dbContext.DeletedDialogs.Single(c => c.DialogId == id);
+            return dbContext.DeletedDialogs.Any(c => c.DialogId == id && c.DeleteByUserId == userId);
+        }
+        public DeletedDialog Get(int? id, string userId)
+        {
+            return dbContext.DeletedDialogs.Single(c => c.DialogId == id && c.IsDeleted == true && c.DeleteByUserId == userId);
+        }
+        public DeletedDialog GetForMessageOutput(int? id, string userId)
+        {
+            return dbContext.DeletedDialogs.Single(c => c.DialogId == id && c.DeleteByUserId == userId);
         }
         public async Task Save()
         {

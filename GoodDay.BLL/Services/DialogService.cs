@@ -47,7 +47,7 @@ namespace GoodDay.BLL.Services
          public async Task DeleteDialog(string userId, int dialogId)
         {
             Dialog dialog = await unitOfWork.Dialogs.FindDialog(dialogId);
-            var isDialogDeleted = unitOfWork.DeletedDialogs.Find(dialogId);
+            var isDialogDeleted = unitOfWork.DeletedDialogs.Check(dialogId);
             if (!isDialogDeleted)
             {
                 var deletedDialog = new DeletedDialog
