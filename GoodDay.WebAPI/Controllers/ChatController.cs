@@ -50,11 +50,33 @@ namespace GoodDay.WebAPI.Controllers
         [HttpPost]
         [Authorize]
         [Route("sendMessage")]
-        public async Task SendMessage([FromForm]PostMessageViewModel postMessage)
+        public async Task<IActionResult> SendMessage([FromForm]PostMessageViewModel postMessage)
         {
             try
             {
                 var id = User.Claims.First(c => c.Type == "Id").Value;
+                foreach (var file in postMessage.Attachment)
+                {
+                    if (file.ContentType == "image/jpg" || file.ContentType == "image/jpeg" || file.ContentType == "audio/mp3" || file.ContentType == "video/mp4")
+                    {
+                        if ((file.ContentType == "image/jpg" || file.ContentType == "image/jpeg") && file.Length >= 2097152)
+                        {
+                            return BadRequest("Unsupported file length. JPG/JPEG must be before 2MB ");
+                        }
+                        else if (file.ContentType == "audio/mp3" && file.Length >= 10484760)
+                        {
+                            return BadRequest("Unsupported file length. Audio files must be before 10MB ");
+                        }
+                        else if (file.ContentType == "video/mp4" && file.Length >= 31457280)
+                        {
+                            return BadRequest("Unsupported file length. Video files must be before 10MB ");
+                        }
+                    }
+                    else
+                    {
+                        return BadRequest("Unsupported file type. Files must be only of 'jpg/jpeg', 'mp3', 'mp4' formats! ");
+                    }
+                }
                 UserIds receiver, caller;
                 chatHub.FindCallerReceiverByIds(postMessage.ReceiverId, id, out caller, out receiver);
                 bool dialogExists = await chatService.IsDialogExists(caller.userId, postMessage.ReceiverId);
@@ -70,6 +92,7 @@ namespace GoodDay.WebAPI.Controllers
                     {
                         await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
                     }
+                    return Ok(message);
                 }
                 else
                 {
@@ -86,8 +109,8 @@ namespace GoodDay.WebAPI.Controllers
                         {
                             await hubContext.Clients.Clients(caller.connectionId).SendAsync("SendMyself", message);
                         }
-
                     }
+                    return Ok(message);
                 }
             }
             catch (Exception ex)
@@ -140,7 +163,7 @@ namespace GoodDay.WebAPI.Controllers
                         }
                         return Ok(message);
                     }
-                    
+
                 }
                 else
                 {
