@@ -16,7 +16,9 @@ namespace GoodDay.Models.Entities
 
         [ForeignKey("User2")]
         public string User2Id { get; set; }
-       
+        public string UserDeletedId { get; set; }
+        public bool DeletedByUser { get; set; }
+
         [NotMapped]
         public virtual User User1 { get; set; }
         [NotMapped]

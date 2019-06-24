@@ -12,11 +12,11 @@ namespace GoodDay.BLL.Services
     public class DialogService: IDialogService
     {
         private UserManager<User> userManager;
-        private IDialogRepository dialogRepository;
-        public DialogService(UserManager<User> _userManager, IDialogRepository _dialogRepository)
+        private IUnitOfWork unitOfWork;
+        public DialogService(UserManager<User> _userManager, IUnitOfWork _unitOfWork)
         {
             userManager = _userManager;
-            dialogRepository = _dialogRepository;
+            unitOfWork = _unitOfWork;
         }
         public  async Task<Dialog> CreateDialog(string id, string friendId)
         {
@@ -32,18 +32,38 @@ namespace GoodDay.BLL.Services
                 User1Id = friendId,
                 User2Id = id
             };
-            await dialogRepository.Add(usersDialog);
+            await unitOfWork.Dialogs.Add(usersDialog);
             if(!await HasUserDialog(friendId, id))
             {
-                await dialogRepository.Add(friendsDialog);
+                await unitOfWork.Dialogs.Add(friendsDialog);
             }
             return usersDialog;
         }
         public async Task<bool> HasUserDialog(string id, string friendId)
         {
             User user = await userManager.FindByIdAsync(id);
-            return dialogRepository.UserHasDialog(user, friendId);
+            return unitOfWork.Dialogs.UserHasDialog(user, friendId);
         }
-
+         public async Task DeleteDialog(string userId, int dialogId)
+        {
+            Dialog dialog = await unitOfWork.Dialogs.FindDialog(dialogId);
+            var isDialogDeleted = unitOfWork.DeletedDialogs.Find(dialogId);
+            if (!isDialogDeleted)
+            {
+                var deletedDialog = new DeletedDialog
+                {
+                    DialogId = dialogId,
+                    DeleteByUserId = userId,
+                    IsDeleted = true,
+                    TimeOfLastDeleting = DateTime.Now   
+                };
+                await unitOfWork.DeletedDialogs.Add(deletedDialog);
+            }
+            else
+            {
+                await unitOfWork.Dialogs.Delete(dialogId);
+                await unitOfWork.Dialogs.Save();
+            }
+        }
     }
 }

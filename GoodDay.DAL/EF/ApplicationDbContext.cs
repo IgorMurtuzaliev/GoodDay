@@ -24,6 +24,7 @@ namespace GoodDay.DAL.EF
         public DbSet<File> Files { get; set; }
         public DbSet<Dialog> Dialogs { get; set; }
         public DbSet<Contact> Contacts { get; set; }
+        public DbSet<DeletedDialog> DeletedDialogs { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.Entity<User>()

@@ -10,5 +10,6 @@ namespace GoodDay.BLL.Interfaces
     {
         Task<bool> HasUserDialog(string id, string friendId);
         Task<Dialog> CreateDialog(string id, string friendId);
+        Task DeleteDialog(string userId, int dialogId);
     }
 }

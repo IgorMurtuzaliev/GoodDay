@@ -14,6 +14,7 @@ namespace GoodDay.DAL.Interfaces
         IBlockRepository Blocks { get; }
         IContactRepository Contacts { get; }
         IDialogRepository Dialogs { get; }
+        IDeletedDialogsRepository DeletedDialogs { get; }
         Task Save();
         void Dispose(bool disposing);
     }

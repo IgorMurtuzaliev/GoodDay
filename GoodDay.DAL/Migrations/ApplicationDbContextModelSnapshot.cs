@@ -59,14 +59,36 @@ namespace GoodDay.DAL.Migrations
                     b.ToTable("Contacts");
                 });
 
+            modelBuilder.Entity("GoodDay.Models.Entities.DeletedDialog", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("DeleteByUserId");
+
+                    b.Property<int>("DialogId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<DateTime>("TimeOfLastDeleting");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DeletedDialogs");
+                });
+
             modelBuilder.Entity("GoodDay.Models.Entities.Dialog", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<bool>("DeletedByUser");
+
                     b.Property<string>("User1Id");
 
                     b.Property<string>("User2Id");
+
+                    b.Property<string>("UserDeletedId");
 
                     b.HasKey("Id");
 

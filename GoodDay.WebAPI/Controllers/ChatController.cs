@@ -22,29 +22,52 @@ namespace GoodDay.WebAPI.Controllers
         private IHubContext<ChatHub> hubContext;
         private UserManager<User> userManager;
         private IChatService chatService;
+        private IDialogService dialogService;
         private IChatHub chatHub;
-        public ChatController(UserManager<User> _userManager, IChatService _chatService, IHubContext<ChatHub> _hubContext, IChatHub _chatHub)
+        private IBlockListService blockListService;
+        public ChatController(UserManager<User> _userManager, IChatService _chatService, IHubContext<ChatHub> _hubContext, IChatHub _chatHub, IDialogService _dialogService, IBlockListService _blockListService)
         {
             userManager = _userManager;
             chatService = _chatService;
             hubContext = _hubContext;
             chatHub = _chatHub;
+            dialogService = _dialogService;
+            blockListService = _blockListService;
         }
         [HttpGet]
         [Authorize]
         [Route("dialogs")]
         public async Task<List<DialogViewModel>> GetAllDialogs()
         {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            return await chatService.GetAllDialogs(id);
+            try
+            {
+                var id = User.Claims.First(c => c.Type == "Id").Value;
+                return await chatService.GetAllDialogs(id);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
         [HttpGet]
         [Authorize]
         [Route("dialog/{friendId}")]
-        public async Task<DialogViewModel> GetDialog(string friendId)
+        public async Task<ActionResult<DialogViewModel>> GetDialog(string friendId)
         {
-            var id = User.Claims.First(c => c.Type == "Id").Value;
-            return await chatService.GetDialog(id, friendId);
+            try
+            {
+                var id = User.Claims.First(c => c.Type == "Id").Value;
+                if (await chatService.IsDialogExists(id, friendId))
+                {
+                    return await chatService.GetDialog(id, friendId);
+                }
+                else return BadRequest("Add new message to start dialog");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         [HttpPost]
@@ -55,28 +78,44 @@ namespace GoodDay.WebAPI.Controllers
             try
             {
                 var id = User.Claims.First(c => c.Type == "Id").Value;
-                foreach (var file in postMessage.Attachment)
+                if(await blockListService.IsUserBlocked(id, postMessage.ReceiverId))
                 {
-                    if (file.ContentType == "image/jpg" || file.ContentType == "image/jpeg" || file.ContentType == "audio/mp3" || file.ContentType == "video/mp4")
+                    return BadRequest("Unlock this user to send messages");
+                }
+                if (await blockListService.IsUserBlocked(postMessage.ReceiverId, id))
+                {
+                    return BadRequest("This user reseieved access to sendind messages");
+                }
+                if (postMessage.Attachment==null && postMessage.Text == null)
+                {
+                    return BadRequest("You cannot send the empty message!");
+                }
+                if (postMessage.Attachment != null)
+                {
+                    foreach (var file in postMessage.Attachment)
                     {
-                        if ((file.ContentType == "image/jpg" || file.ContentType == "image/jpeg") && file.Length >= 2097152)
+                        if (file.ContentType == "image/jpg" || file.ContentType == "image/jpeg" || file.ContentType == "audio/mp3" || file.ContentType == "video/mp4")
                         {
-                            return BadRequest("Unsupported file length. JPG/JPEG must be before 2MB ");
+                            if ((file.ContentType == "image/jpg" || file.ContentType == "image/jpeg") && file.Length >= 2097152)
+                            {
+                                return BadRequest("Unsupported file length. JPG/JPEG must be before 2MB ");
+                            }
+                            else if (file.ContentType == "audio/mp3" && file.Length >= 10484760)
+                            {
+                                return BadRequest("Unsupported file length. Audio files must be before 10MB ");
+                            }
+                            else if (file.ContentType == "video/mp4" && file.Length >= 31457280)
+                            {
+                                return BadRequest("Unsupported file length. Video files must be before 10MB ");
+                            }
                         }
-                        else if (file.ContentType == "audio/mp3" && file.Length >= 10484760)
+                        else
                         {
-                            return BadRequest("Unsupported file length. Audio files must be before 10MB ");
+                            return BadRequest("Unsupported file type. Files must be only of 'jpg/jpeg', 'mp3', 'mp4' formats! ");
                         }
-                        else if (file.ContentType == "video/mp4" && file.Length >= 31457280)
-                        {
-                            return BadRequest("Unsupported file length. Video files must be before 10MB ");
-                        }
-                    }
-                    else
-                    {
-                        return BadRequest("Unsupported file type. Files must be only of 'jpg/jpeg', 'mp3', 'mp4' formats! ");
                     }
                 }
+
                 UserIds receiver, caller;
                 chatHub.FindCallerReceiverByIds(postMessage.ReceiverId, id, out caller, out receiver);
                 bool dialogExists = await chatService.IsDialogExists(caller.userId, postMessage.ReceiverId);
@@ -233,6 +272,15 @@ namespace GoodDay.WebAPI.Controllers
             {
                 throw ex;
             }
+        }
+
+        [HttpGet]
+        [Authorize]
+        [Route("deleteDialog/{dialogId}")]
+        public async Task DeleteDialog(int dialogId)
+        {
+            var id = User.Claims.First(c => c.Type == "Id").Value;
+            await dialogService.DeleteDialog(id, dialogId);
         }
     }
 }

@@ -28,6 +28,12 @@ namespace GoodDay.DAL.Repositories
             Dialog dialog = await dbContext.Dialogs.FindAsync(id);
             if (dialog != null)
                 dbContext.Dialogs.Remove(dialog);
+
+        }
+        public async Task Edit(Dialog item)
+        {
+            dbContext.Entry(item).State = EntityState.Modified;
+            await Save();
         }
 
         public async Task<IEnumerable<Dialog>> GetAll()
@@ -46,6 +52,11 @@ namespace GoodDay.DAL.Repositories
         public Dialog GetDialog(User user, string friendId)
         {
             return user.UsersDialogs.Single(c => c.User2Id == friendId || c.User1Id == friendId);
+        }
+
+        public async Task<Dialog> FindDialog(int? id)
+        {
+            return await dbContext.Dialogs.FindAsync(id);
         }
     }
 }

@@ -41,6 +41,13 @@ namespace GoodDay.BLL.Services
                     var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == postMessage.ReceiverId || c.User1Id == postMessage.ReceiverId);
                     dialog = interlocutorsDialog;
                 }
+
+                if (unitOfWork.DeletedDialogs.Find(dialog.Id))
+                {
+                    unitOfWork.DeletedDialogs.Delete(dialog.Id);
+                    await unitOfWork.DeletedDialogs.Save();
+
+                }
                 var newMessage = new Message
                 {
                     DialogId = dialog.Id,
@@ -89,7 +96,7 @@ namespace GoodDay.BLL.Services
                     SendingTime = time,
                     Receiverid = viewModel.ReceiverId,
                     SharedUserId = viewModel.Link,
-                    SharedUserName = friend.Name +" "+friend.Surname,
+                    SharedUserName = friend.Name + " " + friend.Surname,
                     Files = null
                 };
                 await unitOfWork.Messages.Add(newMessage);
@@ -106,7 +113,7 @@ namespace GoodDay.BLL.Services
         {
             try
             {
-                
+
                 User user = await userManager.FindByIdAsync(senderId);
                 Message message = await unitOfWork.Messages.GetUser(Convert.ToInt32(viewModel.MessageId));
                 User sender = await userManager.FindByIdAsync(message.SenderId);
@@ -191,16 +198,25 @@ namespace GoodDay.BLL.Services
                 var result = new List<DialogViewModel>();
                 foreach (var item in dialogList)
                 {
-                    var dialogVM = new DialogViewModel(item, user);
-                    result.Add(dialogVM);
-                    var messagesList = item.Messages;
-                    var messagesListVM = new List<MessageViewModel>();
-                    foreach (var message in messagesList)
+                    var deletedDialog = new DeletedDialog();
+                    var isDialogDeleted = unitOfWork.DeletedDialogs.Find(item.Id);
+                    if (isDialogDeleted)
                     {
-                        var messageVM = new MessageViewModel(message);
-                        messagesListVM.Add(messageVM);
+                        deletedDialog = unitOfWork.DeletedDialogs.Get(item.Id);
                     }
-                    dialogVM.Messages = messagesListVM;
+                    if (deletedDialog.DeleteByUserId != userId)
+                    {
+                        var dialogVM = new DialogViewModel(item, user);
+                        result.Add(dialogVM);
+                        var messagesList = item.Messages;
+                        var messagesListVM = new List<MessageViewModel>();
+                        foreach (var message in messagesList)
+                        {
+                            var messageVM = new MessageViewModel(message);
+                            messagesListVM.Add(messageVM);
+                        }
+                        dialogVM.Messages = messagesListVM;
+                    }
                 }
                 return result;
             }
@@ -219,7 +235,7 @@ namespace GoodDay.BLL.Services
                 var dialog = dialogList.Single(c => (c.User2Id == friendId && c.User1Id == userId) || (c.User1Id == friendId && c.User2Id == userId));
                 var dialogVM = new DialogViewModel(dialog, user);
                 dialogVM.Messages = await GetAllDialogMessages(userId, friendId);
-                if(await blockListService.IsUserBlocked(friendId, userId))
+                if (await blockListService.IsUserBlocked(friendId, userId))
                 {
                     dialogVM.BlockedClient = true;
                 }

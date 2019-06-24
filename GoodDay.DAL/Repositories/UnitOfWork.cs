@@ -18,6 +18,7 @@ namespace GoodDay.DAL.Repositories
         private MessageRepository messageRepository;
         private ContactRepository contactRepository;
         private BlockRepository blockRepository;
+        private DeletedDialogsRepository deletedDialogsRepository;
         public UnitOfWork(ApplicationDbContext _dbContext)
         {
             dbContext = _dbContext;
@@ -76,6 +77,15 @@ namespace GoodDay.DAL.Repositories
                 if (blockRepository == null)
                     blockRepository = new BlockRepository(dbContext);
                 return blockRepository;
+            }
+        }
+        public IDeletedDialogsRepository DeletedDialogs
+        {
+            get
+            {
+                if (deletedDialogsRepository == null)
+                    deletedDialogsRepository = new DeletedDialogsRepository(dbContext);
+                return deletedDialogsRepository;
             }
         }
         public async Task Save()

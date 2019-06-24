@@ -68,6 +68,7 @@ namespace GoodDay.WebAPI
             services.AddTransient<IChatHub, ChatHub>();
             services.AddTransient<ISearchService, SearchService>();
             services.AddTransient<IChatService, ChatService>();
+            services.AddTransient<IDialogService, DialogService>();
             services.AddTransient<IContactService, ContactService>();
             services.AddTransient<IBlockListService, BlockListService>();
             services.AddTransient<IBlockRepository, BlockRepository>();
