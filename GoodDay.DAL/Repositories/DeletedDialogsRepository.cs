@@ -39,9 +39,9 @@ namespace GoodDay.DAL.Repositories
         }
         public bool Check(int? id)
         {
-            return dbContext.DeletedDialogs.Any(c => c.DialogId == id && c.IsDeleted == true);
+            return dbContext.DeletedDialogs.Any(c => c.DialogId == id);
         }
-        public bool CheckForMessageOutput(int? id, string userId)
+        public bool CheckForOutput(int? id, string userId)
         {
             return dbContext.DeletedDialogs.Any(c => c.DialogId == id && c.DeleteByUserId == userId);
         }
@@ -49,7 +49,7 @@ namespace GoodDay.DAL.Repositories
         {
             return dbContext.DeletedDialogs.Single(c => c.DialogId == id && c.IsDeleted == true && c.DeleteByUserId == userId);
         }
-        public DeletedDialog GetForMessageOutput(int? id, string userId)
+        public DeletedDialog GetForOutput(int? id, string userId)
         {
             return dbContext.DeletedDialogs.Single(c => c.DialogId == id && c.DeleteByUserId == userId);
         }

@@ -185,9 +185,9 @@ namespace GoodDay.BLL.Services
                 var dialogList = user.UsersDialogs.Union(user.InterlocutorsDialogs);
                 var dialog = dialogList.Single(c => (c.User2Id == friendId && c.User1Id == userId) || (c.User1Id == friendId && c.User2Id == userId));
                 var deletedDialog = new DeletedDialog();
-                if (unitOfWork.DeletedDialogs.CheckForMessageOutput(dialog.Id, userId))
+                if (unitOfWork.DeletedDialogs.CheckForOutput(dialog.Id, userId))
                 {
-                    deletedDialog = unitOfWork.DeletedDialogs.GetForMessageOutput(dialog.Id, userId);
+                    deletedDialog = unitOfWork.DeletedDialogs.GetForOutput(dialog.Id, userId);
                 }
                 var result = new List<MessageViewModel>();
                 var messagesList = dialog.Messages.Where(c => c.SendingTime > deletedDialog.TimeOfLastDeleting);

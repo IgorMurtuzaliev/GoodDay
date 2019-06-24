@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace GoodDay.BLL.Services
 {
-    public class DialogService: IDialogService
+    public class DialogService : IDialogService
     {
         private UserManager<User> userManager;
         private IUnitOfWork unitOfWork;
@@ -18,7 +18,7 @@ namespace GoodDay.BLL.Services
             userManager = _userManager;
             unitOfWork = _unitOfWork;
         }
-        public  async Task<Dialog> CreateDialog(string id, string friendId)
+        public async Task<Dialog> CreateDialog(string id, string friendId)
         {
             User user = await userManager.FindByIdAsync(id);
             User friend = await userManager.FindByIdAsync(friendId);
@@ -33,7 +33,7 @@ namespace GoodDay.BLL.Services
                 User2Id = id
             };
             await unitOfWork.Dialogs.Add(usersDialog);
-            if(!await HasUserDialog(friendId, id))
+            if (!await HasUserDialog(friendId, id))
             {
                 await unitOfWork.Dialogs.Add(friendsDialog);
             }
@@ -44,7 +44,7 @@ namespace GoodDay.BLL.Services
             User user = await userManager.FindByIdAsync(id);
             return unitOfWork.Dialogs.UserHasDialog(user, friendId);
         }
-         public async Task DeleteDialog(string userId, int dialogId)
+        public async Task DeleteDialog(string userId, int dialogId)
         {
             Dialog dialog = await unitOfWork.Dialogs.FindDialog(dialogId);
             var isDialogDeleted = unitOfWork.DeletedDialogs.Check(dialogId);
@@ -55,14 +55,48 @@ namespace GoodDay.BLL.Services
                     DialogId = dialogId,
                     DeleteByUserId = userId,
                     IsDeleted = true,
-                    TimeOfLastDeleting = DateTime.Now   
+                    TimeOfLastDeleting = DateTime.Now
                 };
                 await unitOfWork.DeletedDialogs.Add(deletedDialog);
             }
             else
             {
-                await unitOfWork.Dialogs.Delete(dialogId);
-                await unitOfWork.Dialogs.Save();
+                if (!unitOfWork.DeletedDialogs.CheckForOutput(dialog.Id, userId))
+                {
+                    string userDeleted = "";
+                    if(userId == dialog.User1Id)
+                    {
+                        userDeleted = dialog.User2Id;
+                    }
+                    if (userId == dialog.User2Id)
+                    {
+                        userDeleted = dialog.User1Id;
+                    }
+                    var delDialogWithFriend = unitOfWork.DeletedDialogs.GetForOutput(dialogId, userDeleted);
+                    if (delDialogWithFriend.IsDeleted)
+                    {
+                        await unitOfWork.Dialogs.Delete(dialogId);
+                        await unitOfWork.Dialogs.Save();
+                    }
+                    else
+                    {
+                        var deletedDialog = new DeletedDialog
+                        {
+                            DialogId = dialogId,
+                            DeleteByUserId = userId,
+                            IsDeleted = true,
+                            TimeOfLastDeleting = DateTime.Now
+                        };
+                        await unitOfWork.DeletedDialogs.Add(deletedDialog);
+                    }
+                }
+                else
+                {
+                    var delDialogOfClient = unitOfWork.DeletedDialogs.GetForOutput(dialogId, userId);
+                    delDialogOfClient.IsDeleted = true;
+                    await unitOfWork.DeletedDialogs.Edit(delDialogOfClient);
+                }
+
             }
         }
     }

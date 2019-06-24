@@ -13,8 +13,8 @@ namespace GoodDay.DAL.Interfaces
         bool Find(int? id, string userId);
         DeletedDialog Get(int? id, string userId);
         Task Edit(DeletedDialog item);
-        DeletedDialog GetForMessageOutput(int? id, string userId);
-        bool CheckForMessageOutput(int? id, string userId);
+        DeletedDialog GetForOutput(int? id, string userId);
+        bool CheckForOutput(int? id, string userId);
         bool Check(int? id);
         Task Save();
     }
