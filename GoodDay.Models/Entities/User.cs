@@ -25,7 +25,7 @@ namespace GoodDay.Models.Entities
         [Required(ErrorMessage = "Input your surname")]
         public string Surname { get; set; }
 
-        [Phone, Required(ErrorMessage = "Input you phone number")]
+        [Required(ErrorMessage = "Input you phone number")]
         public string Phone { get; set; }
         public DateTime LastTimeOnline { get; set; }
         public string FilePath { get; set; }

@@ -13,10 +13,12 @@ namespace GoodDay.BLL.Services
     {
         private UserManager<User> userManager;
         private IUnitOfWork unitOfWork;
-        public DialogService(UserManager<User> _userManager, IUnitOfWork _unitOfWork)
+        private IFileManager fileManager;
+        public DialogService(UserManager<User> _userManager, IUnitOfWork _unitOfWork, IFileManager _fileManager)
         {
             userManager = _userManager;
             unitOfWork = _unitOfWork;
+            fileManager = _fileManager;
         }
         public async Task<Dialog> CreateDialog(string id, string friendId)
         {
@@ -77,6 +79,8 @@ namespace GoodDay.BLL.Services
                     {
                         await unitOfWork.Dialogs.Delete(dialogId);
                         await unitOfWork.Dialogs.Save();
+                        fileManager.DeleteDialogFiles(dialogId);
+                        unitOfWork.DeletedDialogs.Delete(delDialogWithFriend.DialogId);
                     }
                     else
                     {
@@ -92,9 +96,30 @@ namespace GoodDay.BLL.Services
                 }
                 else
                 {
+                    string userDeleted = "";
+                    if (userId == dialog.User1Id)
+                    {
+                        userDeleted = dialog.User2Id;
+                    }
+                    if (userId == dialog.User2Id)
+                    {
+                        userDeleted = dialog.User1Id;
+                    }
+                    var delDialogWithFriend = unitOfWork.DeletedDialogs.GetForOutput(dialogId, userDeleted);
+                    if (delDialogWithFriend.IsDeleted)
+                    {
+                        await unitOfWork.Dialogs.Delete(dialogId);
+                        await unitOfWork.Dialogs.Save();
+                        fileManager.DeleteDialogFiles(dialogId);
+                        unitOfWork.DeletedDialogs.Delete(delDialogWithFriend.DialogId);
+                    }
+                    else
+                    {
                     var delDialogOfClient = unitOfWork.DeletedDialogs.GetForOutput(dialogId, userId);
                     delDialogOfClient.IsDeleted = true;
                     await unitOfWork.DeletedDialogs.Edit(delDialogOfClient);
+                    }
+
                 }
 
             }

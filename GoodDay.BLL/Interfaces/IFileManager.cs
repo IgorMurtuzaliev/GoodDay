@@ -9,5 +9,7 @@ namespace GoodDay.BLL.Interfaces
     {
         Task<File> EditImage(User user, IFormFile file);
         Task<ICollection<File>> UploadMessagesFiles(int dialogId, int messageId, IFormFileCollection files);
+        void DeleteDialogFiles(int dialogId);
+        void DeleteUserAvatar(string path);
     }
 }

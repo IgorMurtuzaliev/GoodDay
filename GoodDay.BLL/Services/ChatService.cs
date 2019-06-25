@@ -97,6 +97,20 @@ namespace GoodDay.BLL.Services
                     var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId);
                     dialog = interlocutorsDialog;
                 }
+                if (unitOfWork.DeletedDialogs.Find(dialog.Id, senderId))
+                {
+                    var deletedDialog = unitOfWork.DeletedDialogs.Get(dialog.Id, senderId);
+                    deletedDialog.IsDeleted = false;
+                    deletedDialog.TimeOfLastDeleting = DateTime.Now;
+                    await unitOfWork.DeletedDialogs.Edit(deletedDialog);
+                }
+                if (unitOfWork.DeletedDialogs.Find(dialog.Id, viewModel.ReceiverId))
+                {
+                    var deletedDialog = unitOfWork.DeletedDialogs.Get(dialog.Id, viewModel.ReceiverId);
+                    deletedDialog.IsDeleted = false;
+                    deletedDialog.TimeOfLastDeleting = DateTime.Now;
+                    await unitOfWork.DeletedDialogs.Edit(deletedDialog);
+                }
                 var newMessage = new Message
                 {
                     DialogId = dialog.Id,
@@ -137,6 +151,20 @@ namespace GoodDay.BLL.Services
                     var interlocutorsDialog = user.InterlocutorsDialogs.Single(c => c.User2Id == viewModel.ReceiverId || c.User1Id == viewModel.ReceiverId);
                     dialog = interlocutorsDialog;
                 }
+                if (unitOfWork.DeletedDialogs.Find(dialog.Id, senderId))
+                {
+                    var deletedDialog = unitOfWork.DeletedDialogs.Get(dialog.Id, senderId);
+                    deletedDialog.IsDeleted = false;
+                    deletedDialog.TimeOfLastDeleting = DateTime.Now;
+                    await unitOfWork.DeletedDialogs.Edit(deletedDialog);
+                }
+                if (unitOfWork.DeletedDialogs.Find(dialog.Id, viewModel.ReceiverId))
+                {
+                    var deletedDialog = unitOfWork.DeletedDialogs.Get(dialog.Id, viewModel.ReceiverId);
+                    deletedDialog.IsDeleted = false;
+                    deletedDialog.TimeOfLastDeleting = DateTime.Now;
+                    await unitOfWork.DeletedDialogs.Edit(deletedDialog);
+                }
                 var newMessage = new Message
                 {
                     DialogId = dialog.Id,
@@ -144,7 +172,7 @@ namespace GoodDay.BLL.Services
                     Text = message.Text,
                     SendingTime = time,
                     Receiverid = viewModel.ReceiverId,
-                    ResendUserFrom = sender.Name + sender.Surname,
+                    ResendUserFrom = sender.Name + " " + sender.Surname,
                     Files = message.Files
                 };
                 await unitOfWork.Messages.Add(newMessage);
@@ -190,7 +218,7 @@ namespace GoodDay.BLL.Services
                     deletedDialog = unitOfWork.DeletedDialogs.GetForOutput(dialog.Id, userId);
                 }
                 var result = new List<MessageViewModel>();
-                var messagesList = dialog.Messages.Where(c => c.SendingTime > deletedDialog.TimeOfLastDeleting);
+                var messagesList = dialog.Messages.Where(c => c.SendingTime >= deletedDialog.TimeOfLastDeleting);
                 foreach (var item in messagesList)
                 {
                     result.Add(new MessageViewModel(item));

@@ -14,8 +14,7 @@ namespace GoodDay.BLL.ViewModels
         public string NewPassword { get; set; }
 
         [Required]
-        [Compare("Password", ErrorMessage = "Passwords don't match")]
-        [DataType(DataType.Password)]
+        [Compare("NewPassword", ErrorMessage = "Passwords don't match")]
         public string NewPasswordConfirm { get; set; }
     }
 }

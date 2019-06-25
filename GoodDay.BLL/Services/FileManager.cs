@@ -58,5 +58,39 @@ namespace GoodDay.BLL.Services
             }
             return fileCollection;
         }
+        public void DeleteDialogFiles(int dialogId)
+        {
+            string directory = Path.Combine(appEnvironment.WebRootPath + "\\Dialogs\\" + dialogId + "\\");
+
+
+            if (Directory.Exists(directory))
+            {
+                string[] files = Directory.GetFiles(directory);
+                foreach (string file in files)
+                {
+                    System.IO.File.SetAttributes(file, FileAttributes.Normal);
+                    System.IO.File.Delete(file);
+                }
+
+                Directory.Delete(directory, false);
+            }
+
+        }
+        public void DeleteUserAvatar(string userName)
+        {
+            string directory = Path.Combine(appEnvironment.WebRootPath + "\\Avatar\\" + userName + "\\");
+          
+            if (Directory.Exists(directory))
+            {
+                string[] files = Directory.GetFiles(directory);
+                foreach (string file in files)
+                {
+                    System.IO.File.SetAttributes(file, FileAttributes.Normal);
+                    System.IO.File.Delete(file);
+                }
+
+                Directory.Delete(directory, false);
+            }
+        }
     }
 }

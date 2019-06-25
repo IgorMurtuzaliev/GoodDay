@@ -153,7 +153,7 @@ namespace GoodDay.WebAPI.Controllers
 
         [HttpGet]
         [Authorize]
-        [Route("icontact/{id}")]
+        [Route("contact/{id}")]
         public async Task<IActionResult> GetContactDetails(int? id)
         {
             try
@@ -166,6 +166,10 @@ namespace GoodDay.WebAPI.Controllers
                 {
                     Contact contact = await contactService.GetContact(id);
                     var contactVM = new ContactViewModel(contact);
+                    if(await blockListService.IsUserBlocked(contact.UserId, contact.FriendId))
+                    {
+                        contactVM.Blocked = true;
+                    }
                     return Ok(contactVM);
                 }
             }

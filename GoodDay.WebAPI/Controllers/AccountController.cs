@@ -35,7 +35,7 @@ namespace GoodDay.WebAPI.Controllers
         {
             try
             {
-                if (accountService.PhoneExists(model.Phone) == false)
+                if (accountService.PhoneExists("+375"+ model.Phone) == false)
                 {
                     IdentityResult result = await accountService.Create(model, HttpContext.Request.Host.ToString());
                     return Ok(result);
@@ -148,6 +148,10 @@ namespace GoodDay.WebAPI.Controllers
             {
                 var id = User.Claims.First(c => c.Type == "Id").Value;
                 var file = HttpContext.Request.Form.Files[0];
+                if (file == null)
+                {
+                    return BadRequest("Please, choose the file!");
+                }
                 const int lengthMax = 2097152;
                 const string correctType = "image/jpeg";
                 var type = file.ContentType;
@@ -172,10 +176,10 @@ namespace GoodDay.WebAPI.Controllers
                 return StatusCode(500, ex.Message);
             }
         }
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         [Route("editPassword")]
-        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        public async Task<IActionResult> ChangePassword([FromBody]ChangePasswordViewModel model)
         {
             try
             {

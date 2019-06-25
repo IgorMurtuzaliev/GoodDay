@@ -69,7 +69,14 @@ namespace GoodDay.BLL.ViewModels
             if (dialog.Messages.Count != 0)
             {
                 var lastmessage = dialog.Messages.LastOrDefault();
-                LastMessage = lastmessage.Text;
+                if (lastmessage.Text.Length < 125)
+                {
+                    LastMessage = lastmessage.Text;
+                }
+                else
+                {
+                    LastMessage = lastmessage.Text.Substring(0, 125) + "...";
+                }
                 if (lastmessage.Sender.FilePath != null)
                 {
                     LastMessageSenderImage = lastmessage.Sender.FilePath;

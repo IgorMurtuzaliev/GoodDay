@@ -167,6 +167,14 @@ namespace GoodDay.WebAPI.Controllers
                 if (viewModel.Link != null)
                 {
                     var id = User.Claims.First(c => c.Type == "Id").Value;
+                    if (await blockListService.IsUserBlocked(id, viewModel.ReceiverId))
+                    {
+                        return BadRequest("Unlock this user to send messages");
+                    }
+                    if (await blockListService.IsUserBlocked(viewModel.ReceiverId, id))
+                    {
+                        return BadRequest("This user reseieved access to sendind messages");
+                    }
                     UserIds receiver, caller;
                     chatHub.FindCallerReceiverByIds(viewModel.ReceiverId, id, out caller, out receiver);
                     bool dialogExists = await chatService.IsDialogExists(caller.userId, viewModel.ReceiverId);
@@ -202,13 +210,11 @@ namespace GoodDay.WebAPI.Controllers
                         }
                         return Ok(message);
                     }
-
                 }
                 else
                 {
                     return BadRequest("You didn't choose the user to share");
                 }
-
             }
             catch (Exception ex)
             {
@@ -225,6 +231,14 @@ namespace GoodDay.WebAPI.Controllers
                 if (viewModel.MessageId != null)
                 {
                     var id = User.Claims.First(c => c.Type == "Id").Value;
+                    if (await blockListService.IsUserBlocked(id, viewModel.ReceiverId))
+                    {
+                        return BadRequest("Unlock this user to send messages");
+                    }
+                    if (await blockListService.IsUserBlocked(viewModel.ReceiverId, id))
+                    {
+                        return BadRequest("This user reseieved access to sendind messages");
+                    }
                     UserIds receiver, caller;
                     chatHub.FindCallerReceiverByIds(viewModel.ReceiverId, id, out caller, out receiver);
                     bool dialogExists = await chatService.IsDialogExists(caller.userId, viewModel.ReceiverId);
@@ -260,13 +274,11 @@ namespace GoodDay.WebAPI.Controllers
                         }
                         return Ok(message);
                     }
-
                 }
                 else
                 {
                     return BadRequest("You didn't choose the message to resend");
                 }
-
             }
             catch (Exception ex)
             {

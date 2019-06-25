@@ -126,6 +126,7 @@ namespace GoodDay.BLL.Services
             User user = await userManager.FindByIdAsync(id);
             try
             {
+                fileManager.DeleteUserAvatar(user.UserName);
                 var newfile = await fileManager.EditImage(user, file);
                 user.FilePath = newfile.Path;
                 await unitOfWork.Users.Edit(user);
